@@ -1,0 +1,5 @@
+export class WantedSystem {
+ constructor(world){this.world=world;this.heat=0;this.seenByPolice=false;this.lastSeen=0;this.decay=0;}
+ reportCrime(kind,x,y){const w=this.world,p=w.driving||w.player,d=Math.hypot((x??p.x)-p.x,(y??p.y)-p.y),witness=d<500&&(w.pedestrians.people.some(q=>Math.hypot(q.x-p.x,q.y-p.y)<360)||w.police.units.some(q=>Math.hypot(q.x-p.x,q.y-p.y)<500));if(kind==='carjack')this.heat=Math.max(this.heat,witness?1:0);if(kind==='pedestrian')this.heat=Math.min(5,this.heat+(witness?2:0));if(kind==='police')this.heat=Math.max(this.heat,witness?3:0);if(kind==='shot')this.heat=Math.min(5,this.heat+(witness?1:0));if(kind==='crash'&&witness)this.heat=Math.min(5,this.heat+1);}
+ update(dt){const w=this.world,p=w.driving||w.player;this.seenByPolice=w.police.units.some(v=>Math.hypot(v.x-p.x,v.y-p.y)<700);if(this.seenByPolice)this.lastSeen=w.time;if(!this.seenByPolice&&this.heat>0&&w.time-this.lastSeen>12){this.decay+=dt;if(this.decay>=10){this.decay-=10;this.heat--;}}w.heat=this.heat;}
+}

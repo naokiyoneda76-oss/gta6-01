@@ -5,7 +5,7 @@ export const CityRenderer = class CityRenderer {
   frame(fn) { const c=this.ctx; c.setTransform(1,0,0,1,0,0); c.fillStyle='#14272c'; c.fillRect(0,0,this.canvas.width,this.canvas.height); c.setTransform(this.scale,0,0,this.scale,this.ox,this.oy); fn(c); }
   overlay(fn) { const c=this.ctx; c.setTransform(this.scale,0,0,this.scale,this.ox,this.oy); fn(c); }
   _visible(x,y,w,h,camera) { return x+w>camera.x-CONFIG.width/2-200 && x<camera.x+CONFIG.width/2+200 && y+h>camera.y-CONFIG.height/2-260 && y<camera.y+CONFIG.height/2+260; }
-  draw(ctx, world, camera) { this.frame(c=>{ c.save(); camera.apply(c); this._city(c,world,camera);for(const v of world.vehicles)v.draw(c,camera,world);world.player.draw(c,camera,world);if(world.driving)world.driving.draw(c,camera,world); this.drawObjective(c,world,camera); c.restore(); }); }
+  draw(ctx, world, camera) { this.frame(c=>{ c.save(); camera.apply(c); this._city(c,world,camera);world.effects.drawGround(c);world.pedestrians.draw(c);for(const v of world.vehicles)v.draw(c,camera,world);world.player.draw(c,camera,world);if(world.driving)world.driving.draw(c,camera,world);world.effects.drawAir(c); this.drawObjective(c,world,camera); c.restore(); }); }
   _city(c,w,camera) {
     const left=camera.x-CONFIG.width/2-5, top=camera.y-CONFIG.height/2-5;
     c.fillStyle=CONFIG.palette.sea; c.fillRect(left,top,CONFIG.width+10,CONFIG.height+10);

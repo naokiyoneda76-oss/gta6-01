@@ -44,4 +44,10 @@ Every source file in `game/src/` has one job and begins with its named export:
 
 ## Screenshot hand-in
 
-`shots.json` declares `1-cover.jpg` as `?shot=cover&seed=1`. `main.ts` verifies `game/index.html`, copies game and screenshots, writes the make.fun dossier, and logs handed-in file counts.
+`shots.json` declares four seed-1 scenes: cover, chase, street, and downtown. `main.ts` verifies `game/index.html`, copies game and screenshots, writes the make.fun dossier, and logs handed-in file counts.
+
+## Phase B: city life and law
+
+`traffic.js` exports `TrafficAI`; `pedestrians.js` exports `PedestrianCrowd`; `wanted.js` exports `WantedSystem`; `police.js` exports `PoliceForce`; and `effects.js` exports `Effects`. `World` owns these systems and updates them after the player; `heat` mirrors `wanted.heat`. The world also exposes `bustMeter` (0–1), `busted`, and its effects/pedestrian/traffic/police system instances. `WantedSystem.reportCrime(kind,x,y)` accepts `carjack`, `pedestrian`, `police`, `crash`, and `shot` reports. Effects expose `drawGround(ctx)` and `drawAir(ctx)`.
+
+`shots.js` stages deterministic `cover`, `chase`, `street`, and `downtown` scenes. `shots.json` declares four seed-1 capture entries; capture is performed separately.
