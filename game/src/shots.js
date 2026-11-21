@@ -8,16 +8,17 @@ export const ShotDirector=class ShotDirector{
   if(name==='title'){game.screen='title';game.camera.x=535;game.camera.y=950;game.time=8;return false;}
   if(name==='map'){w._showMap=true;w.objective={x:820,y:950,label:'MISSION: MEET MIA'};game.camera.x=535;game.camera.y=950;return true;}
   if(name==='cover'){
-   w.setTimeOfDay('day');const x=750,y=1020,v=new Vehicle(x,y,'sport','#e94f45',.78);v.speed=321;v.driver='player';w.vehicles.push(v);w.driving=v;w.player.x=v.x;w.player.y=v.y;
-   // One braking car approaches from the coastal boulevard; its lit brakes signal a response, not a collision.
-   const brake=new Vehicle(535,936,'sedan','#d8d2bd',0);brake.driver='traffic';brake._braking=true;w.vehicles.push(brake);w.traffic.cars.push(brake);
-   const police=new Vehicle(1110,1000,'police','#e7e4d8',0);police.driver='police';police._headlights=true;w.vehicles.push(police);w.police.units.push(police);
-   const p=w.pedestrians.people[0];p.x=704;p.y=984;p.run=false;p._recoil=false;p._alarmed=true;p.timer=2;p.vx=0;p.vy=0;p.angle=0;
-   // Enlarge only the staged owner; keep every other pedestrian at the shared crowd scale.
-   const drawCrowd=w.pedestrians.draw.bind(w.pedestrians);w.pedestrians.draw=(ctx)=>{const people=w.pedestrians.people;w.pedestrians.people=people.filter(q=>q!==p);drawCrowd(ctx);w.pedestrians.people=people;ctx.save();ctx.translate(p.x,p.y+Math.sin(w.time*8+p.x)*1.4);ctx.scale(2.1,2.1);ctx.fillStyle='rgba(30,28,22,.25)';ctx.beginPath();ctx.ellipse(0,2,4,2,0,0,7);ctx.fill();ctx.fillStyle=p.color;ctx.fillRect(-2,-8,4,8);ctx.fillStyle='#dbad83';ctx.beginPath();ctx.arc(0,-10,2.5,0,7);ctx.fill();ctx.strokeStyle=p.color;ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(-1,-6);ctx.lineTo(4,-6);ctx.lineTo(10,-6);ctx.moveTo(1,-6);ctx.lineTo(4,-11);ctx.lineTo(3,-16);ctx.lineTo(6,-19);ctx.moveTo(-1,0);ctx.lineTo(-4,4);ctx.moveTo(1,0);ctx.lineTo(5,3);ctx.stroke();ctx.restore();};
-   dress([[890,900,'sedan','#47747a',0],[980,1130,'taxi','#e8bc3e',Math.PI/2]],[[600,1000],[620,1040],[585,1060]]);
-   // Stage FIRST WHEELS after the steal: its target ring now points to Mia's garage.
-   w.missions.index=1;w.missions.state='active';w.missions.car=v;w.objective={x:4050,y:1700,label:'DELIVER THE CAR'};w.heat=2;w.wanted.heat=2;v._doorOpen=true;for(let i=0;i<7;i++){w.effects.skid(x-72+i*8,y+70-i*7,.78,26);w.effects.skid(x-86+i*8,y+84-i*7,.78,25);}for(let i=0;i<12;i++)w.effects.particles.push({x:x-18-i*5,y:y+8+i*1.3,vx:-8,vy:3,life:1,size:7+(i%4)*2,color:'rgba(250,249,242,.62)',_smoke:true});w.pinCallout('STOLEN!','+ SPORTS CAR',{y:176});game.camera.x=690;game.camera.y=1020;game.camera.zoom=2.2;
+   w.setTimeOfDay('day');game.camera.zoom=3.6;game.camera.x=640;game.camera.y=1000;
+   // FIRST WHEELS catches the handoff itself: a parked car and two distinct, staged poses.
+   const v=new Vehicle(669.17,997.22,'sport','#e94f45',-.61);v.speed=0;v.driver='player';v._doorOpen=true;v._coverDoorAngle=60;w.vehicles.push(v);w._shotSpeed=0;
+   w.player.x=637.22;w.player.y=1012.50;w.player.angle=-.61;w.player._coverEntering=true;
+   const p=w.pedestrians.people[0];p.x=612.22;p.y=987.50;p.run=false;p._recoil=false;p._alarmed=false;p._coverOwnerStagger=true;p.timer=0;p.vx=0;p.vy=0;p.angle=0;
+   w.city.looseItems=[];
+   const drawCrowd=w.pedestrians.draw.bind(w.pedestrians);w.pedestrians.draw=(ctx)=>{const people=w.pedestrians.people;w.pedestrians.people=people.filter(q=>q!==p);drawCrowd(ctx);w.pedestrians.people=people;ctx.save();ctx.translate(p.x,p.y);ctx.scale(2.55,2.55);ctx.rotate(-.42);ctx.fillStyle='rgba(30,28,22,.25)';ctx.beginPath();ctx.ellipse(0,1,2,1,0,0,7);ctx.fill();ctx.fillStyle=p.color;ctx.beginPath();ctx.ellipse(0,-3,1,-0+4,0,0,7);ctx.fill();ctx.fillStyle='#dbad83';ctx.beginPath();ctx.arc(0,-8,1.3,0,7);ctx.fill();ctx.strokeStyle=p.color;ctx.lineWidth=1;ctx.lineCap='round';ctx.beginPath();ctx.moveTo(-.4,-5);ctx.lineTo(-1.4,-4);ctx.lineTo(-2.2,-3);ctx.moveTo(.4,-5);ctx.lineTo(1.5,-3.5);ctx.lineTo(3.8,-2.5);ctx.moveTo(-.4,0);ctx.lineTo(-1.4,1);ctx.lineTo(-2.2,2);ctx.moveTo(.4,0);ctx.lineTo(1.4,1);ctx.lineTo(2.4,1.7);ctx.stroke();ctx.restore();};
+   // Surrounding boulevard life stays well clear of the theft action.
+   dress([[900,900,'sedan','#47747a',0],[1030,1130,'taxi','#e8bc3e',Math.PI/2]],[[590,1080],[610,1110],[570,1130]]);
+   w.missions.index=1;w.missions.state='active';w.missions.car=v;w.objective=null;w._shotObjectiveBanner='GET IN THE CAR';w.heat=2;w.wanted.heat=2;
+   w.effects.skids=[];w.effects.particles=w.effects.particles.filter(q=>!q._smoke);w.pinCallout('STOLEN!','FIRST WHEELS',{y:176});
   }
   else if(name==='chase'){
    w.setTimeOfDay('night');const x=1250,y=720,v=new Vehicle(x,y,'sport','#e94f45',Math.PI/2-.27);v.speed=785;v.driver='player';v._handbrake=true;w.vehicles.push(v);w.driving=v;w.player.x=x;w.player.y=y;w.objective={x:x+620,y,label:'LOSE THE HEAT'};w.wanted.heat=w.heat=5;
