@@ -58,20 +58,18 @@ export const ShotDirector=class ShotDirector{
    // Clear the procedural crowd so the reunion has quiet space around it.
    const pedestrianTemplate=w.pedestrians.people[0];w.pedestrians.people=[];w.vehicles=[];w.traffic.cars=[];w.police.units=[];w.gang.crews=[];
    w.effects.skids=[];w.effects.particles=[];w.effects.impacts=[];w.effects.lightPools=[];w.combat.bullets=[];w.activities.flags=[];w.activities.cards=[];
-   // Allow this one staged view to sit west of the normal city camera bound.
-   // The heroes stand on open sand south of the pier and clear of the palm row.
-   game.camera._homecomingWestClamp=580;
-   const danny={...pedestrianTemplate,x:510,y:2145,vx:0,vy:0,angle:Math.PI/2,timer:0,run:false,color:'#cf694f',_shotScale:1.4,_homecomingPose:true};
-   const mia={...pedestrianTemplate,x:542,y:2145,vx:0,vy:0,angle:-Math.PI/2,timer:0,run:false,color:'#f2a85e',_shotScale:1.4,_homecomingPose:true};
+   // The renderer clamps camera.x to 640 (its half-width); keep the round-37
+   // camera setup exactly so the lighthouse remains the screen-space anchor.
+   const danny={...pedestrianTemplate,x:445,y:2090,vx:0,vy:0,angle:Math.PI/2,timer:0,run:false,color:'#cf694f',_shotScale:1.4,_homecomingPose:true};
+   const mia={...pedestrianTemplate,x:478,y:2090,vx:0,vy:0,angle:-Math.PI/2,timer:0,run:false,color:'#f2a85e',_shotScale:1.4,_homecomingPose:true};
    w.player._homecomingHidden=true;w.pedestrians.people=[danny,mia];
    // Park on the inland shoulder beside the sand staging area.
-   const car=new Vehicle(563,2145,'sedan','#e8a078',-Math.PI/2+.22);car.speed=0;car.driver=null;w.vehicles.push(car);
-   // Sidewalk figures use the paved shoulder beside the boulevard; the middle
-   // pair stand directly on the timber pier deck.
-   dress([],[[513,1940],[557,1940],[430,2030],[465,2033],[557,2237]]);w.pedestrians.people.slice(2).forEach((p,i)=>{p.color=['#4d8290','#d28c59','#718d58','#b86b69','#d7b75f'][i];p.skin=['#dca77f','#ae7655','#efc8a2','#c88e6d','#e8b88d'][i];p.pants=['#394653','#3b4651','#665342','#34414e','#51443e'][i];if(i===4){p.vx=24;p.vy=0;}});
+   const car=new Vehicle(525,2115,'sedan','#e8a078',-Math.PI/2+.22);car.speed=0;car.driver=null;w.vehicles.push(car);
+   // Keep the ambient crowd on the beach pier decks and boulevard sidewalk.
+   dress([],[[350,2027],[390,2028],[400,2189],[535,1900],[535,2260]]);w.pedestrians.people.slice(2).forEach((p,i)=>{p.color=['#4d8290','#d28c59','#718d58','#b86b69','#d7b75f'][i];p.skin=['#dca77f','#ae7655','#efc8a2','#c88e6d','#e8b88d'][i];p.pants=['#394653','#3b4651','#665342','#34414e','#51443e'][i];if(i===4){p.vx=24;p.vy=0;}});
    w.objective={x:mia.x,y:mia.y,label:'TALK TO MIA'};w._shotObjectiveBanner='TALK TO MIA';w._homecomingShotMarkerSuppressed=true;w._homecomingScene=true;
    w.heat=0;w.wanted.heat=0;w.pinCallout('HOMECOMING','CORAL BEACH',{y:176});
-   game.camera.x=600;game.camera.y=2040;game.camera.zoom=1.9;
+   game.camera.x=540;game.camera.y=2040;game.camera.zoom=1.9;
   }
   else if(name==='getaway'){
    w.setTimeOfDay('night');w.vehicles=[];w.traffic.cars=[];w.pedestrians.people=[];
