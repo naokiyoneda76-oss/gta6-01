@@ -8,7 +8,7 @@ export const ShotDirector=class ShotDirector{
   if(name==='title'){game.screen='title';game.camera.x=535;game.camera.y=950;game.time=8;return false;}
   if(name==='map'){w._showMap=true;w.objective={x:820,y:950,label:'MISSION: MEET MIA'};game.camera.x=535;game.camera.y=950;return true;}
   if(name==='cover'){
-   w.setTimeOfDay('day');const x=750,y=1020,v=new Vehicle(x,y,'sport','#e94f45',.78);v.speed=321;v.driver='player';v._groundMarker=true;w.vehicles.push(v);w.driving=v;w.player.x=v.x;w.player.y=v.y;
+   w.setTimeOfDay('day');const x=750,y=1020,v=new Vehicle(x,y,'sport','#e94f45',.78);v.speed=321;v.driver='player';w.vehicles.push(v);w.driving=v;w.player.x=v.x;w.player.y=v.y;
    // One braking car approaches from the coastal boulevard; its lit brakes signal a response, not a collision.
    const brake=new Vehicle(535,936,'sedan','#d8d2bd',0);brake.driver='traffic';brake._braking=true;w.vehicles.push(brake);w.traffic.cars.push(brake);
    const police=new Vehicle(1110,1000,'police','#e7e4d8',0);police.driver='police';police._headlights=true;w.vehicles.push(police);w.police.units.push(police);
@@ -37,7 +37,7 @@ export const ShotDirector=class ShotDirector{
   else if(name==='taxi'){
    w.setTimeOfDay('day');const x=1030,y=1280,v=new Vehicle(x,y,'taxi','#e8bc3e',Math.PI/2+.26);v.speed=428;v.driver='player';v.passenger=true;w.vehicles.push(v);w.driving=v;w.player.x=v.x;w.player.y=v.y;
    const oncoming=new Vehicle(x+67,y-2,'sedan','#42657b',Math.PI*1.5-.26);oncoming.speed=-125;oncoming.driver='traffic';oncoming._braking=true;w.effects.skids.push({curve:[x-88,y+58,x-63,y+41,x-28,y+28]},{curve:[x-81,y+68,x-56,y+51,x-21,y+38]});w.vehicles.push(oncoming);w.traffic.cars.push(oncoming);
-   w.objective=null;dress([[860,1180,'sedan','#9f473c',Math.PI/2],[1190,1455,'pickup','#526d59',Math.PI/2],[930,1510,'sedan','#d8d2bd',Math.PI/2]],[[855,1240],[850,1330],[1225,1280],[1200,1340]]);w.pinCallout('NEAR MISS!','+$25',{y:176});game.camera.x=x+35;game.camera.y=y+5;game.camera.zoom=1.75;
+   w.objective=null;w._shotObjectiveBanner="FARE $185 • ROSA'S HOTEL";dress([[860,1180,'sedan','#9f473c',Math.PI/2],[1190,1455,'pickup','#526d59',Math.PI/2],[930,1510,'sedan','#d8d2bd',Math.PI/2]],[[855,1240],[850,1330],[1225,1280],[1200,1340]]);w.pinCallout('NEAR MISS!','+$25',{y:176});game.camera.x=x+35;game.camera.y=y+5;game.camera.zoom=1.75;
   }
   else if(name==='street'){w.player.x=635;w.player.y=650;w.objective={x:720,y:1250,label:'MEET MIA AT THE GARAGE'};game.camera.x=635;game.camera.y=650;}
   else if(name==='downtown'){const v=new Vehicle(1920,780,'sedan','#42657b',Math.PI/2);v.speed=65;v.driver='player';w.vehicles.push(v);w.driving=v;w.heat=1;w.wanted.heat=1;w.objective={x:2200,y:780,label:'HEAD DOWNTOWN'};game.camera.x=v.x;game.camera.y=v.y;}
