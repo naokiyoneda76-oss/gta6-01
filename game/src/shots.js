@@ -15,13 +15,13 @@ export const ShotDirector=class ShotDirector{
    // Single two-lane carriageway, with paved sidewalks and a visible loading forecourt.
    w.city.roads.push({x1:500,y1:1120,x2:1100,y2:1120,width:160});w.city.palms.push({x:520,y:1015},{x:1080,y:1015});
    w.city.buildings.push(
-    {x:520,y:920,w:250,d:58,height:24,kind:'shop',archetype:'shop',commercial:true,awning:true,color:'#c7b9a0',roof:'#d18b70',district:'coral',treatment:1,roofProps:2},
-    {x:850,y:910,w:128,d:82,height:48,kind:'hotel',archetype:'hotel',commercial:true,footprint:'L',wing:{x:978,y:950,w:54,d:42},awning:true,color:'#e4c7a0',roof:'#9f7966',district:'coral',treatment:0,roofProps:3}
+    {x:520,y:920,w:250,d:58,height:24,kind:'shop',archetype:'shop',name:'PALM MARKET',commercial:true,awning:true,color:'#c7b9a0',roof:'#d18b70',district:'coral',treatment:1,roofProps:2},
+    {x:850,y:910,w:128,d:82,height:48,kind:'hotel',archetype:'hotel',name:'HOTEL',commercial:true,footprint:'L',wing:{x:978,y:950,w:54,d:42},awning:true,color:'#e4c7a0',roof:'#9f7966',district:'coral',treatment:0,roofProps:3}
    );
-   w.city.lots.push({x:520,y:985,w:250,d:60,type:'plaza',cars:0},{x:830,y:992,w:178,d:104,type:'parking',cars:3});
-   // The hotel loop is a continuous paved driveway with a planted island.
-   w.city.lots.push({x:845,y:1020,w:138,d:48,type:'parking',cars:0});w._styleHotelIsland={x:890,y:1030,w:48,h:22};
-   w._styleCrates=[{x:700,y:1028,w:18,h:18},{x:724,y:1032,w:18,h:18}];game.camera.x=800;game.camera.y=1080;game.camera.zoom=2.5;w.objective=null;w.heat=0;w.wanted.heat=0;return true;
+   w.city.lots.push({x:520,y:985,w:250,d:60,type:'plaza',cars:0},{x:1038,y:1000,w:142,d:100,type:'parking',cars:3});
+   // A paved loop serves the hotel entrance; the parking court sits clear beside it.
+   w._styleHotelDrive={x:940,y:1052,rx:84,ry:32};w._styleHotelIsland={x:914,y:1044,w:52,h:16};
+   w._styleCrates=[{x:700,y:1028,w:18,h:18},{x:724,y:1032,w:18,h:18}];game.camera.x=842;game.camera.y=1060;game.camera.zoom=1.55;w.objective=null;w.heat=0;w.wanted.heat=0;return true;
   }
   if(name==='cover'){
    w.setTimeOfDay('day');game.camera.zoom=3.6;game.camera.x=640;game.camera.y=1000;
