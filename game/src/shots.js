@@ -25,11 +25,11 @@ export const ShotDirector=class ShotDirector{
    w._styleCrates=[{x:700,y:1028,w:18,h:18},{x:724,y:1032,w:18,h:18}];game.camera.x=842;game.camera.y=1060;game.camera.zoom=1.55;w.objective=null;w.heat=0;w.wanted.heat=0;return true;
   }
   if(name==='cover'){
-   w.setTimeOfDay('day');game.camera.zoom=4.3;game.camera.x=646;game.camera.y=1000;
+   w.setTimeOfDay('day');game.camera.zoom=3.8;game.camera.x=642;game.camera.y=1008;
    // FIRST WHEELS catches the handoff itself: a parked car and two distinct, staged poses.
    const v=new Vehicle(650,1020,'sport','#e94f45',Math.PI/2);v.speed=0;v.driver='player';v._doorOpen=true;v._coverDoorAngle=62;v._groundMarker=false;v._handbrake=false;v._coverDoor=true;w.vehicles=[v];w.traffic.cars=[];w.gang.crews=[];w._shotSpeed=0;
-   w.player.x=644;w.player.y=1003;w.player.angle=0;w.player._coverEntering=true;
-   const p=w.pedestrians.people[0];p.x=638;p.y=986;p.run=false;p._recoil=false;p._alarmed=false;p._coverOwnerStagger=true;p.timer=0;p.vx=0;p.vy=0;p.angle=0;
+   w.player.x=643;w.player.y=1001;w.player.angle=0;w.player._coverEntering=true;
+   const p=w.pedestrians.people[0];p.x=628;p.y=978;p.run=false;p._recoil=false;p._alarmed=false;p._coverOwnerStagger=true;p.timer=0;p.vx=0;p.vy=0;p.angle=0;
    w.city.looseItems=[];
    // The owner recoils away from the car; this shot has exactly two people.
    w.pedestrians.people=[p];
@@ -82,7 +82,7 @@ export const ShotDirector=class ShotDirector{
    dress([],[[350,2027],[390,2028],[400,2189],[535,1900],[535,2260],[460,2268],[490,2325],[420,2380]]);w.pedestrians.people.slice(2).forEach((p,i)=>{p.color=['#4d8290','#d28c59','#718d58','#b86b69','#d7b75f','#568578','#d18c62','#617b9b'][i];p.skin=['#dca77f','#ae7655','#efc8a2','#c88e6d','#e8b88d','#c78f69','#e3b58b','#af795a'][i];p.pants=['#394653','#3b4651','#665342','#34414e','#51443e','#324a48','#55423b','#394754'][i];if(i===4){p.vx=24;p.vy=0;}});
    w.objective={x:mia.x,y:mia.y,label:'TALK TO MIA'};w._shotObjectiveBanner='TALK TO MIA';w._homecomingShotMarkerSuppressed=true;w._homecomingScene=true;
    w.heat=0;w.wanted.heat=0;w.pinCallout('HOMECOMING','CORAL BEACH',{y:176});
-   game.camera.x=640;game.camera.y=2075;game.camera.zoom=2.2;
+   game.camera.x=640;game.camera.y=2055;game.camera.zoom=3.0;
   }
   else if(name==='getaway'){
    w.setTimeOfDay('night');w.vehicles=[];w.traffic.cars=[];w.pedestrians.people=[];
