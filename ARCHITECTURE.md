@@ -74,3 +74,9 @@ Every source file in `game/src/` has one job and begins with its named export:
 ## Phase D2: world look and staged captures
 
 `World.setTimeOfDay('day'|'dusk'|'night')` selects renderer palette treatment without changing simulation time. Dusk supports story staging; night adds blue grading, lit windows, lamp pools, neon, and vehicle headlight cones. The deterministic city renderer draws roof treatments, shore and district ground dressing, parking, piers, runway, cargo plane, and lighthouse. Dialogue exposes additive `revealAll()` for fully readable staged lines.
+
+## Phase E1: action presentation
+
+`World.callout(mainText, subText, small)` queues centre-screen event callouts; the HUD animates one at a time. Gameplay triggers include near misses, sustained handbrake drifts, NPC traffic collisions, heat rises and escape, mission success, postcard pickups, taxi fare completion, and police roadblocks. Near misses, drifts, traffic chaos, escaped heat, and postcards award their displayed cash amounts; taxi and mission callouts display their existing rewards. Shot staging can enqueue callouts directly to prove the presentation in deterministic captures.
+
+The driven vehicle is presented at 1.2× scale with a warm outline, drift smoke, and high-speed streaks; NPC vehicles retain their standard scale. Police vehicles have a monochrome livery and alternating light bars. HUD panels share a dark translucent treatment and warm border.
