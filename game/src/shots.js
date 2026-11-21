@@ -48,12 +48,14 @@ export const ShotDirector=class ShotDirector{
    // A broad staged boulevard segment gives the complete manoeuvre room on asphalt.
    const road=w.city.roads.find(r=>r.x1===r.x2&&r.x1===1020);if(road)road.width=150;
    const v=new Vehicle(x,y,'taxi','#e8bc3e',.62);v.speed=428;v.driver='player';v.passenger=true;v._handbrake=true;w.vehicles.push(v);w.driving=v;w.player.x=v.x;w.player.y=v.y;
-   // Taxi cuts diagonally across the oncoming lane; the sedan is still straight and braking.
-   const oncoming=new Vehicle(x-33,y-40,'sedan','#42657b',Math.PI);oncoming.speed=-125;oncoming.driver='traffic';oncoming._braking=true;w.effects.skids.push(
+   // The sedan's forward line points directly through the taxi after a hard stop.
+   // Its nose sits one 14px screen-space gap from the taxi's right flank.
+   const flank={x:Math.cos(v.angle),y:Math.sin(v.angle)},sedanHeading=Math.atan2(-flank.x,flank.y),sedanOffset=16.2+21.5+7;
+   const oncoming=new Vehicle(x+flank.x*sedanOffset,y+flank.y*sedanOffset,'sedan','#42657b',sedanHeading);oncoming.speed=-125;oncoming.driver='traffic';oncoming._braking=true;w.effects.skids.push(
     {curve:[[x-66,y+53],[x-48,y+42],[x-31,y+25],[x-16,y+6]],width:2.3},
     {curve:[[x-60,y+62],[x-42,y+51],[x-25,y+34],[x-10,y+15]],width:2.3},
-    {x:x-33,y:y-62,angle:0,length:48},
-    {x:x-25,y:y-62,angle:0,length:48}
+    {x:oncoming.x-flank.x*25,y:oncoming.y-flank.y*25,angle:sedanHeading,length:48,width:3.8,color:'rgba(9,12,14,.92)'},
+    {x:oncoming.x-flank.x*25+flank.y*8,y:oncoming.y-flank.y*25-flank.x*8,angle:sedanHeading,length:48,width:3.8,color:'rgba(9,12,14,.92)'}
    );w.vehicles.push(oncoming);w.traffic.cars.push(oncoming);
    // Small smoke puffs sit at the taxi's two rear wheels.
    for(let i=0;i<5;i++){const side=i%2?1:-1;w.effects.particles.push({x:x-Math.sin(.62)*24+Math.cos(.62)*side*10,y:y+Math.cos(.62)*24+Math.sin(.62)*side*10,vx:-4+i*1.5,vy:2,life:.8,size:5+i%2*2,color:'rgba(245,244,235,.72)',_smoke:true});}
