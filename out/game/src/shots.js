@@ -66,7 +66,7 @@ export const ShotDirector=class ShotDirector{
    // Park on the inland shoulder beside the sand staging area.
    const car=new Vehicle(525,2115,'sedan','#e8a078',-Math.PI/2+.22);car.speed=0;car.driver=null;w.vehicles.push(car);
    // Keep the ambient crowd on the beach pier decks and boulevard sidewalk.
-   dress([],[[350,2027],[390,2028],[400,2189],[535,1900],[535,2260]]);w.pedestrians.people.slice(2).forEach((p,i)=>{p.color=['#4d8290','#d28c59','#718d58','#b86b69','#d7b75f'][i];p.skin=['#dca77f','#ae7655','#efc8a2','#c88e6d','#e8b88d'][i];p.pants=['#394653','#3b4651','#665342','#34414e','#51443e'][i];if(i===4){p.vx=24;p.vy=0;}});
+   dress([],[[350,2027],[390,2028],[400,2189],[535,1900],[535,2260],[460,2268],[490,2325],[420,2380]]);w.pedestrians.people.slice(2).forEach((p,i)=>{p.color=['#4d8290','#d28c59','#718d58','#b86b69','#d7b75f','#568578','#d18c62','#617b9b'][i];p.skin=['#dca77f','#ae7655','#efc8a2','#c88e6d','#e8b88d','#c78f69','#e3b58b','#af795a'][i];p.pants=['#394653','#3b4651','#665342','#34414e','#51443e','#324a48','#55423b','#394754'][i];if(i===4){p.vx=24;p.vy=0;}});
    w.objective={x:mia.x,y:mia.y,label:'TALK TO MIA'};w._shotObjectiveBanner='TALK TO MIA';w._homecomingShotMarkerSuppressed=true;w._homecomingScene=true;
    w.heat=0;w.wanted.heat=0;w.pinCallout('HOMECOMING','CORAL BEACH',{y:176});
    game.camera.x=540;game.camera.y=2040;game.camera.zoom=1.9;
