@@ -48,10 +48,9 @@ export const ShotDirector=class ShotDirector{
    // A broad staged boulevard segment gives the complete manoeuvre room on asphalt.
    const road=w.city.roads.find(r=>r.x1===r.x2&&r.x1===1020);if(road)road.width=150;
    const v=new Vehicle(x,y,'taxi','#e8bc3e',.62);v.speed=428;v.driver='player';v.passenger=true;v._handbrake=true;w.vehicles.push(v);w.driving=v;w.player.x=v.x;w.player.y=v.y;
-   // The sedan's forward line points directly through the taxi after a hard stop.
-   // Its nose sits one 14px screen-space gap from the taxi's right flank.
-   const flank={x:Math.cos(v.angle),y:Math.sin(v.angle)},sedanHeading=Math.atan2(-flank.x,flank.y),sedanOffset=16.2+21.5+7;
-   const oncoming=new Vehicle(x+flank.x*sedanOffset,y+flank.y*sedanOffset,'sedan','#42657b',sedanHeading);oncoming.speed=-125;oncoming.driver='traffic';oncoming._braking=true;w.effects.skids.push(
+   // Preserve the direct collision line while leaving a thumbnail-readable gap.
+   const flank={x:Math.cos(v.angle),y:Math.sin(v.angle)},sedanHeading=Math.atan2(-flank.x,flank.y),sedanOffset=16.2+21.5+25;
+   const oncoming=new Vehicle(x+flank.x*sedanOffset,y+flank.y*sedanOffset,'sedan','#42657b',sedanHeading);oncoming.speed=-125;oncoming.driver='traffic';oncoming._braking=true;oncoming._brakeGlow=true;w.effects.skids.push(
     {curve:[[x-66,y+53],[x-48,y+42],[x-31,y+25],[x-16,y+6]],width:2.3},
     {curve:[[x-60,y+62],[x-42,y+51],[x-25,y+34],[x-10,y+15]],width:2.3},
     {x:oncoming.x-flank.x*25,y:oncoming.y-flank.y*25,angle:sedanHeading,length:48,width:3.8,color:'rgba(9,12,14,.92)'},
