@@ -13,8 +13,10 @@ export const CityMap = class CityMap {
     this.roads.push({ x1: 635, y1: 0, x2: 635, y2: this.height, width: 18 });
     for (const district of this.districts) this._fillDistrict(district);
     for (let y = 60; y < this.height; y += 46) this.palms.push({ x: 482 + this.rng.range(-8, 18), y });
+    const las=this.districts.find(q=>q.id==='laspalmas');for(let i=0;i<24;i++)this.palms.push({x:this.rng.range(las.x+12,las.x+las.w-12),y:this.rng.range(las.y+12,las.y+las.h-12)});
     for (let y = 1900; y < 2600; y += 145) this.piers.push({ x1: 500, y1: y, x2: this.rng.range(280, 430), y2: y + this.rng.range(-24, 24), width: 18 });
-    for(let i=0;i<5;i++)this.boats.push({x:315+(i%2)*88,y:1830+i*155,a:(i%2?-.12:.1),l:58+(i%3)*12});
+    for(let i=0;i<11;i++)this.boats.push({x:300+(i%3)*62,y:1800+i*72,a:(i%2?-.12:.1),l:i%3===0?78:48});
+    this.buoys=[];for(let i=0;i<12;i++)this.buoys.push({x:190+(i%3)*95,y:1815+i*58});
     for(let i=0;i<7;i++)this.crates.push({x:565+(i%3)*30,y:2055+Math.floor(i/3)*45,w:23,h:19});
     this.runway = { x: 3930, y: 2430, w: 760, h: 90 }; this.terminal = { x: 3700, y: 2160, w: 260, h: 180 };
   }
@@ -24,7 +26,9 @@ export const CityMap = class CityMap {
       if (this.buildings.length >= CONFIG.entityCaps.buildings) return;
       const w = Math.min(step - 42, d.x + d.w - x - 18), dep = Math.min(step - 42, d.y + d.h - y - 18);
       if (w < 25 || dep < 25 || this._nearRoad(x + w / 2, y + dep / 2, w, dep)) continue;
-      const variation = this.rng.range(.76, 1.16); this.buildings.push({ x, y, w, d: dep, height: this.rng.range(minH, maxH) * variation, kind: d.kind, shade: this.rng.range(.86, 1.12), district: d.id, color: d.color, roof: d.roof });
+      const variation=this.rng.range(.76,1.16),height=this.rng.range(minH,maxH)*variation,base=parseInt(d.color.slice(1),16);
+      const color='#'+[16,8,0].map(s=>Math.max(0,Math.min(255,((base>>s)&255)+this.rng.range(-13,13)|0)).toString(16).padStart(2,'0')).join('');
+      this.buildings.push({x,y,w,d:dep,height,kind:d.kind,shade:this.rng.range(.86,1.12),district:d.id,color,roof:d.roof,treatment:this.rng.int(0,2),awning:d.id==='coral'&&y<d.y+155});
     }
   }
   _nearRoad(x, y, w, h) { return this.roads.some(r => r.x1 === r.x2 ? Math.abs(x-r.x1) < w/2+r.width/2+12 : y > r.y1-r.width/2-h/2-12 && y < r.y1+r.width/2+h/2+12); }

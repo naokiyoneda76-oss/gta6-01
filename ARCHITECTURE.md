@@ -44,13 +44,13 @@ Every source file in `game/src/` has one job and begins with its named export:
 
 ## Screenshot hand-in
 
-`shots.json` declares four seed-1 scenes: cover, chase, street, and downtown. `main.ts` verifies `game/index.html`, copies game and screenshots, writes the make.fun dossier, and logs handed-in file counts.
+`shots.json` declares four seed-1 scenes: cover, chase, marina, and taxi. `main.ts` verifies `game/index.html`, copies game and screenshots, writes the make.fun dossier, and logs handed-in file counts.
 
 ## Phase B: city life and law
 
 `traffic.js` exports `TrafficAI`; `pedestrians.js` exports `PedestrianCrowd`; `wanted.js` exports `WantedSystem`; `police.js` exports `PoliceForce`; and `effects.js` exports `Effects`. `World` owns these systems and updates them after the player; `heat` mirrors `wanted.heat`. The world also exposes `bustMeter` (0–1), `busted`, and its effects/pedestrian/traffic/police system instances. `WantedSystem.reportCrime(kind,x,y)` accepts `carjack`, `pedestrian`, `police`, `crash`, and `shot` reports. Effects expose `drawGround(ctx)` and `drawAir(ctx)`.
 
-`shots.js` stages deterministic `cover`, `chase`, `street`, and `downtown` scenes. `shots.json` declares four seed-1 capture entries; capture is performed separately.
+`shots.js` stages deterministic `cover`, `chase`, `marina`, `taxi`, `street`, `downtown`, `title`, and `map` scenes. The title scene uses the live boulevard world; map opens the full-screen district map. `shots.json` declares the four seed-1 hand-in scenes; capture is performed separately.
 
 ## Phase C1: combat, dialogue, and story
 
@@ -63,3 +63,14 @@ Every source file in `game/src/` has one job and begins with its named export:
 `missions.js` appends HEAVY METAL, SET UP, and SUNSET GETAWAY after missions 1–3. M4 loots a route-bound armoured truck then requires heat 0; M5 survives two marina ambush waves and stops a ledger car within three minutes; M6 pins HEAT 5 and reaches the airport cargo-plane checkpoint within six minutes. Completing M6 sets `world.ending` to `{timeMs,money,missionsDone}` and saves completion. `menus.js` presents the epilogue and run stats; Enter returns to free roam.
 
 `save.js` exports `SaveStore`, backed by localStorage key `palmera-heat-save-v1`. Saves contain money, next mission index, completion, garage vehicle types, and play time. `World` loads progress at startup, mission completion saves, and keeping a car at Mia’s garage records its type for respawn there. Title screen R resets the save. Marina world dressing includes deterministic boat and crate props, rendered by `CityRenderer`; dusk is a world `timeOfDay` tint.
+
+
+## Phase D1: side activities and sound
+
+`activities.js` exports `SideActivities`, owned as `world.activities`; it updates repeatable taxi fares, the Palmera Loop checkpoint race, and eight scenic postcards. Activity markers render through `CityRenderer`; activity progress and toast text are reflected in the world objective. The save retains additive `activities.raceBestMs` and `postcards` fields. Taxi fares use taxi type vehicles, a flagged nearby pedestrian, a destination timer, and clean driving bonuses.
+
+`audio.js` exports `SoundSynth`, owned as `world.audio`; all audio is synthesized with WebAudio after the first title confirm gesture. `M` toggles and persists audio mute using the additive `muted` save field. The master output is capped at 0.15.
+
+## Phase D2: world look and staged captures
+
+`World.setTimeOfDay('day'|'dusk'|'night')` selects renderer palette treatment without changing simulation time. Dusk supports story staging; night adds blue grading, lit windows, lamp pools, neon, and vehicle headlight cones. The deterministic city renderer draws roof treatments, shore and district ground dressing, parking, piers, runway, cargo plane, and lighthouse. Dialogue exposes additive `revealAll()` for fully readable staged lines.
