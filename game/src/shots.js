@@ -58,14 +58,14 @@ export const ShotDirector=class ShotDirector{
    // Clear the procedural crowd so the reunion has quiet space around it.
    const pedestrianTemplate=w.pedestrians.people[0];w.pedestrians.people=[];w.vehicles=[];w.traffic.cars=[];w.police.units=[];w.gang.crews=[];
    w.effects.skids=[];w.effects.particles=[];w.effects.impacts=[];w.effects.lightPools=[];w.combat.bullets=[];w.activities.flags=[];w.activities.cards=[];
-   w.player.x=618;w.player.y=2088;w.player.angle=Math.PI/2;w.player._cover=false;
-   const mia={...pedestrianTemplate,x:640,y:2088,vx:0,vy:0,angle:-Math.PI/2,timer:0,run:false,color:'#f2a85e'};
+   w.player.x=430;w.player.y=2086;w.player.angle=Math.PI/2;w.player._cover=false;w.player._homecomingScale=1.6;
+   const mia={...pedestrianTemplate,x:448,y:2086,vx:0,vy:0,angle:-Math.PI/2,timer:0,run:false,color:'#f2a85e',_shotScale:1.2,_homecomingPose:true};
    w.pedestrians.people=[mia];
    // A close parked sedan completes the small three-part reunion grouping.
-   const car=new Vehicle(665,2122,'sedan','#e8a078',-Math.PI/2+.22);car.speed=0;car.driver=null;w.vehicles.push(car);
+   const car=new Vehicle(490,2112,'sedan','#e8a078',-Math.PI/2+.22);car.speed=0;car.driver=null;w.vehicles.push(car);
    w.objective={x:mia.x,y:mia.y,label:'TALK TO MIA'};w._shotObjectiveBanner='TALK TO MIA';w._homecomingShotMarkerSuppressed=true;w._homecomingScene=true;
    w.heat=0;w.wanted.heat=0;w.pinCallout('HOMECOMING','CORAL BEACH',{y:176});
-   game.camera.x=640;game.camera.y=2088;game.camera.zoom=1.6;
+   game.camera.x=540;game.camera.y=2040;game.camera.zoom=1.9;
   }
   else if(name==='getaway'){
    w.setTimeOfDay('night');w.vehicles=[];w.traffic.cars=[];w.pedestrians.people=[];
