@@ -24,8 +24,11 @@ export const ShotDirector=class ShotDirector{
     ctx.moveTo(-2,-2);ctx.lineTo(-4,0);ctx.lineTo(-5.5,1); // trailing leg away from car
     ctx.moveTo(-2,-2);ctx.lineTo(0,0.5);ctx.lineTo(1,2); // planted leg beneath him
     ctx.stroke();ctx.fillStyle='#418b83';ctx.beginPath();ctx.ellipse(-2.5,-6.5,1.2,1.5,-.5,0,7);ctx.fill();ctx.fillStyle='#dbad83';ctx.beginPath();ctx.arc(-3.5,-9.5,1.5,0,7);ctx.fill();ctx.restore();};
-   // Keep street furniture and parked cars, with no additional pedestrians.
-   dress([[900,900,'sedan','#47747a',0],[1030,1130,'taxi','#e8bc3e',Math.PI/2]],[]);
+   // The cover frame is reserved for the staged car and its two figures.
+   // Camera.apply uses CONFIG's logical view divided by this zoom.
+   const halfW=1280/(2*game.camera.zoom),halfH=800/(2*game.camera.zoom),left=game.camera.x-halfW,right=game.camera.x+halfW,top=game.camera.y-halfH,bottom=game.camera.y+halfH;
+   w.city.parkedCars=w.city.parkedCars.filter(q=>q.x<left-16||q.x>right+16||q.y<top-16||q.y>bottom+16);
+   w.city.streetProps=w.city.streetProps.filter(q=>q.x<left-18||q.x>right+18||q.y<top-24||q.y>bottom+12);
    w.missions.index=1;w.missions.state='active';w.missions.car=v;w.objective=null;w._shotObjectiveBanner='GET IN THE CAR';w.heat=2;w.wanted.heat=2;
    w.effects.skids=[];w.effects.particles=w.effects.particles.filter(q=>!q._smoke);w.pinCallout('STOLEN!','FIRST WHEELS',{y:176});
   }
