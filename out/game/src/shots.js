@@ -39,9 +39,20 @@ export const ShotDirector=class ShotDirector{
    w.dialogue.play([{who:'ROSA',text:'Danny, get behind the crates! It’s an ambush — they’re coming in from the pier!'}]);w.dialogue.revealAll();w.objective={x:565,y:2102,label:'SURVIVE THE AMBUSH'};w.heat=2;w.wanted.heat=2;w.activities.flags=[];w.activities.cards=[];w.pinCallout('BETRAYAL','SURVIVE THE AMBUSH',{x:640,y:176});game.camera.x=675;game.camera.y=2050;game.camera.zoom=1.45;dress([[465,1950,'sedan','#47747a',Math.PI/2],[790,2180,'pickup','#526d59',Math.PI/2]],[[465,1990],[795,2110],[520,2190]]);
   }
   else if(name==='taxi'){
-   w.setTimeOfDay('day');const x=1030,y=1280,v=new Vehicle(x,y,'taxi','#e8bc3e',Math.PI/2+.26);v.speed=428;v.driver='player';v.passenger=true;w.vehicles.push(v);w.driving=v;w.player.x=v.x;w.player.y=v.y;
-   const oncoming=new Vehicle(x+67,y-2,'sedan','#42657b',Math.PI*1.5-.26);oncoming.speed=-125;oncoming.driver='traffic';oncoming._braking=true;w.effects.skids.push({curve:[x-88,y+58,x-63,y+41,x-28,y+28]},{curve:[x-81,y+68,x-56,y+51,x-21,y+38]});w.vehicles.push(oncoming);w.traffic.cars.push(oncoming);
-   w.objective=null;w._shotObjectiveBanner="FARE $185 • ROSA'S HOTEL";dress([[860,1180,'sedan','#9f473c',Math.PI/2],[1190,1455,'pickup','#526d59',Math.PI/2],[930,1510,'sedan','#d8d2bd',Math.PI/2]],[[855,1240],[850,1330],[1225,1280],[1200,1340]]);w.pinCallout('NEAR MISS!','+$25',{y:176});game.camera.x=x+35;game.camera.y=y+5;game.camera.zoom=1.75;
+   w.setTimeOfDay('day');const x=1020,y=1300;
+   // A broad staged boulevard segment gives the complete manoeuvre room on asphalt.
+   const road=w.city.roads.find(r=>r.x1===r.x2&&r.x1===1020);if(road)road.width=150;
+   const v=new Vehicle(x,y,'taxi','#e8bc3e',.62);v.speed=428;v.driver='player';v.passenger=true;v._handbrake=true;w.vehicles.push(v);w.driving=v;w.player.x=v.x;w.player.y=v.y;
+   // Taxi cuts diagonally across the oncoming lane; the sedan is still straight and braking.
+   const oncoming=new Vehicle(x-33,y-40,'sedan','#42657b',Math.PI);oncoming.speed=-125;oncoming.driver='traffic';oncoming._braking=true;w.effects.skids.push(
+    {curve:[[x-66,y+53],[x-48,y+42],[x-31,y+25],[x-16,y+6]],width:2.3},
+    {curve:[[x-60,y+62],[x-42,y+51],[x-25,y+34],[x-10,y+15]],width:2.3},
+    {x:x-33,y:y-62,angle:0,length:48},
+    {x:x-25,y:y-62,angle:0,length:48}
+   );w.vehicles.push(oncoming);w.traffic.cars.push(oncoming);
+   // Small smoke puffs sit at the taxi's two rear wheels.
+   for(let i=0;i<5;i++){const side=i%2?1:-1;w.effects.particles.push({x:x-Math.sin(.62)*24+Math.cos(.62)*side*10,y:y+Math.cos(.62)*24+Math.sin(.62)*side*10,vx:-4+i*1.5,vy:2,life:.8,size:5+i%2*2,color:'rgba(245,244,235,.72)',_smoke:true});}
+   w.objective=null;w._shotObjectiveBanner="FARE $185 • ROSA'S HOTEL";dress([],[[855,1240],[850,1330],[1225,1280],[1200,1340]]);w.pinCallout('NEAR MISS!','+$25',{y:176});game.camera.x=x;game.camera.y=y;game.camera.zoom=2;
   }
   else if(name==='street'){w.player.x=635;w.player.y=650;w.objective={x:720,y:1250,label:'MEET MIA AT THE GARAGE'};game.camera.x=635;game.camera.y=650;}
   else if(name==='downtown'){const v=new Vehicle(1920,780,'sedan','#42657b',Math.PI/2);v.speed=65;v.driver='player';w.vehicles.push(v);w.driving=v;w.heat=1;w.wanted.heat=1;w.objective={x:2200,y:780,label:'HEAD DOWNTOWN'};game.camera.x=v.x;game.camera.y=v.y;}
