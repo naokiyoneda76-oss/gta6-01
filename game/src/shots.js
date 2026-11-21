@@ -28,7 +28,7 @@ export const ShotDirector=class ShotDirector{
    w.setTimeOfDay('day');game.camera.zoom=3.8;game.camera.x=642;game.camera.y=1008;
    // FIRST WHEELS catches the handoff itself: a parked car and two distinct, staged poses.
    const v=new Vehicle(650,1020,'sport','#e94f45',Math.PI/2);v.speed=0;v.driver='player';v._doorOpen=true;v._coverDoorAngle=62;v._groundMarker=false;v._handbrake=false;v._coverDoor=true;w.vehicles=[v];w.traffic.cars=[];w.gang.crews=[];w._shotSpeed=0;
-   w.player.x=644;w.player.y=1007;w.player.angle=0;w.player._coverEntering=true;
+   w.player.x=634;w.player.y=1005;w.player.angle=0;w.player._coverEntering=true;
    const p=w.pedestrians.people[0];p.x=621;p.y=989;p.run=false;p._recoil=false;p._alarmed=false;p._coverOwnerStagger=true;p.timer=0;p.vx=0;p.vy=0;p.angle=0;
    w.city.looseItems=[];
    // The owner recoils away from the car; this shot has exactly two people.
@@ -53,7 +53,7 @@ export const ShotDirector=class ShotDirector{
    w.pinCallout('HIGH HEAT!','HEAT LEVEL 5',{y:176});game.camera.x=x+60;game.camera.y=y+66;game.camera.zoom=1.2;dress([[1120,790,'sedan','#d8d2bd',heading],[1370,650,'pickup','#526d59',heading]],[[1080,610],[1430,740],[1190,850]]);
   }
   else if(name==='marina'){
-   w.setTimeOfDay('dusk');for(const v of w.vehicles)if(v.type==='police'){v.type='sedan';v.color='#d8d2bd';}w.player.x=578;w.player.y=2040;w.player._cover=true;w._marinaShotMarker=true;w._homecomingShotMarkerSuppressed=true;w.objective={x:554,y:2074,label:'SURVIVE THE AMBUSH'};const coverCrate=w.city.crates.find(b=>b.x===565&&b.y===2055);if(coverCrate){coverCrate.x=545;coverCrate.w=30;coverCrate.h=28;}
+   w.setTimeOfDay('dusk');for(const v of w.vehicles)if(v.type==='police'){v.type='sedan';v.color='#d8d2bd';}w.player.x=578;w.player.y=2040;w.player._cover=true;w.player._marinaAim=true;w._marinaShotMarker=true;w._homecomingShotMarkerSuppressed=true;w.objective={x:554,y:2074,label:'SURVIVE THE AMBUSH'};const coverCrate=w.city.crates.find(b=>b.x===565&&b.y===2055);if(coverCrate){coverCrate.x=545;coverCrate.w=30;coverCrate.h=28;}
    // Pier-side and road-side teams converge on the marked crate cover.
    const pier=w.gang.spawnGroup(430,2050,3,{faction:'Ambush',color:'#813d4a'});
    pier.members.forEach((p,i)=>{p.x=405+i*24;p.y=2040+i*18;p.state='combat';p.angle=Math.atan2(w.player.y-p.y,w.player.x-p.x);p._flash=true;p._advancing=true;p.cover={x:p.x,y:p.y};});
@@ -73,8 +73,8 @@ export const ShotDirector=class ShotDirector{
    const pedestrianTemplate=w.pedestrians.people[0];w.pedestrians.people=[];w.vehicles=[];w.traffic.cars=[];w.police.units=[];w.gang.crews=[];
    w.effects.skids=[];w.effects.particles=[];w.effects.impacts=[];w.effects.lightPools=[];w.combat.bullets=[];w.activities.flags=[];w.activities.cards=[];
    // Stage the reunion on the promenade where the clamped camera can frame it.
-   const danny={...pedestrianTemplate,x:615,y:2090,vx:0,vy:0,angle:Math.PI/2,timer:0,run:false,color:'#cf694f',_shotScale:1,_homecomingPose:true};
-   const mia={...pedestrianTemplate,x:648,y:2090,vx:0,vy:0,angle:-Math.PI/2,timer:0,run:false,color:'#f2a85e',hairStyle:'long',_shotScale:1,_homecomingPose:true};
+   const danny={...pedestrianTemplate,x:664,y:2110,vx:0,vy:0,angle:Math.PI/2,timer:0,run:false,color:'#cf694f',_shotScale:1,_homecomingPose:true,pose:'idle',joints:{head:{x:0,y:-14.2},shoulder:[{x:-4.5,y:-10.5},{x:4.5,y:-10.5}],hip:{x:0,y:-2.2},elbow:[{x:-5.6,y:-7.5},{x:7,y:-13.5}],hand:[{x:-6,y:-4.1},{x:5,y:-17}],knee:[{x:-2.3,y:1.1},{x:2.3,y:1.1}],foot:[{x:-2.3,y:3},{x:2.3,y:3}]}};
+   const mia={...pedestrianTemplate,x:680,y:2116,vx:0,vy:0,angle:-Math.PI/2,timer:0,run:false,color:'#f2a85e',hairStyle:'long',_shotScale:1,_homecomingPose:true,pose:'walk',phase:1.4};
    w.player._homecomingHidden=true;w.pedestrians.people=[danny,mia];
    // Mia's sedan is parked on the inland shoulder beside her.
    const car=new Vehicle(692,2122,'sedan','#e8a078',.22);car.speed=0;car.driver=null;w.vehicles.push(car);
