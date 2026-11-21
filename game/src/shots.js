@@ -14,9 +14,18 @@ export const ShotDirector=class ShotDirector{
    w.player.x=637.22;w.player.y=1012.50;w.player.angle=-.61;w.player._coverEntering=true;
    const p=w.pedestrians.people[0];p.x=612.22;p.y=987.50;p.run=false;p._recoil=false;p._alarmed=false;p._coverOwnerStagger=true;p.timer=0;p.vx=0;p.vy=0;p.angle=0;
    w.city.looseItems=[];
-   const drawCrowd=w.pedestrians.draw.bind(w.pedestrians);w.pedestrians.draw=(ctx)=>{const people=w.pedestrians.people;w.pedestrians.people=people.filter(q=>q!==p);drawCrowd(ctx);w.pedestrians.people=people;ctx.save();ctx.translate(p.x,p.y);ctx.scale(2.55,2.55);ctx.rotate(-.42);ctx.fillStyle='rgba(30,28,22,.25)';ctx.beginPath();ctx.ellipse(0,1,2,1,0,0,7);ctx.fill();ctx.fillStyle=p.color;ctx.beginPath();ctx.ellipse(0,-3,1,-0+4,0,0,7);ctx.fill();ctx.fillStyle='#dbad83';ctx.beginPath();ctx.arc(0,-8,1.3,0,7);ctx.fill();ctx.strokeStyle=p.color;ctx.lineWidth=1;ctx.lineCap='round';ctx.beginPath();ctx.moveTo(-.4,-5);ctx.lineTo(-1.4,-4);ctx.lineTo(-2.2,-3);ctx.moveTo(.4,-5);ctx.lineTo(1.5,-3.5);ctx.lineTo(3.8,-2.5);ctx.moveTo(-.4,0);ctx.lineTo(-1.4,1);ctx.lineTo(-2.2,2);ctx.moveTo(.4,0);ctx.lineTo(1.4,1);ctx.lineTo(2.4,1.7);ctx.stroke();ctx.restore();};
-   // Surrounding boulevard life stays well clear of the theft action.
-   dress([[900,900,'sedan','#47747a',0],[1030,1130,'taxi','#e8bc3e',Math.PI/2]],[[590,1080],[610,1110],[570,1130]]);
+   // The owner recoils away from the car; this shot has exactly two people.
+   w.pedestrians.people=[p];
+   w.pedestrians.draw=ctx=>{ctx.save();ctx.translate(p.x,p.y);ctx.scale(2.55,2.55);ctx.scale(1,1);ctx.fillStyle='rgba(30,28,22,.25)';ctx.beginPath();ctx.ellipse(0,2,4,2,0,0,7);ctx.fill();
+    ctx.strokeStyle='#418b83';ctx.lineWidth=3.2;ctx.lineCap='round';ctx.beginPath();
+    ctx.moveTo(-2,-2.5);ctx.lineTo(-1.5,-5);ctx.lineTo(-2.5,-7); // shoulders and head lean away from car
+    ctx.moveTo(-1.5,-4.5);ctx.lineTo(1,-4);ctx.lineTo(4,-3.5); // car-side arm reaches toward the door
+    ctx.moveTo(-1.5,-4.5);ctx.lineTo(-4,-5.5);ctx.lineTo(-6,-7); // far arm flung away
+    ctx.moveTo(-2,-2);ctx.lineTo(-4,0);ctx.lineTo(-5.5,1); // trailing leg away from car
+    ctx.moveTo(-2,-2);ctx.lineTo(0,0.5);ctx.lineTo(1,2); // planted leg beneath him
+    ctx.stroke();ctx.fillStyle='#418b83';ctx.beginPath();ctx.ellipse(-2.5,-6.5,1.2,1.5,-.5,0,7);ctx.fill();ctx.fillStyle='#dbad83';ctx.beginPath();ctx.arc(-3.5,-9.5,1.5,0,7);ctx.fill();ctx.restore();};
+   // Keep street furniture and parked cars, with no additional pedestrians.
+   dress([[900,900,'sedan','#47747a',0],[1030,1130,'taxi','#e8bc3e',Math.PI/2]],[]);
    w.missions.index=1;w.missions.state='active';w.missions.car=v;w.objective=null;w._shotObjectiveBanner='GET IN THE CAR';w.heat=2;w.wanted.heat=2;
    w.effects.skids=[];w.effects.particles=w.effects.particles.filter(q=>!q._smoke);w.pinCallout('STOLEN!','FIRST WHEELS',{y:176});
   }
