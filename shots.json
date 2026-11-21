@@ -1,18 +1,6 @@
 [
-  {
-    "name": "1-cover.jpg",
-    "query": "?shot=cover&seed=1"
-  },
-  {
-    "name": "2-chase.jpg",
-    "query": "?shot=chase&seed=1"
-  },
-  {
-    "name": "3-marina.jpg",
-    "query": "?shot=marina&seed=1"
-  },
-  {
-    "name": "4-getaway.jpg",
-    "query": "?shot=getaway&seed=1"
-  }
+  {"name":"1-cover.jpg","query":"?shot=cover&seed=1"},
+  {"name":"2-homecoming.jpg","query":"?shot=homecoming&seed=1"},
+  {"name":"3-marina.jpg","query":"?shot=marina&seed=1"},
+  {"name":"4-getaway.jpg","query":"?shot=getaway&seed=1"}
 ]

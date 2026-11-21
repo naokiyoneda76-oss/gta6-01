@@ -53,6 +53,20 @@ export const ShotDirector=class ShotDirector{
    w.effects.impacts.push({x:604,y:2021},{x:574,y:2051},{x:596,y:2051},{x:road.members[0].x,y:road.members[0].y-9},{x:road.members[1].x,y:road.members[1].y-9},{x:road.members[2].x,y:road.members[2].y-9});
    w.dialogue.play([{who:'ROSA',text:'Danny, get behind the crates! It’s an ambush — they’re coming in from the pier!'}]);w.dialogue.revealAll();w.heat=2;w.wanted.heat=2;w.activities.flags=[];w.activities.cards=[];w.pinCallout('BETRAYAL','SURVIVE THE AMBUSH',{x:640,y:176});game.camera.x=640;game.camera.y=2048;game.camera.zoom=1.45;dress([[465,1950,'sedan','#47747a',Math.PI/2],[790,2180,'pickup','#526d59',Math.PI/2]],[[465,1990],[795,2110],[520,2190]]);
   }
+  else if(name==='homecoming'){
+   w.setTimeOfDay('dusk');
+   // Clear the procedural crowd so the reunion has quiet space around it.
+   const pedestrianTemplate=w.pedestrians.people[0];w.pedestrians.people=[];w.vehicles=[];w.traffic.cars=[];w.police.units=[];w.gang.crews=[];
+   w.effects.skids=[];w.effects.particles=[];w.effects.impacts=[];w.effects.lightPools=[];w.combat.bullets=[];w.activities.flags=[];w.activities.cards=[];
+   w.player.x=618;w.player.y=2088;w.player.angle=Math.PI/2;w.player._cover=false;
+   const mia={...pedestrianTemplate,x:640,y:2088,vx:0,vy:0,angle:-Math.PI/2,timer:0,run:false,color:'#f2a85e'};
+   w.pedestrians.people=[mia];
+   // A close parked sedan completes the small three-part reunion grouping.
+   const car=new Vehicle(665,2122,'sedan','#e8a078',-Math.PI/2+.22);car.speed=0;car.driver=null;w.vehicles.push(car);
+   w.objective={x:mia.x,y:mia.y,label:'TALK TO MIA'};w._shotObjectiveBanner='TALK TO MIA';w._homecomingShotMarkerSuppressed=true;w._homecomingScene=true;
+   w.heat=0;w.wanted.heat=0;w.pinCallout('HOMECOMING','CORAL BEACH',{y:176});
+   game.camera.x=640;game.camera.y=2088;game.camera.zoom=1.6;
+  }
   else if(name==='getaway'){
    w.setTimeOfDay('night');w.vehicles=[];w.traffic.cars=[];w.pedestrians.people=[];
    const x=3985,y=2528,heading=.61,v=new Vehicle(x,y,'sport','#e94f45',heading);v.speed=820;v.driver='player';v._handbrake=true;v._headlights=true;v._groundMarker=true;w.vehicles.push(v);w.driving=v;w.player.x=x;w.player.y=y;
