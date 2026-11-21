@@ -33,11 +33,11 @@ export const ShotDirector=class ShotDirector{
    // Pier-side and road-side teams converge on the marked crate cover.
    const pier=w.gang.spawnGroup(430,2050,3,{faction:'Ambush',color:'#813d4a'});
    pier.members.forEach((p,i)=>{p.x=405+i*24;p.y=2040+i*18;p.state='combat';p.angle=Math.atan2(w.player.y-p.y,w.player.x-p.x);p._flash=true;p._advancing=true;p.cover={x:p.x,y:p.y};});
-   const road=w.gang.spawnGroup(760,2035,3,{faction:'Ambush',color:'#813d4a'});
-   road.members.forEach((p,i)=>{p.x=740+i*24;p.y=2020+i*18;p.state='combat';p.angle=Math.atan2(w.player.y-p.y,w.player.x-p.x);p._flash=true;p._advancing=true;p.cover={x:p.x,y:p.y};});
+   const road=w.gang.spawnGroup(820,1880,3,{faction:'Ambush',color:'#813d4a'});
+   road.members.forEach((p,i)=>{p.x=820+i*24;p.y=1880+i*18;p.state='combat';p.angle=Math.atan2(w.player.y-p.y,w.player.x-p.x);p._flash=true;p._advancing=true;p.cover={x:p.x,y:p.y};});
    // Two incoming rounds strike the front crate face from distinct bearings.
    w.combat.bullets.push({x:574,y:2051,prevX:420,prevY:2046,vx:0,vy:0,life:1,range:300,owner:'gang'});
-   w.combat.bullets.push({x:596,y:2051,prevX:790,prevY:2056,vx:0,vy:0,life:1,range:300,owner:'gang'});
+   w.combat.bullets.push({x:596,y:2051,prevX:860,prevY:1870,vx:0,vy:0,life:1,range:300,owner:'gang'});
    // Danny returns a round toward the road-side attackers.
    w.combat.bullets.push({x:790,y:2010,prevX:580,y:2081,vx:0,vy:0,life:1,range:300,owner:'player'});
    w.effects.impacts.push({x:574,y:2051},{x:596,y:2051},{x:580,y:2081,muzzle:true});w.effects.burst(574,2051,10);w.effects.burst(596,2051,10);w.effects.burst(580,2081,5);
