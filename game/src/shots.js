@@ -53,22 +53,19 @@ export const ShotDirector=class ShotDirector{
    w.effects.impacts.push({x:574,y:2051},{x:596,y:2051},{x:road.members[0].x,y:road.members[0].y-9},{x:road.members[1].x,y:road.members[1].y-9},{x:road.members[2].x,y:road.members[2].y-9});
    w.dialogue.play([{who:'ROSA',text:'Danny, get behind the crates! It’s an ambush — they’re coming in from the pier!'}]);w.dialogue.revealAll();w.heat=2;w.wanted.heat=2;w.activities.flags=[];w.activities.cards=[];w.pinCallout('BETRAYAL','SURVIVE THE AMBUSH',{x:640,y:176});game.camera.x=640;game.camera.y=2048;game.camera.zoom=1.45;dress([[465,1950,'sedan','#47747a',Math.PI/2],[790,2180,'pickup','#526d59',Math.PI/2]],[[465,1990],[795,2110],[520,2190]]);
   }
-  else if(name==='taxi'){
-   w.setTimeOfDay('day');const x=1020,y=1300;
-   // A broad staged boulevard segment gives the complete manoeuvre room on asphalt.
-   const road=w.city.roads.find(r=>r.x1===r.x2&&r.x1===1020);if(road)road.width=150;
-   const v=new Vehicle(x,y,'taxi','#e8bc3e',.62);v.speed=428;v.driver='player';v.passenger=true;v._handbrake=true;w.vehicles.push(v);w.driving=v;w.player.x=v.x;w.player.y=v.y;
-   // Preserve the direct collision line while leaving a thumbnail-readable gap.
-   const flank={x:Math.cos(v.angle),y:Math.sin(v.angle)},sedanHeading=Math.atan2(-flank.x,flank.y),sedanOffset=16.2+21.5+25;
-   const oncoming=new Vehicle(x+flank.x*sedanOffset,y+flank.y*sedanOffset,'sedan','#42657b',sedanHeading);oncoming.speed=-125;oncoming.driver='traffic';oncoming._braking=true;oncoming._brakeGlow=true;w.effects.skids.push(
-    {curve:[[x-66,y+53],[x-48,y+42],[x-31,y+25],[x-16,y+6]],width:2.3},
-    {curve:[[x-60,y+62],[x-42,y+51],[x-25,y+34],[x-10,y+15]],width:2.3},
-    {x:oncoming.x-flank.x*25,y:oncoming.y-flank.y*25,angle:sedanHeading,length:48,width:3.8,color:'rgba(9,12,14,.92)'},
-    {x:oncoming.x-flank.x*25+flank.y*8,y:oncoming.y-flank.y*25-flank.x*8,angle:sedanHeading,length:48,width:3.8,color:'rgba(9,12,14,.92)'}
-   );w.vehicles.push(oncoming);w.traffic.cars.push(oncoming);
-   // Small smoke puffs sit at the taxi's two rear wheels.
-   for(let i=0;i<5;i++){const side=i%2?1:-1;w.effects.particles.push({x:x-Math.sin(.62)*24+Math.cos(.62)*side*10,y:y+Math.cos(.62)*24+Math.sin(.62)*side*10,vx:-4+i*1.5,vy:2,life:.8,size:5+i%2*2,color:'rgba(245,244,235,.72)',_smoke:true});}
-   w.objective=null;w._shotObjectiveBanner="FARE $185 • ROSA'S HOTEL";dress([],[[855,1240],[850,1330],[1225,1280],[1200,1340]]);w.pinCallout('NEAR MISS!','+$25',{y:176});game.camera.x=x;game.camera.y=y;game.camera.zoom=2;
+  else if(name==='getaway'){
+   w.setTimeOfDay('night');w.vehicles=[];w.traffic.cars=[];w.pedestrians.people=[];
+   const x=3985,y=2528,heading=.61,v=new Vehicle(x,y,'sport','#e94f45',heading);v.speed=820;v.driver='player';v._handbrake=true;v._headlights=true;v._groundMarker=true;w.vehicles.push(v);w.driving=v;w.player.x=x;w.player.y=y;
+   // Keep the ramp, hero car, and police funnel on one clean apron sightline.
+   const ramp={x:4119,y:2470};w.objective={x:ramp.x,y:ramp.y,label:'REACH THE CARGO PLANE'};w._shotObjectiveBanner='REACH THE CARGO PLANE';w._shotSpeed=122;w.heat=w.wanted.heat=5;
+   w.missions.index=5;w.missions.state='active';
+   const forward={x:Math.sin(heading),y:-Math.cos(heading)},lateral={x:Math.cos(heading),y:Math.sin(heading)};
+   const cops=[[3920,2558],[3865,2506],[3820,2590]];
+   w.police.units=[];for(let i=0;i<cops.length;i++){const [cx,cy]=cops[i],a=heading+(i-1)*.13,q=new Vehicle(cx,cy,'police','#e7e4d8',a);q.driver='police';q.speed=95;q._headlights=true;q._braking=true;q._brakeGlow=true;w.vehicles.push(q);w.police.units.push(q);w.effects.lightPool(cx,cy,'rgba(50,105,255,.9)',132);w.effects.lightPool(cx,cy,'rgba(255,44,54,.88)',120);}
+   // Paired curved tyre trails and smoke trail the red car through the turn.
+   for(let i=0;i<15;i++){const back=30+i*7,side=(i%2?1:-1)*11;w.effects.skid(x-forward.x*back+lateral.x*side,y-forward.y*back+lateral.y*side,heading,30);}
+   for(let i=0;i<9;i++)w.effects.particles.push({x:x-forward.x*(25+i*8)+lateral.x*(i%2?10:-10),y:y-forward.y*(25+i*8)+lateral.y*(i%2?10:-10),vx:-forward.x*10,vy:-forward.y*10,life:1.2,size:10+(i%3)*3,color:'rgba(246,244,235,.68)',_smoke:true,angle:heading});
+   w.pinCallout('ESCAPE!','SUNSET GETAWAY',{y:176});game.camera.x=4180;game.camera.y=2485;game.camera.zoom=1.5;dress([],[]);
   }
   else if(name==='street'){w.player.x=635;w.player.y=650;w.objective={x:720,y:1250,label:'MEET MIA AT THE GARAGE'};game.camera.x=635;game.camera.y=650;}
   else if(name==='downtown'){const v=new Vehicle(1920,780,'sedan','#42657b',Math.PI/2);v.speed=65;v.driver='player';w.vehicles.push(v);w.driving=v;w.heat=1;w.wanted.heat=1;w.objective={x:2200,y:780,label:'HEAD DOWNTOWN'};game.camera.x=v.x;game.camera.y=v.y;}

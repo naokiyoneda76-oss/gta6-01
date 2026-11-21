@@ -50,8 +50,25 @@ export const CityRenderer = class CityRenderer {
     for(const [x,y] of [[950,510],[2670,1740],[3820,1850]]){c.fillStyle='#555359';c.fillRect(x,y,112,82);c.strokeStyle='#e2d6bb';for(let k=0;k<4;k++){c.strokeRect(x+6+k*26,y+8,22,34);c.fillStyle=['#c7d0c7','#d65e48','#e4c65a','#477b82'][k];c.fillRect(x+9+k*26,y+14,16,28);}}
     for(const b of w.city.boats||[]){c.save();c.translate(b.x,b.y);c.rotate(b.a);c.fillStyle='rgba(20,45,48,.35)';c.beginPath();c.ellipse(3,5,b.l*.58,13,0,0,Math.PI*2);c.fill();c.fillStyle='#fff7e9';c.beginPath();c.moveTo(-b.l/2,-10);c.lineTo(b.l/2,-10);c.lineTo(b.l*.36,10);c.lineTo(-b.l*.4,10);c.closePath();c.fill();c.fillStyle='#318d91';c.fillRect(-b.l*.3,5,b.l*.6,3);c.fillStyle='#b85f48';c.fillRect(-8,-8,19,14);c.restore();}for(const b of w.city.buoys||[]){c.fillStyle='#e56a4e';c.beginPath();c.arc(b.x,b.y,4,0,7);c.fill();}
     const runway=w.city.runway; c.fillStyle='#55545a';c.fillRect(runway.x,runway.y,runway.w,runway.h);c.fillStyle='#e9dfc3';for(let x=runway.x+20;x<runway.x+runway.w-20;x+=40)c.fillRect(x,runway.y+42,20,5);for(let x of [runway.x+18,runway.x+runway.w-30])for(let y=runway.y+18;y<runway.y+70;y+=12)c.fillRect(x,y,12,5);
-    // Cargo plane and lighthouse make the two waterfront landmarks legible at city scale.
-    c.fillStyle='#e6dfcb';c.fillRect(4210,2470,170,28);c.fillRect(4277,2444,38,80);c.fillRect(4230,2448,28,70);c.fillStyle='#4a7182';c.fillRect(4205,2478,180,5);
+    // Top-down cargo plane, nose east, with an open west-facing loading ramp.
+    c.save();c.translate(4300,2470);
+    c.fillStyle='rgba(16,24,26,.28)';c.beginPath();c.ellipse(4,9,157,35,0,0,Math.PI*2);c.fill();
+    // swept main wing and tailplane
+    c.fillStyle='#d8d1bf';c.beginPath();c.moveTo(-49,-12);c.lineTo(-5,-74);c.lineTo(42,-72);c.lineTo(20,-12);c.lineTo(20,12);c.lineTo(42,72);c.lineTo(-5,74);c.lineTo(-49,12);c.closePath();c.fill();
+    c.fillStyle='#4a7182';c.beginPath();c.moveTo(-20,-52);c.lineTo(-8,-70);c.lineTo(1,-69);c.lineTo(-7,-22);c.lineTo(-7,22);c.lineTo(1,69);c.lineTo(-8,70);c.lineTo(-20,52);c.closePath();c.fill();
+    c.fillStyle='#e8e1cf';c.fillRect(-145,-25,58,50);c.fillRect(-156,-37,110,17);c.fillRect(-156,20,110,17);
+    c.fillStyle='#c95345';c.fillRect(-153,-35,24,70);
+    // ramp drops west from the cargo opening onto the apron
+    c.fillStyle='#9c9789';c.beginPath();c.moveTo(-145,-17);c.lineTo(-181,-32);c.lineTo(-181,32);c.lineTo(-145,17);c.closePath();c.fill();
+    c.fillStyle='#252d31';c.beginPath();c.moveTo(-145,-14);c.lineTo(-121,-12);c.lineTo(-121,12);c.lineTo(-145,14);c.closePath();c.fill();
+    // fuselage, rounded nose facing right
+    c.fillStyle='#eee9da';c.beginPath();c.moveTo(-151,-15);c.quadraticCurveTo(-160,-15,-160,-8);c.lineTo(-160,8);c.quadraticCurveTo(-160,15,-151,15);c.lineTo(119,15);c.quadraticCurveTo(149,15,150,0);c.quadraticCurveTo(149,-15,119,-15);c.closePath();c.fill();
+    c.fillStyle='#4a7182';c.fillRect(-151,7,274,5);c.fillStyle='#c95345';c.fillRect(-154,-14,18,28);
+    c.fillStyle='#26383e';c.beginPath();c.moveTo(117,-13);c.quadraticCurveTo(145,-11,147,0);c.quadraticCurveTo(144,3,137,4);c.lineTo(117,2);c.closePath();c.fill();
+    c.fillStyle='#35464a';for(let wx=-112;wx<105;wx+=22){c.beginPath();c.arc(wx,-4,2.1,0,Math.PI*2);c.fill();}
+    // four under-wing nacelles, two on either side of the fuselage
+    for(const [ex,ey] of [[-33,-47],[19,-38],[-33,47],[19,38]]){c.fillStyle='#a9a698';c.beginPath();c.roundRect(ex-12,ey-6,34,12,6);c.fill();c.fillStyle='#59666a';c.fillRect(ex+13,ey-4,5,8);}
+    c.restore();
     c.fillStyle='#e7ddc5';c.fillRect(408,2088,18,77);c.fillStyle='#c85e4c';c.fillRect(405,2080,24,12);c.fillStyle='#ffd878';c.shadowColor='#ffdf84';c.shadowBlur=18;c.beginPath();c.arc(417,2078,6,0,7);c.fill();c.shadowBlur=0;
     const t=w.city.terminal;c.fillStyle='#bbb29e';c.fillRect(t.x,t.y,t.w,t.h);
   }
