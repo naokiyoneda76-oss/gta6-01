@@ -7,6 +7,15 @@ export const ShotDirector=class ShotDirector{
   game.camera._homecomingWestClamp=0;const seed=Number(new URLSearchParams(location.search).get('seed')||1);game.rng=new SeededRandom(seed);game.world=new World(game.rng);const w=game.world;game.screen='play';const dress=(cars,people)=>{for(const [x,y,type,color,a] of cars){const q=new Vehicle(x,y,type,color,a);q.driver='traffic';q.speed=45;w.vehicles.push(q);w.traffic.cars.push(q);}for(const [x,y] of people){const p=w.pedestrians.people[w.pedestrians.people.length-1];const q={...p,x,y,vx:0,vy:0,angle:0,timer:0,run:false};w.pedestrians.people.push(q);}};
   if(name==='title'){game.screen='title';game.camera.x=535;game.camera.y=950;game.time=8;return false;}
   if(name==='map'){w._showMap=true;w.objective={x:820,y:950,label:'MISSION: MEET MIA'};game.camera.x=535;game.camera.y=950;return true;}
+  if(name==='styletest'){
+   w.setTimeOfDay('day');w._styleTest=true;w.vehicles=[];w.traffic.cars=[];w.pedestrians.people=[];w.gang.crews=[];w.city.buildings=[];w.city.parkedCars=[];w.city.streetProps=[];w.city.palms=[];w.city.roads=[];
+   w.player.x=610;w.player.y=1005;w.player.angle=0;w.player._homecomingHidden=false;w.player._coverEntering=false;w.player._cover=false;
+   const npc={x:568,y:1002,vx:30,vy:0,angle:0,timer:0,run:false,color:'#4b8290',skin:'#dca77f',pants:'#394653',hair:'#302923',hairStyle:'long'};w.pedestrians.people=[npc];
+   const hero=new Vehicle(690,1010,'sport','#e94f45',-.15),taxi=new Vehicle(825,1010,'taxi','#e8bc3e',.1);hero.driver='player';w.vehicles.push(hero,taxi);
+   w.city.roads.push({x1:500,y1:1100,x2:1050,y2:1100,width:110});w.city.palms.push({x:535,y:1065},{x:1030,y:1065});
+   w.city.buildings.push({x:565,y:905,w:110,d:62,height:28,kind:'house',house:true,color:'#e9b68b',roof:'#d98768',district:'coral',treatment:0},{x:860,y:905,w:125,d:65,height:32,kind:'shop',archetype:'shop',commercial:true,awning:true,color:'#c7b9a0',roof:'#d18b70',district:'coral',treatment:1});
+   w._styleCrates=[{x:740,y:1038,w:18,h:18},{x:766,y:1042,w:18,h:18}];game.camera.x=780;game.camera.y=1010;game.camera.zoom=1.8;w.objective=null;w.heat=0;w.wanted.heat=0;return true;
+  }
   if(name==='cover'){
    w.setTimeOfDay('day');game.camera.zoom=3.6;game.camera.x=640;game.camera.y=1000;
    // FIRST WHEELS catches the handoff itself: a parked car and two distinct, staged poses.
@@ -16,14 +25,7 @@ export const ShotDirector=class ShotDirector{
    w.city.looseItems=[];
    // The owner recoils away from the car; this shot has exactly two people.
    w.pedestrians.people=[p];
-   w.pedestrians.draw=ctx=>{ctx.save();ctx.translate(p.x,p.y);ctx.scale(2.55,2.55);ctx.scale(1,1);ctx.fillStyle='rgba(30,28,22,.25)';ctx.beginPath();ctx.ellipse(0,2,4,2,0,0,7);ctx.fill();
-    ctx.strokeStyle='#418b83';ctx.lineWidth=3.2;ctx.lineCap='round';ctx.beginPath();
-    ctx.moveTo(-2,-2.5);ctx.lineTo(-1.5,-5);ctx.lineTo(-2.5,-7); // shoulders and head lean away from car
-    ctx.moveTo(-1.5,-4.5);ctx.lineTo(1,-4);ctx.lineTo(4,-3.5); // car-side arm reaches toward the door
-    ctx.moveTo(-1.5,-4.5);ctx.lineTo(-4,-5.5);ctx.lineTo(-6,-7); // far arm flung away
-    ctx.moveTo(-2,-2);ctx.lineTo(-4,0);ctx.lineTo(-5.5,1); // trailing leg away from car
-    ctx.moveTo(-2,-2);ctx.lineTo(0,0.5);ctx.lineTo(1,2); // planted leg beneath him
-    ctx.stroke();ctx.fillStyle='#418b83';ctx.beginPath();ctx.ellipse(-2.5,-6.5,1.2,1.5,-.5,0,7);ctx.fill();ctx.fillStyle='#dbad83';ctx.beginPath();ctx.arc(-3.5,-9.5,1.5,0,7);ctx.fill();ctx.restore();};
+   p.color='#418b83';p.skin='#dbad83';p.pants='#394653';p.hair='#302923';p.hairStyle='short';
    // The cover frame is reserved for the staged car and its two figures.
    // Camera.apply uses CONFIG's logical view divided by this zoom.
    const halfW=1280/(2*game.camera.zoom),halfH=800/(2*game.camera.zoom),left=game.camera.x-halfW,right=game.camera.x+halfW,top=game.camera.y-halfH,bottom=game.camera.y+halfH;
@@ -64,7 +66,7 @@ export const ShotDirector=class ShotDirector{
    // The renderer clamps camera.x to 640 (its half-width); keep the round-37
    // camera setup exactly so the lighthouse remains the screen-space anchor.
    const danny={...pedestrianTemplate,x:445,y:2090,vx:0,vy:0,angle:Math.PI/2,timer:0,run:false,color:'#cf694f',_shotScale:1.4,_homecomingPose:true};
-   const mia={...pedestrianTemplate,x:478,y:2090,vx:0,vy:0,angle:-Math.PI/2,timer:0,run:false,color:'#f2a85e',_shotScale:1.4,_homecomingPose:true};
+   const mia={...pedestrianTemplate,x:478,y:2090,vx:0,vy:0,angle:-Math.PI/2,timer:0,run:false,color:'#f2a85e',hairStyle:'long',_shotScale:1.4,_homecomingPose:true};
    w.player._homecomingHidden=true;w.pedestrians.people=[danny,mia];
    // Park on the inland shoulder beside the sand staging area.
    const car=new Vehicle(525,2115,'sedan','#e8a078',-Math.PI/2+.22);car.speed=0;car.driver=null;w.vehicles.push(car);
