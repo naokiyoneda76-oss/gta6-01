@@ -25,13 +25,13 @@ export const ShotDirector=class ShotDirector{
    w._styleCrates=[{x:700,y:1028,w:18,h:18},{x:724,y:1032,w:18,h:18}];game.camera.x=842;game.camera.y=1060;game.camera.zoom=1.55;w.objective=null;w.heat=0;w.wanted.heat=0;return true;
   }
   if(name==='cover'){
-   w.setTimeOfDay('day');game.camera.zoom=4.6;game.camera.x=518;game.camera.y=1050;
+   w.setTimeOfDay('day');game.camera.zoom=4.6;game.camera.x=553;game.camera.y=1058;
    // Coral Beach boulevard at X=535; the car points north and its driver door opens west.
-   const v=new Vehicle(535,1050,'sport','#e94f45',0);v.speed=0;v.driver='player';v._doorOpen=true;v._coverDoorAngle=62;v._groundMarker=false;v._handbrake=false;v._coverDoor=true;w.vehicles=[v];w.traffic.cars=[];w.gang.crews=[];w._shotSpeed=0;
+   const v=new Vehicle(535,1045,'sport','#e94f45',0);v.speed=0;v.driver='player';v._doorOpen=true;v._coverDoorAngle=62;v._groundMarker=false;v._handbrake=false;v._coverDoor=true;w.vehicles=[v];w.traffic.cars=[];w.gang.crews=[];w._shotSpeed=0;
    // Sport driver door: hinge (-10.35,-1.68), panel L=14.28, W=11.96.
-   // At 62 degrees the opening centre is hinge + half panel vectors = (-16.65,-5.03), world (515.53,1044.97).
-   w.player.x=505;w.player.y=1051;w.player.angle=0;w.player._coverShove={head:{x:0,y:-14.2},shoulder:[{x:-4.5,y:-10.5},{x:4.5,y:-10.5}],hip:{x:0,y:-2.2},elbow:[{x:-3,y:-7.5},{x:8,y:-6.5}],hand:[{x:-1,y:-4},{x:14,y:-4}],knee:[{x:-2.3,y:1.1},{x:2.3,y:1.1}],foot:[{x:-2.3,y:3},{x:2.3,y:3}]};w._shotHudMode='pistol';
-   const p=w.pedestrians.people[0];p.x=475;p.y=1051;p.run=false;p._recoil=false;p._alarmed=false;p._coverOwnerStagger=true;p.pose='stumble';p.joints={head:{x:-1.2,y:-15.6},shoulder:[{x:-4.6,y:-10.6},{x:4.4,y:-10.2}],hip:{x:-0.3,y:-2.0},elbow:[{x:-8.8,y:-9.6},{x:7.4,y:-4.6}],hand:[{x:-11.6,y:-13.8},{x:9.5,y:0.5}],knee:[{x:-4.6,y:0.6},{x:3.4,y:1.6}],foot:[{x:-7.6,y:0.2},{x:4.8,y:4.6}]};p.timer=0;p.vx=0;p.vy=0;p.angle=0;
+   // At 62 degrees the opening centre is hinge + half panel vectors = (-16.65,-5.03), world (515.53,1039.97).
+   w.player.x=524;w.player.y=1051;w.player.angle=0;w.player._coverShove={head:{x:0,y:-14.2},shoulder:[{x:-4.5,y:-10.5},{x:4.5,y:-10.5}],hip:{x:0,y:-2.2},elbow:[{x:-3,y:-7.5},{x:8,y:-6.5}],hand:[{x:-1,y:-4},{x:14,y:-4}],knee:[{x:-2.3,y:1.1},{x:2.3,y:1.1}],foot:[{x:-2.3,y:3},{x:2.3,y:3}]};w._shotHudMode='pistol';
+   const p=w.pedestrians.people[0];p.x=494;p.y=1051;p.run=false;p._recoil=false;p._alarmed=false;p._coverOwnerStagger=true;p.pose='stumble';p.joints={head:{x:-1.2,y:-15.6},shoulder:[{x:-4.6,y:-10.6},{x:4.4,y:-10.2}],hip:{x:-0.3,y:-2.0},elbow:[{x:-8.8,y:-9.6},{x:7.4,y:-4.6}],hand:[{x:-11.6,y:-13.8},{x:9.5,y:0.5}],knee:[{x:-4.6,y:0.6},{x:3.4,y:1.6}],foot:[{x:-7.6,y:0.2},{x:4.8,y:4.6}]};p.timer=0;p.vx=0;p.vy=0;p.angle=0;
    w.pedestrians.people=[p];p.color='#C2AA78';p.skin='#dbad83';p.pants='#51483a';p.hair='#302923';p.hairStyle='short';
    // Staggered roadside traffic gives two parked cars in the boulevard view.
    w.city.parkedCars=w.city.parkedCars.filter(q=>q.x<430||q.x>650||Math.abs(q.y-1050)>300);
