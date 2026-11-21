@@ -5,7 +5,7 @@ export const CityRenderer = class CityRenderer {
   frame(fn) { const c=this.ctx; c.setTransform(1,0,0,1,0,0); c.fillStyle='#14272c'; c.fillRect(0,0,this.canvas.width,this.canvas.height); c.setTransform(this.scale,0,0,this.scale,this.ox,this.oy); fn(c); }
   overlay(fn) { const c=this.ctx; c.setTransform(this.scale,0,0,this.scale,this.ox,this.oy); fn(c); }
   _visible(x,y,w,h,camera) { return x+w>camera.x-CONFIG.width/2-200 && x<camera.x+CONFIG.width/2+200 && y+h>camera.y-CONFIG.height/2-260 && y<camera.y+CONFIG.height/2+260; }
-  draw(ctx, world, camera) { this.frame(c=>{ c.save(); camera.apply(c); this._city(c,world,camera);world.effects.drawGround(c);world.pedestrians.draw(c);for(const v of world.vehicles)v.draw(c,camera,world);world.player.draw(c,camera,world);if(world.driving)world.driving.draw(c,camera,world);world.effects.drawAir(c); this.drawObjective(c,world,camera); c.restore(); }); }
+  draw(ctx, world, camera) { this.frame(c=>{ c.save(); camera.apply(c); this._city(c,world,camera);world.effects.drawGround(c);world.pedestrians.draw(c);world.gang.draw(c);for(const v of world.vehicles)v.draw(c,camera,world);world.player.draw(c,camera,world);if(world.driving)world.driving.draw(c,camera,world);if(world.player._cover){for(const b of world.city.crates||[]){c.fillStyle='#75533a';c.fillRect(b.x,b.y-b.h,b.w,b.h);c.strokeStyle='#c39a62';c.strokeRect(b.x,b.y-b.h,b.w,b.h);}}world.combat.draw(c);world.effects.drawAir(c); this.drawObjective(c,world,camera); if(world.timeOfDay==='dusk'){c.fillStyle='rgba(116,65,88,.20)';c.fillRect(camera.x-CONFIG.width/2,camera.y-CONFIG.height/2,CONFIG.width,CONFIG.height);} c.restore(); }); }
   _city(c,w,camera) {
     const left=camera.x-CONFIG.width/2-5, top=camera.y-CONFIG.height/2-5;
     c.fillStyle=CONFIG.palette.sea; c.fillRect(left,top,CONFIG.width+10,CONFIG.height+10);
@@ -24,6 +24,7 @@ export const CityRenderer = class CityRenderer {
       if(b.height>60){c.fillStyle='rgba(255,224,157,.65)';for(let wx=b.x+9;wx<b.x+b.w-4;wx+=18)for(let wy=b.y+9;wy<b.y+b.d-4;wy+=20)c.fillRect(wx,wy,4,5);}
     }
     for(const p of w.city.piers){ c.fillStyle='#9c7856';c.fillRect(p.x2,p.y2-7,p.x1-p.x2,p.width); for(let x=p.x2;x<p.x1;x+=28)c.fillRect(x,p.y2-9,5,22); }
+    for(const b of w.city.boats||[]){c.save();c.translate(b.x,b.y);c.rotate(b.a);c.fillStyle='rgba(20,45,48,.35)';c.beginPath();c.ellipse(3,5,b.l*.58,13,0,0,Math.PI*2);c.fill();c.fillStyle='#f1e5c9';c.beginPath();c.moveTo(-b.l/2,-10);c.lineTo(b.l/2,-10);c.lineTo(b.l*.36,10);c.lineTo(-b.l*.4,10);c.closePath();c.fill();c.fillStyle='#b85f48';c.fillRect(-8,-8,19,14);c.fillStyle='#fff0cb';c.fillRect(-2,-24,2,16);c.restore();}
     const runway=w.city.runway; c.fillStyle='#55545a';c.fillRect(runway.x,runway.y,runway.w,runway.h);c.fillStyle='#e9dfc3';for(let x=runway.x+20;x<runway.x+runway.w-20;x+=40)c.fillRect(x,runway.y+42,20,5);
     const t=w.city.terminal;c.fillStyle='#bbb29e';c.fillRect(t.x,t.y,t.w,t.h);
   }

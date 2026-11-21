@@ -51,3 +51,15 @@ Every source file in `game/src/` has one job and begins with its named export:
 `traffic.js` exports `TrafficAI`; `pedestrians.js` exports `PedestrianCrowd`; `wanted.js` exports `WantedSystem`; `police.js` exports `PoliceForce`; and `effects.js` exports `Effects`. `World` owns these systems and updates them after the player; `heat` mirrors `wanted.heat`. The world also exposes `bustMeter` (0–1), `busted`, and its effects/pedestrian/traffic/police system instances. `WantedSystem.reportCrime(kind,x,y)` accepts `carjack`, `pedestrian`, `police`, `crash`, and `shot` reports. Effects expose `drawGround(ctx)` and `drawAir(ctx)`.
 
 `shots.js` stages deterministic `cover`, `chase`, `street`, and `downtown` scenes. `shots.json` declares four seed-1 capture entries; capture is performed separately.
+
+## Phase C1: combat, dialogue, and story
+
+`combat.js` exports `CombatSystem`, owned as `world.combat`; it exposes `weaponName`, `ammoInMag`, `ammoReserve`, and live projectiles. `gang.js` exports `GangCrew`, owned as `world.gang`, with `spawnGroup(x,y,count,opts)`, `update(dt)`, and `draw(ctx)`. `dialogue.js` exports `DialogueBox`, owned as `world.dialogue`, with `active`, `play(lines,onDone)`, `update(dt,input)`, and `draw(ctx)`. Active dialogue pauses player and mission input.
+
+`missions.js` exports `MissionDirector`, owned as `world.missions`; it maintains appendable mission `definitions`, mission index/state, objectives/checkpoints, rewards, dialogue, and `world.missionRetry`. `World` also exposes `wasted`, `checkpoint`, and `gameStarted`; the live session starts at Palmera International Airport with the first mission marker available. Combat reads mouse screen coordinates plus `world.camera`; `wanted.reportCrime` accepts `shot` and the existing `pedestrian` kind for bullet hits. HUD draws on-foot weapon/ammo, while driving HUD remains speed focused.
+
+## Phase C2: missions, ending, and saves
+
+`missions.js` appends HEAVY METAL, SET UP, and SUNSET GETAWAY after missions 1–3. M4 loots a route-bound armoured truck then requires heat 0; M5 survives two marina ambush waves and stops a ledger car within three minutes; M6 pins HEAT 5 and reaches the airport cargo-plane checkpoint within six minutes. Completing M6 sets `world.ending` to `{timeMs,money,missionsDone}` and saves completion. `menus.js` presents the epilogue and run stats; Enter returns to free roam.
+
+`save.js` exports `SaveStore`, backed by localStorage key `palmera-heat-save-v1`. Saves contain money, next mission index, completion, garage vehicle types, and play time. `World` loads progress at startup, mission completion saves, and keeping a car at Mia’s garage records its type for respawn there. Title screen R resets the save. Marina world dressing includes deterministic boat and crate props, rendered by `CityRenderer`; dusk is a world `timeOfDay` tint.

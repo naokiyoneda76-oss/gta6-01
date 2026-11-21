@@ -1,0 +1,6 @@
+export class DialogueBox{
+ constructor(){this.active=false;this.lines=[];this.index=0;this.shown=0;this.done=null;this.mouseWasDown=false;}
+ play(lines,onDone=()=>{}){this.lines=lines||[];this.index=0;this.shown=0;this.done=onDone;this.active=this.lines.length>0;if(!this.active)onDone();}
+ update(dt,input){const mouse=!!(input.mouseButtons&1),click=mouse&&!this.mouseWasDown;this.mouseWasDown=mouse;if(!this.active)return;const line=this.lines[this.index];this.shown=Math.min(line.text.length,this.shown+dt*42);if((input.actions&4)||click){if(this.shown<line.text.length)this.shown=line.text.length;else if(++this.index>=this.lines.length){this.active=false;const cb=this.done;this.done=null;if(cb)cb();}else this.shown=0;}}
+ draw(c){if(!this.active)return;const line=this.lines[this.index],y=650,h=126;c.fillStyle='rgba(12,20,22,.78)';c.fillRect(32,y,1216,h);c.strokeStyle='rgba(245,198,91,.7)';c.lineWidth=2;c.strokeRect(32,y,1216,h);c.fillStyle='#ffd05a';c.font='bold 20px sans-serif';c.fillText(line.who||'',56,y+32);c.fillStyle='#fff0ce';c.font='20px sans-serif';c.fillText(line.text.slice(0,Math.floor(this.shown)),56,y+70,1160);c.font='13px sans-serif';c.fillStyle='#cfc4ad';c.textAlign='right';c.fillText('E / CLICK',1224,y+108);c.textAlign='left';}
+}

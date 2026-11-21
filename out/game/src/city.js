@@ -1,7 +1,7 @@
 import { CONFIG } from './config.js';
 export const CityMap = class CityMap {
   constructor(rng) {
-    this.width = CONFIG.city.width; this.height = CONFIG.city.height; this.rng = rng; this.roads = []; this.buildings = []; this.districts = []; this.palms = []; this.piers = [];
+    this.width = CONFIG.city.width; this.height = CONFIG.city.height; this.rng = rng; this.roads = []; this.buildings = []; this.districts = []; this.palms = []; this.piers = []; this.boats=[];this.crates=[];
     this.waterline = 500;
     const d = CONFIG.districts;
     for (const key of Object.keys(d)) this.districts.push({ ...d[key], id: key, x: d[key].rect[0], y: d[key].rect[1], w: d[key].rect[2], h: d[key].rect[3] });
@@ -14,6 +14,8 @@ export const CityMap = class CityMap {
     for (const district of this.districts) this._fillDistrict(district);
     for (let y = 60; y < this.height; y += 46) this.palms.push({ x: 482 + this.rng.range(-8, 18), y });
     for (let y = 1900; y < 2600; y += 145) this.piers.push({ x1: 500, y1: y, x2: this.rng.range(280, 430), y2: y + this.rng.range(-24, 24), width: 18 });
+    for(let i=0;i<5;i++)this.boats.push({x:315+(i%2)*88,y:1830+i*155,a:(i%2?-.12:.1),l:58+(i%3)*12});
+    for(let i=0;i<7;i++)this.crates.push({x:565+(i%3)*30,y:2055+Math.floor(i/3)*45,w:23,h:19});
     this.runway = { x: 3930, y: 2430, w: 760, h: 90 }; this.terminal = { x: 3700, y: 2160, w: 260, h: 180 };
   }
   _fillDistrict(d) {
