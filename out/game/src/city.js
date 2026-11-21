@@ -25,13 +25,13 @@ export const CityMap = class CityMap {
     const [minH, maxH] = d.heights; const step = d.kind === 'tower' ? 130 : d.kind === 'house' ? 95 : 120;
     for (let y = d.y + 35; y < d.y + d.h - 50; y += step) for (let x = d.x + 35; x < d.x + d.w - 50; x += step) {
       if (this.buildings.length >= CONFIG.entityCaps.buildings) return;
-      const w = Math.min(step - 42, d.x + d.w - x - 18), dep = Math.min(step - 42, d.y + d.h - y - 18);
+      const house=d.kind==='house', w = Math.min(house?this.rng.range(44,65):step - 42, d.x + d.w - x - 18), dep = Math.min(house?this.rng.range(42,62):step - 42, d.y + d.h - y - 18);
       if (w < 25 || dep < 25 || this._nearRoad(x + w / 2, y + dep / 2, w, dep)) continue;
       if(d.id==='downtown'&&this.rng.chance(.14))continue;
-      const variation=this.rng.range(.76,1.16),height=this.rng.range(minH,maxH)*variation,base=parseInt(d.color.slice(1),16);
+      const variation=this.rng.range(.76,1.16),height=house?this.rng.range(15,27):this.rng.range(minH,maxH)*variation,base=parseInt(d.color.slice(1),16);
       const color='#'+[16,8,0].map(s=>Math.max(0,Math.min(255,((base>>s)&255)+this.rng.range(-13,13)|0)).toString(16).padStart(2,'0')).join('');
       const neon=d.id==='downtown'&&this.rng.chance(.34)?{count:this.rng.int(1,2),width:this.rng.int(23,39),hue:this.rng.pick(['#ff4fa3','#43dce2','#ffc44d','#a77bff'])}:null;
-      const warehouse=(d.id==='porto'||d.id==='airport')&&this.rng.chance(d.id==='porto'?.48:.3),footprint=this.rng.chance(.23)?'L':'rect';this.buildings.push({x,y,w:warehouse?Math.min(step*1.45,d.x+d.w-x-18):w,d:warehouse?Math.max(30,dep*.7):dep,height:warehouse?this.rng.range(22,38):height,kind:warehouse?'warehouse':d.kind,footprint,wing:footprint==='L'?{x:x+w*.48,y:y+dep*.42,w:w*.52,d:dep*.58}:null,shade:this.rng.range(.86,1.12),district:d.id,color,roof:d.roof,treatment:this.rng.int(0,2),awning:d.id==='coral'&&y<d.y+155,neon});
+      const warehouse=(d.id==='porto'||d.id==='airport')&&this.rng.chance(d.id==='porto'?.48:.3),footprint=this.rng.chance(.23)?'L':'rect';this.buildings.push({x,y,w:warehouse?Math.min(step*1.45,d.x+d.w-x-18):w,d:warehouse?Math.max(30,dep*.7):dep,height:warehouse?this.rng.range(22,38):height,kind:warehouse?'warehouse':d.kind,footprint,wing:footprint==='L'?{x:x+w*.48,y:y+dep*.42,w:w*.52,d:dep*.58}:null,shade:this.rng.range(.86,1.12),district:d.id,color,roof:this.rng.pick(['#b6a28a','#8f8577','#c4ad88','#777d79','#a88e78','#d0b68d']),treatment:this.rng.int(0,2),awning:d.id==='coral'&&y<d.y+155,commercial:['coral','downtown','marina','porto'].includes(d.id)&&!house,house,roofProps:!house&&this.rng.chance(.48)?this.rng.int(1,3):0,neon});
     }
   }
   _nearRoad(x, y, w, h) { return this.roads.some(r => r.x1 === r.x2 ? Math.abs(x-r.x1) < w/2+r.width/2+12 : y > r.y1-r.width/2-h/2-12 && y < r.y1+r.width/2+h/2+12); }
