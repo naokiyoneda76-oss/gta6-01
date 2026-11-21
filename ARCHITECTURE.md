@@ -26,7 +26,7 @@ Every source file in `game/src/` has one job and begins with its named export:
 | `vehicles.js` | `Vehicle` | Arcade vehicle physics, five `VEHICLE_TYPES`, collision and draw. |
 | `player.js` | `Player` | On-foot movement, car entry/exit and actor draw. |
 | `hud.js` | `Hud` | Health, money, heat, objective, speed and control hint; delegates minimap. |
-| `minimap.js` | `Minimap` | City map and actor/objective blips. |
+| `minimap.js` | `Minimap` | Real-map minimap: scaled city land/water, road and building shapes, piers, activity/objective markers, police dots, and a heading-aware player arrow. |
 | `shots.js` | `ShotDirector` | `stageShot(name,game)` stages `cover`; unknown names select title staging. |
 | `main.js` | `PalmeraHeatGame` | Creates systems, handles fixed-step loop and title/play screens. |
 
@@ -57,6 +57,8 @@ Every source file in `game/src/` has one job and begins with its named export:
 `combat.js` exports `CombatSystem`, owned as `world.combat`; it exposes `weaponName`, `ammoInMag`, `ammoReserve`, and live projectiles. `gang.js` exports `GangCrew`, owned as `world.gang`, with `spawnGroup(x,y,count,opts)`, `update(dt)`, and `draw(ctx)`. `dialogue.js` exports `DialogueBox`, owned as `world.dialogue`, with `active`, `play(lines,onDone)`, `update(dt,input)`, and `draw(ctx)`. Active dialogue pauses player and mission input.
 
 `missions.js` exports `MissionDirector`, owned as `world.missions`; it maintains appendable mission `definitions`, mission index/state, objectives/checkpoints, rewards, dialogue, and `world.missionRetry`. `World` also exposes `wasted`, `checkpoint`, and `gameStarted`; the live session starts at Palmera International Airport with the first mission marker available. Combat reads mouse screen coordinates plus `world.camera`; `wanted.reportCrime` accepts `shot` and the existing `pedestrian` kind for bullet hits. HUD draws on-foot weapon/ammo, while driving HUD remains speed focused.
+
+Mission 2, FIRST WHEELS, changes its objective to `DELIVER THE CAR` after Danny jacks Mia’s marked sports car, then sends the player back to Mia’s garage.
 
 ## Phase C2: missions, ending, and saves
 
