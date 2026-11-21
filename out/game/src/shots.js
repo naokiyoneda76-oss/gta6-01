@@ -29,19 +29,19 @@ export const ShotDirector=class ShotDirector{
    w.pinCallout('HIGH HEAT!','HEAT LEVEL 5',{y:176});game.camera.x=x+60;game.camera.y=y+66;game.camera.zoom=1.2;dress([[1120,790,'sedan','#d8d2bd',heading],[1370,650,'pickup','#526d59',heading]],[[1080,610],[1430,740],[1190,850]]);
   }
   else if(name==='marina'){
-   w.setTimeOfDay('dusk');for(const v of w.vehicles)if(v.type==='police'){v.type='sedan';v.color='#d8d2bd';}w.player.x=600;w.player.y=2104;w.player._cover=true;w.player._groundMarker=true;w.objective=null;
+   w.setTimeOfDay('dusk');for(const v of w.vehicles)if(v.type==='police'){v.type='sedan';v.color='#d8d2bd';}w.player.x=554;w.player.y=2100;w.player._cover=true;w._marinaShotMarker=true;w.objective={x:554,y:2100,label:'SURVIVE THE AMBUSH'};
    // Pier-side and road-side teams converge on the marked crate cover.
    const pier=w.gang.spawnGroup(430,2050,3,{faction:'Ambush',color:'#813d4a'});
    pier.members.forEach((p,i)=>{p.x=405+i*24;p.y=2040+i*18;p.state='combat';p.angle=Math.atan2(w.player.y-p.y,w.player.x-p.x);p._flash=true;p._advancing=true;p.cover={x:p.x,y:p.y};});
-   const road=w.gang.spawnGroup(760,1910,3,{faction:'Ambush',color:'#813d4a'});
-   road.members.forEach((p,i)=>{p.x=740+i*24;p.y=1895+i*18;p.state='combat';p.angle=Math.atan2(w.player.y-p.y,w.player.x-p.x);p._flash=true;p._advancing=true;p.cover={x:p.x,y:p.y};});
+   const road=w.gang.spawnGroup(760,2035,3,{faction:'Ambush',color:'#813d4a'});
+   road.members.forEach((p,i)=>{p.x=740+i*24;p.y=2020+i*18;p.state='combat';p.angle=Math.atan2(w.player.y-p.y,w.player.x-p.x);p._flash=true;p._advancing=true;p.cover={x:p.x,y:p.y};});
    // Two incoming rounds strike the front crate face from distinct bearings.
-   w.combat.bullets.push({x:574,y:2051,prevX:490,prevY:2075,vx:0,vy:0,life:1,range:200,owner:'gang'});
-   w.combat.bullets.push({x:596,y:2051,prevX:650,prevY:1982,vx:0,vy:0,life:1,range:200,owner:'gang'});
+   w.combat.bullets.push({x:574,y:2051,prevX:420,prevY:2046,vx:0,vy:0,life:1,range:300,owner:'gang'});
+   w.combat.bullets.push({x:596,y:2051,prevX:790,prevY:2056,vx:0,vy:0,life:1,range:300,owner:'gang'});
    // Danny returns a round toward the road-side attackers.
-   w.combat.bullets.push({x:710,y:1960,prevX:610,prevY:2090,vx:0,vy:0,life:1,range:200,owner:'player'});
-   w.effects.impacts.push({x:574,y:2051},{x:596,y:2051},{x:610,y:2090,muzzle:true});w.effects.burst(574,2051,10);w.effects.burst(596,2051,10);w.effects.burst(610,2090,5);
-   w.dialogue.play([{who:'ROSA',text:'Danny, get behind the crates! It’s an ambush — they’re coming in from the pier!'}]);w.dialogue.revealAll();w.objective={x:600,y:2104,label:'SURVIVE THE AMBUSH'};w.heat=2;w.wanted.heat=2;w.activities.flags=[];w.activities.cards=[];w.pinCallout('BETRAYAL','SURVIVE THE AMBUSH',{x:640,y:176});game.camera.x=640;game.camera.y=2048;game.camera.zoom=1.45;dress([[465,1950,'sedan','#47747a',Math.PI/2],[790,2180,'pickup','#526d59',Math.PI/2]],[[465,1990],[795,2110],[520,2190]]);
+   w.combat.bullets.push({x:790,y:2010,prevX:580,y:2081,vx:0,vy:0,life:1,range:300,owner:'player'});
+   w.effects.impacts.push({x:574,y:2051},{x:596,y:2051},{x:580,y:2081,muzzle:true});w.effects.burst(574,2051,10);w.effects.burst(596,2051,10);w.effects.burst(580,2081,5);
+   w.dialogue.play([{who:'ROSA',text:'Danny, get behind the crates! It’s an ambush — they’re coming in from the pier!'}]);w.dialogue.revealAll();w.heat=2;w.wanted.heat=2;w.activities.flags=[];w.activities.cards=[];w.pinCallout('BETRAYAL','SURVIVE THE AMBUSH',{x:640,y:176});game.camera.x=640;game.camera.y=2048;game.camera.zoom=1.45;dress([[465,1950,'sedan','#47747a',Math.PI/2],[790,2180,'pickup','#526d59',Math.PI/2]],[[465,1990],[795,2110],[520,2190]]);
   }
   else if(name==='taxi'){
    w.setTimeOfDay('day');const x=1020,y=1300;

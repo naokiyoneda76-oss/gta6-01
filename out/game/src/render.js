@@ -55,6 +55,6 @@ export const CityRenderer = class CityRenderer {
     c.fillStyle='#e7ddc5';c.fillRect(408,2088,18,77);c.fillStyle='#c85e4c';c.fillRect(405,2080,24,12);c.fillStyle='#ffd878';c.shadowColor='#ffdf84';c.shadowBlur=18;c.beginPath();c.arc(417,2078,6,0,7);c.fill();c.shadowBlur=0;
     const t=w.city.terminal;c.fillStyle='#bbb29e';c.fillRect(t.x,t.y,t.w,t.h);
   }
-  drawObjective(ctx,world) { if(!world.objective)return;const o=world.objective,p=.5+.5*Math.sin(world.time*3);ctx.fillStyle=`rgba(255,200,62,${.11+p*.08})`;ctx.fillRect(o.x-14,o.y-170,28,170);ctx.strokeStyle=`rgba(255,215,95,${.7+p*.3})`;ctx.lineWidth=4;ctx.beginPath();ctx.ellipse(o.x,o.y,24+p*11,9+p*4,0,0,Math.PI*2);ctx.stroke(); }
+  drawObjective(ctx,world) { if(!world.objective)return;const o=world.objective,p=.5+.5*Math.sin(world.time*3),shot=world._marinaShotMarker?0.55:1;ctx.fillStyle=`rgba(255,200,62,${world._marinaShotMarker?.07+p*.04:.11+p*.08})`;ctx.fillRect(o.x-14,o.y-170,28,170);ctx.strokeStyle=`rgba(255,215,95,${world._marinaShotMarker?.32+p*.16:.7+p*.3})`;ctx.lineWidth=world._marinaShotMarker?2:4;ctx.beginPath();ctx.ellipse(o.x,o.y,(24+p*11)*shot,(9+p*4)*shot,0,0,Math.PI*2);ctx.stroke(); }
 };
 function shade(hex,f){const n=parseInt(hex.slice(1),16);return `rgb(${Math.floor((n>>16)*f)},${Math.floor(((n>>8)&255)*f)},${Math.floor((n&255)*f)})`;}
