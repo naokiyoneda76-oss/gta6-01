@@ -18,9 +18,10 @@ export const ShotDirector=class ShotDirector{
     {x:520,y:920,w:250,d:58,height:24,kind:'shop',archetype:'shop',name:'PALM MARKET',commercial:true,awning:true,color:'#c7b9a0',roof:'#d18b70',district:'coral',treatment:1,roofProps:2},
     {x:850,y:910,w:128,d:82,height:48,kind:'hotel',archetype:'hotel',name:'HOTEL',commercial:true,footprint:'L',wing:{x:978,y:950,w:54,d:42},awning:true,color:'#e4c7a0',roof:'#9f7966',district:'coral',treatment:0,roofProps:3}
    );
-   w.city.lots.push({x:520,y:985,w:250,d:60,type:'plaza',cars:0},{x:1038,y:1000,w:142,d:100,type:'parking',cars:3});
+   w.city.lots.push({x:520,y:985,w:250,d:60,type:'plaza',cars:0},{x:1065,y:1000,w:142,d:100,type:'parking',cars:3});
    // A paved loop serves the hotel entrance; the parking court sits clear beside it.
-   w._styleHotelDrive={x:940,y:1052,rx:84,ry:32};w._styleHotelIsland={x:914,y:1044,w:52,h:16};
+   w._styleHotelForecourt={x:850,y:992,w:210,h:48};
+   w._styleHotelDrive={x:1000,y:1017,rx:45,ry:21};w._styleHotelIsland={x:982,y:1013,w:36,h:8};
    w._styleCrates=[{x:700,y:1028,w:18,h:18},{x:724,y:1032,w:18,h:18}];game.camera.x=842;game.camera.y=1060;game.camera.zoom=1.55;w.objective=null;w.heat=0;w.wanted.heat=0;return true;
   }
   if(name==='cover'){
