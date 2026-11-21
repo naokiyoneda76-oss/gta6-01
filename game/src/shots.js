@@ -73,8 +73,8 @@ export const ShotDirector=class ShotDirector{
    const pedestrianTemplate=w.pedestrians.people[0];w.pedestrians.people=[];w.vehicles=[];w.traffic.cars=[];w.police.units=[];w.gang.crews=[];
    w.effects.skids=[];w.effects.particles=[];w.effects.impacts=[];w.effects.lightPools=[];w.combat.bullets=[];w.activities.flags=[];w.activities.cards=[];
    // Stage the reunion on the promenade where the clamped camera can frame it.
-   const danny={...pedestrianTemplate,x:660,y:2108,vx:0,vy:0,angle:Math.PI/2,timer:0,run:false,color:'#cf694f',_shotScale:1,_homecomingPose:true,pose:'idle',joints:{head:{x:0,y:-14.2},shoulder:[{x:-4.5,y:-10.5},{x:4.5,y:-10.5}],hip:{x:0,y:-2.2},elbow:[{x:-5.6,y:-7.5},{x:7,y:-13.5}],hand:[{x:-6,y:-4.1},{x:5,y:-17}],knee:[{x:-2.3,y:1.1},{x:2.3,y:1.1}],foot:[{x:-2.3,y:3},{x:2.3,y:3}]}};
-   const mia={...pedestrianTemplate,x:684,y:2118,vx:0,vy:0,angle:-Math.PI/2,timer:0,run:false,color:'#f2a85e',hairStyle:'long',_shotScale:1,_homecomingPose:true,pose:'walk',phase:1.4};
+   const danny={...pedestrianTemplate,x:652,y:2104,vx:0,vy:0,angle:Math.PI/2,timer:0,run:false,color:'#418b83',pants:'#394653',_shotScale:1,_homecomingPose:true,pose:'idle',joints:{head:{x:0,y:-14.2},shoulder:[{x:-4.5,y:-10.5},{x:4.5,y:-10.5}],hip:{x:0,y:-2.2},elbow:[{x:-5.6,y:-7.5},{x:7,y:-13.5}],hand:[{x:-6,y:-4.1},{x:5,y:-17}],knee:[{x:-2.3,y:1.1},{x:2.3,y:1.1}],foot:[{x:-2.3,y:3},{x:2.3,y:3}]}};
+   const mia={...pedestrianTemplate,x:688,y:2120,vx:0,vy:0,angle:-Math.PI/2,timer:0,run:false,color:'#f2a85e',hairStyle:'long',_shotScale:1,_homecomingPose:true,pose:'walk',phase:1.4};
    w.player._homecomingHidden=true;w.pedestrians.people=[danny,mia];
    // Mia's sedan is parked on the inland shoulder beside her.
    const car=new Vehicle(692,2122,'sedan','#e8a078',.22);car.speed=0;car.driver=null;w.vehicles.push(car);
@@ -82,7 +82,7 @@ export const ShotDirector=class ShotDirector{
    dress([],[[350,2027],[390,2028],[400,2189],[535,1900],[535,2260],[460,2268],[490,2325],[420,2380]]);w.pedestrians.people.slice(2).forEach((p,i)=>{p.color=['#4d8290','#d28c59','#718d58','#b86b69','#d7b75f','#568578','#d18c62','#617b9b'][i];p.skin=['#dca77f','#ae7655','#efc8a2','#c88e6d','#e8b88d','#c78f69','#e3b58b','#af795a'][i];p.pants=['#394653','#3b4651','#665342','#34414e','#51443e','#324a48','#55423b','#394754'][i];if(i===4){p.vx=24;p.vy=0;}});
    w.objective={x:mia.x,y:mia.y,label:'TALK TO MIA'};w._shotObjectiveBanner='TALK TO MIA';w._homecomingShotMarkerSuppressed=true;w._homecomingScene=true;
    w.heat=0;w.wanted.heat=0;w.pinCallout('HOMECOMING','CORAL BEACH',{y:176});
-   w._shotHudMode='unarmed';game.camera.x=665;game.camera.y=2092;game.camera.zoom=3.2;
+   w._shotHudMode='unarmed';game.camera.x=672;game.camera.y=2100;game.camera.zoom=3.2;
   }
   else if(name==='getaway'){
    w.setTimeOfDay('night');w._shotHudMode='driving';w.vehicles=[];w.traffic.cars=[];w.pedestrians.people=[];
