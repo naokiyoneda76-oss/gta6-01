@@ -97,6 +97,6 @@ export const ShotDirector=class ShotDirector{
   else if(name==='street'){w.player.x=635;w.player.y=650;w.objective={x:720,y:1250,label:'MEET MIA AT THE GARAGE'};game.camera.x=635;game.camera.y=650;}
   else if(name==='downtown'){const v=new Vehicle(1920,780,'sedan','#42657b',Math.PI/2);v.speed=65;v.driver='player';w.vehicles.push(v);w.driving=v;w.heat=1;w.wanted.heat=1;w.objective={x:2200,y:780,label:'HEAD DOWNTOWN'};game.camera.x=v.x;game.camera.y=v.y;}
   else {game.screen='title';game.camera.x=535;game.camera.y=950;return false;}
-  game.camera.clamp(w.city);return true;
+  return true;
  }
 };
