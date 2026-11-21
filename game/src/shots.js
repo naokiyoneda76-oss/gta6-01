@@ -28,8 +28,8 @@ export const ShotDirector=class ShotDirector{
    w.setTimeOfDay('day');game.camera.zoom=3.8;game.camera.x=642;game.camera.y=1008;
    // FIRST WHEELS catches the handoff itself: a parked car and two distinct, staged poses.
    const v=new Vehicle(650,1020,'sport','#e94f45',Math.PI/2);v.speed=0;v.driver='player';v._doorOpen=true;v._coverDoorAngle=62;v._groundMarker=false;v._handbrake=false;v._coverDoor=true;w.vehicles=[v];w.traffic.cars=[];w.gang.crews=[];w._shotSpeed=0;
-   w.player.x=643;w.player.y=1001;w.player.angle=0;w.player._coverEntering=true;
-   const p=w.pedestrians.people[0];p.x=628;p.y=978;p.run=false;p._recoil=false;p._alarmed=false;p._coverOwnerStagger=true;p.timer=0;p.vx=0;p.vy=0;p.angle=0;
+   w.player.x=644;w.player.y=1007;w.player.angle=0;w.player._coverEntering=true;
+   const p=w.pedestrians.people[0];p.x=621;p.y=989;p.run=false;p._recoil=false;p._alarmed=false;p._coverOwnerStagger=true;p.timer=0;p.vx=0;p.vy=0;p.angle=0;
    w.city.looseItems=[];
    // The owner recoils away from the car; this shot has exactly two people.
    w.pedestrians.people=[p];

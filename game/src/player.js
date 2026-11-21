@@ -6,7 +6,7 @@ export class Player{
  draw(c,cam,world){if(world.driving||this._homecomingHidden)return; if(this._groundMarker){c.save();c.strokeStyle='rgba(255,225,139,.9)';c.lineWidth=1;c.beginPath();c.ellipse(this.x,this.y,14,4,0,0,Math.PI*2);c.stroke();c.restore();} c.save();c.translate(this.x,this.y);if(this._coverEntering){
    // Danny stands north of the flank, bracing on the open door and reaching into the cabin.
    c.rotate(0);
-   drawFigure(c,{torso:'#cf694f',skin:'#e8bd91',pants:'#343b40',hair:'#382b26',hairStyle:'short',pose:'car-entry',joints:{head:{x:1.2,y:-11.6},shoulder:[{x:-4.3,y:-10.3},{x:4.7,y:-10.0}],hip:{x:0.3,y:-2.3},elbow:[{x:-7.8,y:-7.6},{x:8.2,y:-6.2}],hand:[{x:-11.0,y:-9.6},{x:10.4,y:-1.8}],knee:[{x:-3.4,y:0.8},{x:5.2,y:1.6}],foot:[{x:-6.8,y:3.4},{x:7.2,y:5.2}]}});
+   drawFigure(c,{torso:'#cf694f',skin:'#e8bd91',pants:'#343b40',hair:'#382b26',hairStyle:'short',pose:'car-entry',joints:{head:{x:1.2,y:-10.8},shoulder:[{x:-4.3,y:-9.9},{x:4.7,y:-9.6}],hip:{x:0.3,y:-2.2},elbow:[{x:-7.8,y:-7.2},{x:8.2,y:-5.4}],hand:[{x:-11.0,y:-9.2},{x:10.2,y:-0.6}],knee:[{x:-3.4,y:0.9},{x:5.4,y:1.8}],foot:[{x:-6.8,y:3.2},{x:7.4,y:5.0}]}});
   }else if(this._cover){
    // A larger staged cover pose reads clearly beside the crate at thumbnail size.
    drawFigure(c,{torso:'#cf694f',skin:'#e8bd91',pants:'#343b40',hair:'#382b26',hairStyle:'short',pose:'cover'});
