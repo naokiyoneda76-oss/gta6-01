@@ -25,9 +25,9 @@ export const ShotDirector=class ShotDirector{
    w._styleCrates=[{x:700,y:1028,w:18,h:18},{x:724,y:1032,w:18,h:18}];game.camera.x=842;game.camera.y=1060;game.camera.zoom=1.55;w.objective=null;w.heat=0;w.wanted.heat=0;return true;
   }
   if(name==='cover'){
-   w.setTimeOfDay('day');game.camera.zoom=3.6;game.camera.x=640;game.camera.y=1000;
+   w.setTimeOfDay('day');game.camera.zoom=4.3;game.camera.x=640;game.camera.y=1000;
    // FIRST WHEELS catches the handoff itself: a parked car and two distinct, staged poses.
-   const v=new Vehicle(669.17,997.22,'sport','#e94f45',-.61);v.speed=0;v.driver='player';v._doorOpen=true;v._coverDoorAngle=50;w.vehicles.push(v);w._shotSpeed=0;
+   const v=new Vehicle(669.17,997.22,'sport','#e94f45',-.61);v.speed=0;v.driver='player';v._doorOpen=true;v._coverDoorAngle=50;v._groundMarker=false;v._handbrake=false;w.vehicles=[v];w.traffic.cars=[];w.gang.crews=[];w._shotSpeed=0;
    w.player.x=639.44;w.player.y=1011.67;w.player.angle=-.61;w.player._coverEntering=true;
    const p=w.pedestrians.people[0];p.x=612.22;p.y=987.50;p.run=false;p._recoil=false;p._alarmed=false;p._coverOwnerStagger=true;p.timer=0;p.vx=0;p.vy=0;p.angle=0;
    w.city.looseItems=[];
