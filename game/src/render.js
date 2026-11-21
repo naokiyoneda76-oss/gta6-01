@@ -30,7 +30,7 @@ export const CityRenderer = class CityRenderer {
       if(b.treatment===1){c.strokeStyle='rgba(90,75,62,.45)';c.lineWidth=2;for(let wx=b.x+12;wx<b.x+b.w;wx+=18){c.beginPath();c.moveTo(wx,b.y);c.lineTo(wx,b.y+b.d);c.stroke();}}
       if(b.height>100){c.fillStyle='#967c60';c.fillRect(b.x+b.w*.58,b.y-b.height*.12+5,13,15);c.fillStyle='#d2b37a';c.beginPath();c.arc(b.x+b.w*.64,b.y-b.height*.12+5,7,Math.PI,0);c.fill();}
       if(b.height>32){c.fillStyle=w.timeOfDay==='night'?'#ffd77b':'rgba(255,224,157,.65)';for(let wx=b.x+9;wx<b.x+b.w-4;wx+=18)for(let wy=b.y+9;wy<b.y+b.d-4;wy+=20)c.fillRect(wx,wy,4,5);}
-      if(b.neon){for(let n=0;n<b.neon.count;n++){const sw=Math.min(b.neon.width,b.w-18),sx=b.x+(n+1)*b.w/(b.neon.count+1)-sw/2,sy=b.y+b.d-27-n*15;c.fillStyle=b.neon.hue;if(w.timeOfDay==='night'){c.shadowColor=b.neon.hue;c.shadowBlur=12;}c.fillRect(sx,sy,sw,6);c.shadowBlur=0;}}
+      if(b.neon){if(w.timeOfDay==='night'){c.fillStyle='rgba(255,166,83,.72)';c.fillRect(b.x,b.y-b.height*.12,b.w,b.d);}for(let n=0;n<b.neon.count;n++){const sw=Math.min(b.neon.width,b.w-18),sx=b.x+(n+1)*b.w/(b.neon.count+1)-sw/2,sy=b.y+b.d-27-n*15;c.fillStyle=b.neon.hue;if(w.timeOfDay==='night'){c.shadowColor=b.neon.hue;c.shadowBlur=12;}c.fillRect(sx,sy,sw,6);c.shadowBlur=0;}}
       if(b.awning){for(let ax=b.x;ax<b.x+b.w;ax+=16){c.fillStyle=(ax-b.x)/16%2?'#fff0d3':'#d95d4e';c.fillRect(ax,b.y+b.d-7,16,9);}}
     }
     for(const p of w.city.piers){ c.fillStyle='#9c7856';c.fillRect(p.x2,p.y2-7,p.x1-p.x2,p.width); for(let x=p.x2;x<p.x1;x+=28)c.fillRect(x,p.y2-9,5,22); }
