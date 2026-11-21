@@ -28,7 +28,8 @@ export const CityMap = class CityMap {
       if (w < 25 || dep < 25 || this._nearRoad(x + w / 2, y + dep / 2, w, dep)) continue;
       const variation=this.rng.range(.76,1.16),height=this.rng.range(minH,maxH)*variation,base=parseInt(d.color.slice(1),16);
       const color='#'+[16,8,0].map(s=>Math.max(0,Math.min(255,((base>>s)&255)+this.rng.range(-13,13)|0)).toString(16).padStart(2,'0')).join('');
-      this.buildings.push({x,y,w,d:dep,height,kind:d.kind,shade:this.rng.range(.86,1.12),district:d.id,color,roof:d.roof,treatment:this.rng.int(0,2),awning:d.id==='coral'&&y<d.y+155});
+      const neon=d.id==='downtown'&&this.rng.chance(.34)?{count:this.rng.int(1,2),width:this.rng.int(23,39),hue:this.rng.pick(['#ff4fa3','#43dce2','#ffc44d','#a77bff'])}:null;
+      this.buildings.push({x,y,w,d:dep,height,kind:d.kind,shade:this.rng.range(.86,1.12),district:d.id,color,roof:d.roof,treatment:this.rng.int(0,2),awning:d.id==='coral'&&y<d.y+155,neon});
     }
   }
   _nearRoad(x, y, w, h) { return this.roads.some(r => r.x1 === r.x2 ? Math.abs(x-r.x1) < w/2+r.width/2+12 : y > r.y1-r.width/2-h/2-12 && y < r.y1+r.width/2+h/2+12); }

@@ -8,11 +8,12 @@ export const ShotDirector=class ShotDirector{
   if(name==='title'){game.screen='title';game.camera.x=535;game.camera.y=950;game.time=8;return false;}
   if(name==='map'){w._showMap=true;w.objective={x:820,y:950,label:'MISSION: MEET MIA'};game.camera.x=535;game.camera.y=950;return true;}
   if(name==='cover'){
-   w.setTimeOfDay('day');const v=new Vehicle(535,930,'sport','#e94f45',.58);v.speed=321;v.driver='player';v._handbrake=true;v._hardBrake=true;w.vehicles.push(v);w.driving=v;w.player.x=v.x;w.player.y=v.y;
-   const brake=new Vehicle(535,852,'sedan','#d8d2bd',0);brake.driver='traffic';brake._crash=2;w.vehicles.push(brake);w.traffic.cars.push(brake);
-   const q=new Vehicle(535,852,'sedan','#d8d2bd',0);q.driver='traffic';q._crash=2;w.vehicles.push(q);w.traffic.cars.push(q);
-   const p=w.pedestrians.people[0];p.x=575;p.y=920;p.run=true;p._recoil=true;p.timer=2;p.vx=75;p.vy=-30;p.angle=Math.atan2(p.vx,-p.vy);
-   w.objective={x:535,y:1020,label:'STEAL THE SPORTS CAR'};w.heat=2;w.wanted.heat=2;w.effects.skid(520,957,.58,70);w.effects.skid(547,963,.58,70);w.pinCallout('STOLEN!','+ SPORTS CAR',{y:176});game.camera.x=535;game.camera.y=930;game.camera.zoom=1;
+   w.setTimeOfDay('day');const x=720,y=1020,v=new Vehicle(x,y,'sport','#e94f45',.78);v.speed=321;v.driver='player';w.vehicles.push(v);w.driving=v;w.player.x=v.x;w.player.y=v.y;
+   // One braking car approaches from the coastal boulevard; its lit brakes signal a response, not a collision.
+   const brake=new Vehicle(535,936,'sedan','#d8d2bd',0);brake.driver='traffic';brake._braking=true;w.vehicles.push(brake);w.traffic.cars.push(brake);
+   const police=new Vehicle(790,1280,'police','#e7e4d8',0);police.driver='police';w.vehicles.push(police);w.police.units.push(police);
+   const p=w.pedestrians.people[0];p.x=681;p.y=1001;p.run=true;p._recoil=true;p.timer=2;p.vx=-34;p.vy=-18;p.angle=Math.atan2(p.vx,-p.vy);
+   w.objective={x,y,label:'STEAL THE SPORTS CAR'};w.heat=2;w.wanted.heat=2;w.effects.skid(x-33,y+33,.78,34);w.effects.skid(x-22,y+48,.78,32);w.pinCallout('STOLEN!','+ SPORTS CAR',{y:176});game.camera.x=820;game.camera.y=1020;game.camera.zoom=1.4;
   }
   else if(name==='chase'){
    w.setTimeOfDay('night');const x=1250,y=720,v=new Vehicle(x,y,'sport','#e94f45',Math.PI/2-.27);v.speed=785;v.driver='player';v._handbrake=true;w.vehicles.push(v);w.driving=v;w.player.x=x;w.player.y=y;w.objective={x:x+620,y,label:'LOSE THE HEAT'};w.wanted.heat=w.heat=5;
