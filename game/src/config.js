@@ -1,61 +1,12 @@
-// Every tuning number and colour in one place. The playfield is a fixed 1280x720 logical area;
-// the renderer scales it to the window, so no rule below depends on the screen size.
-
-export const FIELD = { width: 1280, height: 720, groundY: 664 };
-
-/** The simulation's fixed step, in seconds: 60 updates a second whatever the display's rate. */
-export const STEP = 1 / 60;
-
-export const PLAYER = {
-  width: 72,
-  height: 24,
-  speed: 560,
-  invulnerable: 1.5,
+export const CONFIG = {
+  width: 1280, height: 800, STEP: 1 / 60, city: { width: 4800, height: 3600 },
+  palette: { sky: '#ffd9a0', sun: '#ffe8b6', sea: '#2e8f86', sand: '#ecd29a', asphalt: '#4a4a52', sidewalk: '#b9b3a4', grass: '#788b62', text: '#fff3d4', gold: '#ffd05a' },
+  districts: {
+    coral: { name: 'Coral Beach', rect: [500, 180, 1050, 1260], color: '#e9b68b', roof: '#d98768', heights: [40, 90], kind: 'hotel' },
+    downtown: { name: 'Downtown Palmera', rect: [1700, 300, 1700, 1350], color: '#c7b9a0', roof: '#ad9c83', heights: [90, 220], kind: 'tower' },
+    marina: { name: 'Marina del Sol', rect: [520, 1740, 1120, 860], color: '#dfbf8d', roof: '#c79f70', heights: [18, 48], kind: 'marina' },
+    porto: { name: 'Porto Azul', rect: [2260, 1950, 1350, 1120], color: '#b9aa8c', roof: '#9b8d74', heights: [20, 40], kind: 'warehouse' },
+    laspalmas: { name: 'Las Palmas', rect: [3480, 220, 1200, 1430], color: '#d9c7a2', roof: '#a96e57', heights: [12, 25], kind: 'house' },
+    airport: { name: 'Palmera International Airport', rect: [3590, 2030, 1120, 1400], color: '#c9b99b', roof: '#a89c86', heights: [20, 38], kind: 'airport' }
+  }, entityCaps: { buildings: 900, palms: 260, piers: 12 }
 };
-
-export const LIVES = 3;
-
-export const BLOCK = {
-  minWidth: 40,
-  maxWidth: 110,
-  height: 36,
-  speed: 240,
-  speedPerLevel: 30,
-  speedJitter: 90,
-  interval: 0.55,
-  intervalScale: 0.88,
-  minInterval: 0.14,
-  dodgePoints: 1,
-};
-
-export const COIN = {
-  size: 24,
-  speed: 190,
-  speedPerLevel: 14,
-  interval: 1.4,
-  intervalJitter: 0.8,
-  points: 10,
-};
-
-/** Seconds of play per level, and the last level: speeds and spawn rates stop growing there. */
-export const LEVEL = { seconds: 12, max: 12 };
-
-/** How many falling things can exist at once; the pool is allocated once, at boot. */
-export const POOL_SIZE = 64;
-
-export const PALETTE = {
-  backdrop: '#11141b',
-  sky: '#1b1f2a',
-  ground: '#2a3040',
-  player: '#4fc3f7',
-  block: '#e5534b',
-  coin: '#f2c94c',
-  panel: '#252b38',
-  text: '#eef1f5',
-  muted: '#8b93a3',
-};
-
-export const FONT = 'system-ui, -apple-system, "Segoe UI", sans-serif';
-
-/** Where the best score is kept between visits (this browser only). */
-export const BEST_KEY = 'block-dodger.best';

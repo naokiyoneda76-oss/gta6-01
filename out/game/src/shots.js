@@ -1,0 +1,6 @@
+import {SeededRandom} from './random.js';
+import {World} from './world.js';
+import {Vehicle} from './vehicles.js';
+export const ShotDirector=class ShotDirector{
+ stageShot(name,game){const seed=Number(new URLSearchParams(location.search).get('seed')||1);game.rng=new SeededRandom(seed);game.world=new World(game.rng);const w=game.world;game.screen='play';if(name==='cover'){const v=new Vehicle(535,1260,'sport','#e94f45',0);v.speed=112;v.driver='player';w.vehicles.push(v);w.driving=v;w.player.x=v.x;w.player.y=v.y;w.objective={x:535,y:760,label:'MISSION 3 - BEACH RUN'};w.heat=2;for(let i=0;i<90;i++)w.step(1/60,{down:k=>k==='KeyW'||k==='KeyD'&&false,actions:0});game.camera.x=v.x;game.camera.y=v.y;}else if(name==='street'){w.player.x=635;w.player.y=650;w.vehicles=w.vehicles.slice(0,5);w.objective={x:720,y:1250,label:'MEET MIA AT THE GARAGE'};game.camera.x=635;game.camera.y=650;}else if(name==='downtown'){const v=new Vehicle(1920,780,'sedan','#42657b',Math.PI/2);v.speed=65;v.driver='player';w.vehicles.push(v);w.driving=v;w.heat=1;w.objective={x:2200,y:780,label:'HEAD DOWNTOWN'};for(let i=0;i<18;i++)w.step(1/60,{down:k=>k==='KeyW',actions:0});game.camera.x=v.x;game.camera.y=v.y;}else{game.screen='title';game.camera.x=535;game.camera.y=950;return false;}game.camera.clamp(w.city);return true;}
+};

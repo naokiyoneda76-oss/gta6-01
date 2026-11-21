@@ -1,53 +1,11 @@
-// Keyboard and pointer input. Held keys give a steering direction; one-shot presses (start or
-// restart, pause) are queued as bit flags and taken once by the loop, so a press between two
-// frames is never lost and never counted twice.
-
-export const ACTION_CONFIRM = 1;
-export const ACTION_PAUSE = 2;
-
-const LEFT = new Set(['ArrowLeft', 'KeyA']);
-const RIGHT = new Set(['ArrowRight', 'KeyD']);
-const CONFIRM = new Set(['Space', 'Enter']);
-const PAUSE = new Set(['KeyP', 'Escape']);
-
-export function createInput(target) {
-  let left = false;
-  let right = false;
-  let actions = 0;
-
-  window.addEventListener('keydown', (event) => {
-    if (LEFT.has(event.code)) left = true;
-    else if (RIGHT.has(event.code)) right = true;
-    else if (CONFIRM.has(event.code)) {
-      if (!event.repeat) actions |= ACTION_CONFIRM;
-    } else if (PAUSE.has(event.code)) {
-      if (!event.repeat) actions |= ACTION_PAUSE;
-    } else return;
-    event.preventDefault();
-  });
-  window.addEventListener('keyup', (event) => {
-    if (LEFT.has(event.code)) left = false;
-    else if (RIGHT.has(event.code)) right = false;
-  });
-  // A key released while the tab is hidden never sends keyup: let go of everything on blur.
-  window.addEventListener('blur', () => {
-    left = false;
-    right = false;
-  });
-  target.addEventListener('pointerdown', () => {
-    actions |= ACTION_CONFIRM;
-  });
-
-  return {
-    /** -1 for left, 1 for right, 0 for neither or both. */
-    direction() {
-      return (right ? 1 : 0) - (left ? 1 : 0);
-    },
-    /** The one-shot presses since the last call, as ACTION_* flags. */
-    takeActions() {
-      const taken = actions;
-      actions = 0;
-      return taken;
-    },
-  };
-}
+export const InputManager = class InputManager {
+  constructor(target = window) {
+    this.held = new Set(); this.actions = 0; this.mouseX = 0; this.mouseY = 0; this.mouseButtons = 0;
+    target.addEventListener('keydown', e => { this.held.add(e.code); if (!e.repeat) { if (e.code === 'Enter' || e.code === 'Space') this.actions |= 1; if (e.code === 'Escape' || e.code === 'KeyP') this.actions |= 2; if (e.code === 'KeyE') this.actions |= 4; } if (['ArrowUp','ArrowDown','ArrowLeft','ArrowRight','Space'].includes(e.code)) e.preventDefault(); });
+    target.addEventListener('keyup', e => this.held.delete(e.code)); target.addEventListener('blur', () => this.held.clear());
+    target.addEventListener('pointermove', e => { this.mouseX = e.clientX; this.mouseY = e.clientY; });
+    target.addEventListener('pointerdown', e => { this.mouseButtons |= 1 << e.button; }); target.addEventListener('pointerup', e => { this.mouseButtons &= ~(1 << e.button); });
+  }
+  isDown(code) { return this.held.has(code); }
+  takeActions() { const a = this.actions; this.actions = 0; return a; }
+};

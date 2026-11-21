@@ -1,141 +1,31 @@
-// Drawing only: the world's state and the current screen in, pixels out. The 1280x720 playfield
-// is scaled to fit the window and centred, the margin filled with the backdrop colour. Flat
-// rectangles and circles, canvas text for the HUD and the panels. Text that holds a number is
-// rebuilt only when the number changes, so a frame allocates nothing.
-import { FIELD, FONT, LIVES, PALETTE } from './config.js';
-import { KIND_COIN } from './world.js';
-
-export const SCREEN_TITLE = 'title';
-export const SCREEN_PLAY = 'play';
-export const SCREEN_PAUSED = 'paused';
-export const SCREEN_OVER = 'over';
-
-/** The panel's width; its height grows with its lines: room for the title, the lines and the prompt. */
-const PANEL = { width: 600, top: 134, line: 34, bottom: 70 };
-const LIFE_SIZE = 20;
-const LIFE_GAP = 8;
-
-function cachedLabel(prefix) {
-  let value = -1;
-  let text = '';
-  return function label(next) {
-    if (next !== value) {
-      value = next;
-      text = prefix + next;
+import { CONFIG } from './config.js';
+export const CityRenderer = class CityRenderer {
+  constructor(canvas) { this.canvas=canvas; this.ctx=canvas.getContext('2d'); this.scale=1; this.ox=0; this.oy=0; this.resize(); window.addEventListener('resize',()=>this.resize()); }
+  resize() { const c=this.canvas, r=window.devicePixelRatio||1; c.width=Math.round(innerWidth*r); c.height=Math.round(innerHeight*r); this.scale=Math.min(c.width/CONFIG.width,c.height/CONFIG.height); this.ox=(c.width-CONFIG.width*this.scale)/2; this.oy=(c.height-CONFIG.height*this.scale)/2; }
+  frame(fn) { const c=this.ctx; c.setTransform(1,0,0,1,0,0); c.fillStyle='#14272c'; c.fillRect(0,0,this.canvas.width,this.canvas.height); c.setTransform(this.scale,0,0,this.scale,this.ox,this.oy); fn(c); }
+  _visible(x,y,w,h,camera) { return x+w>camera.x-CONFIG.width/2-200 && x<camera.x+CONFIG.width/2+200 && y+h>camera.y-CONFIG.height/2-260 && y<camera.y+CONFIG.height/2+260; }
+  draw(ctx, world, camera) { this.frame(c=>{ c.save(); camera.apply(c); this._city(c,world,camera);for(const v of world.vehicles)v.draw(c,camera,world);world.player.draw(c,camera,world);if(world.driving)world.driving.draw(c,camera,world); this.drawObjective(c,world,camera); c.restore(); }); }
+  _city(c,w,camera) {
+    const left=camera.x-CONFIG.width/2-5, top=camera.y-CONFIG.height/2-5;
+    c.fillStyle=CONFIG.palette.sea; c.fillRect(left,top,CONFIG.width+10,CONFIG.height+10);
+    // West-facing sand shelf and inland green base.
+    c.fillStyle=CONFIG.palette.sand; c.fillRect(470,0,92,w.city.height);
+    c.fillStyle=CONFIG.palette.grass; c.fillRect(555,0,w.city.width-555,w.city.height);
+    c.fillStyle='rgba(255,240,186,.18)'; for(let i=0;i<9;i++){const y=((w.time*22+i*151)%w.city.height); c.fillRect(40+((i*67)%280),y,130,2);}
+    c.fillStyle=CONFIG.palette.asphalt; c.lineCap='butt'; for(const r of w.city.roads){ if(!this._visible(Math.min(r.x1,r.x2),Math.min(r.y1,r.y2),Math.abs(r.x2-r.x1)||r.width,Math.abs(r.y2-r.y1)||r.width,camera))continue; c.lineWidth=r.width+10;c.strokeStyle=CONFIG.palette.sidewalk;c.beginPath();c.moveTo(r.x1,r.y1);c.lineTo(r.x2,r.y2);c.stroke();c.lineWidth=r.width;c.strokeStyle=CONFIG.palette.asphalt;c.stroke();c.setLineDash([22,22]);c.lineWidth=2;c.strokeStyle='rgba(243,215,150,.55)';c.stroke();c.setLineDash([]); }
+    // Beach palms and their fixed south-east cast shadows.
+    for(const p of w.city.palms) if(this._visible(p.x-20,p.y-20,40,40,camera)){c.strokeStyle='rgba(42,43,35,.22)';c.lineWidth=5;c.beginPath();c.moveTo(p.x,p.y);c.lineTo(p.x+8,p.y+20);c.stroke();c.strokeStyle='#805b37';c.lineWidth=4;c.beginPath();c.moveTo(p.x,p.y);c.lineTo(p.x-3,p.y-24);c.stroke();c.fillStyle='#397c53';for(let a=0;a<5;a++){c.beginPath();c.ellipse(p.x-3+Math.cos(a*1.25)*13,p.y-25+Math.sin(a*1.25)*7,12,4,a*1.25,0,Math.PI*2);c.fill();}}
+    const ordered=w.city.buildings.slice().sort((a,b)=>a.y-b.y); for(const b of ordered){if(!this._visible(b.x,b.y-b.height,b.w+b.height*.18,b.d+b.height,camera))continue; const h=b.height*.45, dx=h*.38, dy=h*.52;
+      c.fillStyle='rgba(53,43,35,.22)';c.beginPath();c.moveTo(b.x+dx,b.y+dy+b.d);c.lineTo(b.x+b.w+dx,b.y+dy+b.d);c.lineTo(b.x+b.w+dx+h*.65,b.y+dy+b.d+h*.65);c.lineTo(b.x+dx+h*.65,b.y+dy+b.d+h*.65);c.closePath();c.fill();
+      c.fillStyle=shade(b.color,.76);c.beginPath();c.moveTo(b.x+b.w,b.y);c.lineTo(b.x+b.w+dx,b.y-dy);c.lineTo(b.x+b.w+dx,b.y+b.d-dy);c.lineTo(b.x+b.w,b.y+b.d);c.closePath();c.fill();
+      c.fillStyle=shade(b.color,.63);c.beginPath();c.moveTo(b.x,b.y+b.d);c.lineTo(b.x+b.w,b.y+b.d);c.lineTo(b.x+b.w+dx,b.y+b.d-dy);c.lineTo(b.x+dx,b.y+b.d-dy);c.closePath();c.fill();
+      c.fillStyle=b.color;c.fillRect(b.x,b.y-b.height*.12,b.w,b.d);c.fillStyle=b.roof;c.fillRect(b.x-3,b.y-b.height*.12-4,b.w+6,b.d+5);
+      if(b.height>60){c.fillStyle='rgba(255,224,157,.65)';for(let wx=b.x+9;wx<b.x+b.w-4;wx+=18)for(let wy=b.y+9;wy<b.y+b.d-4;wy+=20)c.fillRect(wx,wy,4,5);}
     }
-    return text;
-  };
-}
-
-export function createRenderer(canvas) {
-  const context = canvas.getContext('2d');
-  const view = { scale: 1, x: 0, y: 0 };
-  const scoreLabel = cachedLabel('Score ');
-  const levelLabel = cachedLabel('Level ');
-  const finalLabel = cachedLabel('Score ');
-  const bestLabel = cachedLabel('Best ');
-
-  function resize() {
-    const ratio = window.devicePixelRatio || 1;
-    const width = Math.round(window.innerWidth * ratio);
-    const height = Math.round(window.innerHeight * ratio);
-    canvas.width = width;
-    canvas.height = height;
-    view.scale = Math.min(width / FIELD.width, height / FIELD.height);
-    view.x = (width - FIELD.width * view.scale) / 2;
-    view.y = (height - FIELD.height * view.scale) / 2;
+    for(const p of w.city.piers){ c.fillStyle='#9c7856';c.fillRect(p.x2,p.y2-7,p.x1-p.x2,p.width); for(let x=p.x2;x<p.x1;x+=28)c.fillRect(x,p.y2-9,5,22); }
+    const runway=w.city.runway; c.fillStyle='#55545a';c.fillRect(runway.x,runway.y,runway.w,runway.h);c.fillStyle='#e9dfc3';for(let x=runway.x+20;x<runway.x+runway.w-20;x+=40)c.fillRect(x,runway.y+42,20,5);
+    const t=w.city.terminal;c.fillStyle='#bbb29e';c.fillRect(t.x,t.y,t.w,t.h);
   }
-
-  const fonts = new Map();
-  function text(value, x, y, size, color, align) {
-    if (!fonts.has(size)) fonts.set(size, `${size}px ${FONT}`);
-    context.font = fonts.get(size);
-    context.fillStyle = color;
-    context.textAlign = align;
-    context.fillText(value, x, y);
-  }
-
-  function drawField(state) {
-    context.fillStyle = PALETTE.sky;
-    context.fillRect(0, 0, FIELD.width, FIELD.height);
-    context.fillStyle = PALETTE.ground;
-    context.fillRect(0, FIELD.groundY, FIELD.width, FIELD.height - FIELD.groundY);
-
-    const items = state.items;
-    for (let index = 0; index < items.length; index += 1) {
-      const item = items[index];
-      if (!item.active) continue;
-      if (item.kind === KIND_COIN) {
-        context.fillStyle = PALETTE.coin;
-        context.beginPath();
-        context.arc(item.x + item.width / 2, item.y + item.height / 2, item.width / 2, 0, Math.PI * 2);
-        context.fill();
-      } else {
-        context.fillStyle = PALETTE.block;
-        context.fillRect(item.x, item.y, item.width, item.height);
-      }
-    }
-
-    const player = state.player;
-    // Blink while invulnerable after a hit: hidden on every other tenth of a second.
-    if (player.invulnerable === 0 || Math.floor(player.invulnerable * 10) % 2 === 1) {
-      context.fillStyle = PALETTE.player;
-      context.fillRect(player.x, player.y, player.width, player.height);
-    }
-  }
-
-  function drawHud(state) {
-    context.textBaseline = 'top';
-    text(scoreLabel(state.score), 24, 20, 28, PALETTE.text, 'left');
-    text(levelLabel(state.level), FIELD.width / 2, 20, 28, PALETTE.text, 'center');
-    const firstLife = FIELD.width - 24 - LIVES * (LIFE_SIZE + LIFE_GAP) + LIFE_GAP;
-    text('Lives', firstLife - 12, 20, 28, PALETTE.text, 'right');
-    for (let life = 0; life < LIVES; life += 1) {
-      context.fillStyle = life < state.lives ? PALETTE.player : PALETTE.ground;
-      context.fillRect(firstLife + life * (LIFE_SIZE + LIFE_GAP), 24, LIFE_SIZE, LIFE_SIZE);
-    }
-  }
-
-  function drawPanel(title, lines, prompt) {
-    const height = PANEL.top + lines.length * PANEL.line + PANEL.bottom;
-    const x = (FIELD.width - PANEL.width) / 2;
-    const y = (FIELD.height - height) / 2;
-    context.fillStyle = PALETTE.panel;
-    context.fillRect(x, y, PANEL.width, height);
-    context.textBaseline = 'alphabetic';
-    text(title, FIELD.width / 2, y + 78, 48, PALETTE.text, 'center');
-    for (let index = 0; index < lines.length; index += 1) {
-      text(lines[index], FIELD.width / 2, y + PANEL.top + index * PANEL.line, 22, PALETTE.muted, 'center');
-    }
-    text(prompt, FIELD.width / 2, y + height - 40, 24, PALETTE.coin, 'center');
-  }
-
-  const TITLE_LINES = ['Dodge the red blocks. Catch the gold coins.', 'Move with ← → or A D.  Pause with P.', ''];
-  const PAUSED_LINES = ['The blocks will wait for you.'];
-  const OVER_LINES = ['', ''];
-
-  /** Paint one frame: the field, then the HUD or a panel for the screen the game is on. */
-  function draw(state, screen, best) {
-    context.setTransform(1, 0, 0, 1, 0, 0);
-    context.fillStyle = PALETTE.backdrop;
-    context.fillRect(0, 0, canvas.width, canvas.height);
-    context.setTransform(view.scale, 0, 0, view.scale, view.x, view.y);
-    drawField(state);
-    if (screen === SCREEN_TITLE) {
-      TITLE_LINES[2] = bestLabel(best);
-      drawPanel('Block Dodger', TITLE_LINES, 'Press Space or click to start');
-      return;
-    }
-    drawHud(state);
-    if (screen === SCREEN_PAUSED) drawPanel('Paused', PAUSED_LINES, 'Press P to resume');
-    else if (screen === SCREEN_OVER) {
-      OVER_LINES[0] = finalLabel(state.score);
-      OVER_LINES[1] = bestLabel(best);
-      drawPanel('Game over', OVER_LINES, 'Press Space or click to play again');
-    }
-  }
-
-  resize();
-  window.addEventListener('resize', resize);
-  return { draw };
-}
+  drawObjective(ctx,world) { if(!world.objective)return;const o=world.objective,p=.5+.5*Math.sin(world.time*3);ctx.fillStyle=`rgba(255,200,62,${.11+p*.08})`;ctx.fillRect(o.x-14,o.y-170,28,170);ctx.strokeStyle=`rgba(255,215,95,${.7+p*.3})`;ctx.lineWidth=4;ctx.beginPath();ctx.ellipse(o.x,o.y,24+p*11,9+p*4,0,0,Math.PI*2);ctx.stroke(); }
+};
+function shade(hex,f){const n=parseInt(hex.slice(1),16);return `rgb(${Math.floor((n>>16)*f)},${Math.floor(((n>>8)&255)*f)},${Math.floor((n&255)*f)})`;}
