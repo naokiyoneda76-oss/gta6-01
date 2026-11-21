@@ -21,7 +21,8 @@ export const CityMap = class CityMap {
     for (let y = 1900; y < 2600; y += 145) this.piers.push({ x1: 500, y1: y, x2: this.rng.range(280, 430), y2: y + this.rng.range(-24, 24), width: 18 });
     for(let i=0;i<14;i++)this.boats.push({x:300+(i%4)*58,y:1780+i*61,a:(i%2?-.12:.1),l:i%3===0?78:48});
     this.buoys=[];for(let i=0;i<12;i++)this.buoys.push({x:190+(i%3)*95,y:1815+i*58});
-    for(let i=0;i<13;i++)this.crates.push({x:565+(i%4)*27,y:2055+Math.floor(i/4)*30,w:23,h:19});
+    // Irregular marina freight pile; the front crate remains beside Danny's cover.
+    for(const [x,y] of [[565,2055],[591,2051],[621,2058],[647,2053],[560,2082],[590,2087],[617,2080],[649,2088],[566,2114],[594,2110],[624,2118],[651,2112],[700,2100]])this.crates.push({x,y,w:23,h:19});
     this.runway = { x: 3930, y: 2430, w: 760, h: 90 }; this.terminal = { x: 3700, y: 2160, w: 260, h: 180 };
   }
   _fillDistrict(d) {
