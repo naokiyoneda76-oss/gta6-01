@@ -14,7 +14,7 @@ export const ShotDirector=class ShotDirector{
    const hero=new Vehicle(690,1010,'sport','#e94f45',-.15),taxi=new Vehicle(825,1010,'taxi','#e8bc3e',.1);hero.driver='player';w.vehicles.push(hero,taxi);
    w.city.roads.push({x1:500,y1:1100,x2:1050,y2:1100,width:110});w.city.palms.push({x:535,y:1065},{x:1030,y:1065});
    w.city.buildings.push({x:565,y:905,w:110,d:62,height:28,kind:'house',house:true,color:'#e9b68b',roof:'#d98768',district:'coral',treatment:0},{x:860,y:905,w:125,d:65,height:32,kind:'shop',archetype:'shop',commercial:true,awning:true,color:'#c7b9a0',roof:'#d18b70',district:'coral',treatment:1});
-   w._styleCrates=[{x:740,y:1038,w:18,h:18},{x:766,y:1042,w:18,h:18}];game.camera.x=780;game.camera.y=1010;game.camera.zoom=1.8;w.objective=null;w.heat=0;w.wanted.heat=0;return true;
+   w._styleCrates=[{x:740,y:1038,w:18,h:18},{x:766,y:1042,w:18,h:18}];game.camera.x=800;game.camera.y=1010;game.camera.zoom=2.5;w.objective=null;w.heat=0;w.wanted.heat=0;return true;
   }
   if(name==='cover'){
    w.setTimeOfDay('day');game.camera.zoom=3.6;game.camera.x=640;game.camera.y=1000;
