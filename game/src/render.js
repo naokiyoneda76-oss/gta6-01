@@ -3,6 +3,7 @@ export const CityRenderer = class CityRenderer {
   constructor(canvas) { this.canvas=canvas; this.ctx=canvas.getContext('2d'); this.scale=1; this.ox=0; this.oy=0; this.resize(); window.addEventListener('resize',()=>this.resize()); }
   resize() { const c=this.canvas, r=window.devicePixelRatio||1; c.width=Math.round(innerWidth*r); c.height=Math.round(innerHeight*r); this.scale=Math.min(c.width/CONFIG.width,c.height/CONFIG.height); this.ox=(c.width-CONFIG.width*this.scale)/2; this.oy=(c.height-CONFIG.height*this.scale)/2; }
   frame(fn) { const c=this.ctx; c.setTransform(1,0,0,1,0,0); c.fillStyle='#14272c'; c.fillRect(0,0,this.canvas.width,this.canvas.height); c.setTransform(this.scale,0,0,this.scale,this.ox,this.oy); fn(c); }
+  overlay(fn) { const c=this.ctx; c.setTransform(this.scale,0,0,this.scale,this.ox,this.oy); fn(c); }
   _visible(x,y,w,h,camera) { return x+w>camera.x-CONFIG.width/2-200 && x<camera.x+CONFIG.width/2+200 && y+h>camera.y-CONFIG.height/2-260 && y<camera.y+CONFIG.height/2+260; }
   draw(ctx, world, camera) { this.frame(c=>{ c.save(); camera.apply(c); this._city(c,world,camera);for(const v of world.vehicles)v.draw(c,camera,world);world.player.draw(c,camera,world);if(world.driving)world.driving.draw(c,camera,world); this.drawObjective(c,world,camera); c.restore(); }); }
   _city(c,w,camera) {
