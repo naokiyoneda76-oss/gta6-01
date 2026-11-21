@@ -13,7 +13,8 @@ export const ShotDirector=class ShotDirector{
    const brake=new Vehicle(535,936,'sedan','#d8d2bd',0);brake.driver='traffic';brake._braking=true;w.vehicles.push(brake);w.traffic.cars.push(brake);
    const police=new Vehicle(1110,1000,'police','#e7e4d8',0);police.driver='police';police._headlights=true;w.vehicles.push(police);w.police.units.push(police);
    const p=w.pedestrians.people[0];p.x=610;p.y=1060;p.run=false;p._recoil=false;p._alarmed=true;p.timer=2;p.vx=0;p.vy=0;p.angle=0;dress([[890,900,'sedan','#47747a',0],[980,1130,'taxi','#e8bc3e',Math.PI/2]],[[600,1000],[620,1040],[585,1060]]);
-   w.objective={x:750,y,label:'DELIVER THE CAR'};w.heat=2;w.wanted.heat=2;for(let i=0;i<7;i++){w.effects.skid(x-72+i*8,y+70-i*7,.78,26);w.effects.skid(x-86+i*8,y+84-i*7,.78,25);}for(let i=0;i<12;i++)w.effects.particles.push({x:x-18-i*5,y:y+8+i*1.3,vx:-8,vy:3,life:1,size:7+(i%4)*2,color:'rgba(250,249,242,.62)',_smoke:true});w.pinCallout('STOLEN!','+ SPORTS CAR',{y:176});game.camera.x=690;game.camera.y=1020;game.camera.zoom=2.2;
+   // Stage FIRST WHEELS after the steal: its target ring now points to Mia's garage.
+   w.missions.index=1;w.missions.state='active';w.missions.car=v;w.objective={x:4050,y:1700,label:'DELIVER THE CAR'};w.heat=2;w.wanted.heat=2;for(let i=0;i<7;i++){w.effects.skid(x-72+i*8,y+70-i*7,.78,26);w.effects.skid(x-86+i*8,y+84-i*7,.78,25);}for(let i=0;i<12;i++)w.effects.particles.push({x:x-18-i*5,y:y+8+i*1.3,vx:-8,vy:3,life:1,size:7+(i%4)*2,color:'rgba(250,249,242,.62)',_smoke:true});w.pinCallout('STOLEN!','+ SPORTS CAR',{y:176});game.camera.x=690;game.camera.y=1020;game.camera.zoom=2.2;
   }
   else if(name==='chase'){
    w.setTimeOfDay('night');const x=1250,y=720,v=new Vehicle(x,y,'sport','#e94f45',Math.PI/2-.27);v.speed=785;v.driver='player';v._handbrake=true;w.vehicles.push(v);w.driving=v;w.player.x=x;w.player.y=y;w.objective={x:x+620,y,label:'LOSE THE HEAT'};w.wanted.heat=w.heat=5;
