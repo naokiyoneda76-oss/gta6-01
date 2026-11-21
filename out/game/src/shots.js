@@ -25,11 +25,11 @@ export const ShotDirector=class ShotDirector{
    w._styleCrates=[{x:700,y:1028,w:18,h:18},{x:724,y:1032,w:18,h:18}];game.camera.x=842;game.camera.y=1060;game.camera.zoom=1.55;w.objective=null;w.heat=0;w.wanted.heat=0;return true;
   }
   if(name==='cover'){
-   w.setTimeOfDay('day');game.camera.zoom=4.3;game.camera.x=640;game.camera.y=1000;
+   w.setTimeOfDay('day');game.camera.zoom=4.3;game.camera.x=646;game.camera.y=1000;
    // FIRST WHEELS catches the handoff itself: a parked car and two distinct, staged poses.
-   const v=new Vehicle(669.17,997.22,'sport','#e94f45',-.61);v.speed=0;v.driver='player';v._doorOpen=true;v._coverDoorAngle=50;v._groundMarker=false;v._handbrake=false;w.vehicles=[v];w.traffic.cars=[];w.gang.crews=[];w._shotSpeed=0;
-   w.player.x=639.44;w.player.y=1011.67;w.player.angle=-.61;w.player._coverEntering=true;
-   const p=w.pedestrians.people[0];p.x=612.22;p.y=987.50;p.run=false;p._recoil=false;p._alarmed=false;p._coverOwnerStagger=true;p.timer=0;p.vx=0;p.vy=0;p.angle=0;
+   const v=new Vehicle(650,1020,'sport','#e94f45',Math.PI/2);v.speed=0;v.driver='player';v._doorOpen=true;v._coverDoorAngle=62;v._groundMarker=false;v._handbrake=false;v._coverDoor=true;w.vehicles=[v];w.traffic.cars=[];w.gang.crews=[];w._shotSpeed=0;
+   w.player.x=644;w.player.y=1003;w.player.angle=0;w.player._coverEntering=true;
+   const p=w.pedestrians.people[0];p.x=638;p.y=986;p.run=false;p._recoil=false;p._alarmed=false;p._coverOwnerStagger=true;p.timer=0;p.vx=0;p.vy=0;p.angle=0;
    w.city.looseItems=[];
    // The owner recoils away from the car; this shot has exactly two people.
    w.pedestrians.people=[p];
@@ -39,6 +39,7 @@ export const ShotDirector=class ShotDirector{
    const halfW=1280/(2*game.camera.zoom),halfH=800/(2*game.camera.zoom),left=game.camera.x-halfW,right=game.camera.x+halfW,top=game.camera.y-halfH,bottom=game.camera.y+halfH;
    w.city.parkedCars=w.city.parkedCars.filter(q=>q.x<left-16||q.x>right+16||q.y<top-16||q.y>bottom+16);
    w.city.streetProps=w.city.streetProps.filter(q=>q.x<left-18||q.x>right+18||q.y<top-24||q.y>bottom+12);
+   w.city.palms=w.city.palms.filter(q=>q.x<left-18||q.x>right+18||q.y<top-24||q.y>bottom+12);
    w.missions.index=1;w.missions.state='active';w.missions.car=v;w.objective=null;w._shotObjectiveBanner='GET IN THE CAR';w.heat=2;w.wanted.heat=2;
    w.effects.skids=[];w.effects.particles=w.effects.particles.filter(q=>!q._smoke);w.pinCallout('STOLEN!','FIRST WHEELS',{y:176});
   }
