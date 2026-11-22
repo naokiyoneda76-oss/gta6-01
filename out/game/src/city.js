@@ -13,7 +13,7 @@ export const CityMap = class CityMap {
     this.roads.push({ x1: 635, y1: 0, x2: 635, y2: this.height, width: 84 });
     this._buildMarinaRoads();
     // Shot-district surface footprints are authored alongside the road graph.
-    this.shotGround={coral:{shore:470,sandEnd:560,promenadeEnd:593,road:{x:635,width:84}},downtown:{road:{x:1920,width:84},parking:38,sidewalk:24},airport:{apron:{x:3860,y:2350,w:600,h:320}}};
+    this.shotGround={coral:{shore:470,sandEnd:540,promenadeEnd:593,road:{x:635,width:84},median:{x:631.5,y1:900,y2:1008,y3:1032,y4:1110,w:7},park:{x:700,y:930,w:74,h:130}},downtown:{road:{x:1920,width:84},parking:38,sidewalk:24,park:{x:2050,y:742,w:50,h:86}},airport:{apron:{x:3860,y:2350,w:600,h:320}}};
     for (const district of this.districts) this._fillDistrict(district);
     for(const id of ['coral','downtown','marina','porto','laspalmas','airport']){const q=this.districts.find(v=>v.id===id);for(let i=0;i<12;i++)if(this.rng.chance(.77)){const x=this.rng.range(q.x+12,q.x+q.w-120),y=this.rng.range(q.y+12,q.y+q.h-100),w=this.rng.range(76,124),depth=this.rng.range(65,102);if(!this._nearRoad(x+w/2,y+depth/2,w,depth)&&!this.buildings.some(b=>x<b.x+b.w&&x+w>b.x&&y<b.y+b.d&&y+depth>b.y))this.lots.push({x,y,w,d:depth,type:this.rng.pick(['parking','plaza','yard','construction']),cars:this.rng.int(2,5)});}}
     // Sidewalk furniture and curb parking use stable road coordinates, leaving the carriageway clear.
@@ -31,7 +31,7 @@ export const CityMap = class CityMap {
   _buildMarinaRoads() {
     const marina=this.districts.find(d=>d.id==='marina'),y0=marina.y,y1=marina.y+marina.h,x0=500,x1=marina.x+marina.w,out=[];
     for(const r of this.roads){const vertical=r.x1===r.x2;if(vertical&&r.y1===0&&r.y2===this.height&&r.x1>=x0&&r.x1<=x1){out.push({...r,y2:y0},{...r,y1:y0,y2:y1,width:84,groundProfile:'marina'},{...r,y1:y1});}else if(!vertical&&r.x1===500&&r.x2===this.width&&r.y1>=y0&&r.y1<=y1){out.push({...r,x2:x0},{...r,x1:x0,x2:x1,width:84,groundProfile:'marina'} ,{...r,x1:x1});}else out.push(r);}
-    this.roads=out;this.marinaGround={x:marina.x,y:marina.y,w:marina.w,h:marina.h,sidewalk:24,parking:38,cargo:{x:535,y:1988,w:235,h:215}};
+    this.roads=out;this.marinaGround={x:marina.x,y:marina.y,w:marina.w,h:marina.h,sidewalk:18,parking:22,cargo:{x:535,y:1988,w:235,h:215}};
   }
   _fillDistrict(d) {
     const [minH, maxH] = d.heights; const step = d.kind === 'tower' ? 130 : d.kind === 'house' ? 95 : 120;
@@ -43,7 +43,11 @@ export const CityMap = class CityMap {
       const variation=this.rng.range(.76,1.16),height=house?this.rng.range(15,27):this.rng.range(minH,maxH)*variation,base=parseInt(d.color.slice(1),16);
       const color='#'+[16,8,0].map(s=>Math.max(0,Math.min(255,((base>>s)&255)+this.rng.range(-13,13)|0)).toString(16).padStart(2,'0')).join('');
       const neon=d.id==='downtown'&&this.rng.chance(.34)?{count:this.rng.int(1,2),width:this.rng.int(23,39),hue:this.rng.pick(['#ff4fa3','#43dce2','#ffc44d','#a77bff'])}:null;
-      const warehouse=(d.id==='porto'||d.id==='airport')&&this.rng.chance(d.id==='porto'?.22:.15),footprint=this.rng.chance(.23)?'L':'rect';let kind=warehouse?'warehouse':d.kind,archetype=house?'house':d.kind==='tower'?(this.rng.chance(.45)?'apartment':'tower'):(['coral','downtown','marina','porto'].includes(d.id)&&this.rng.chance(.52)?'shop':'office');const record={x,y,w:warehouse?Math.min(step*1.2,d.x+d.w-x-18):w,d:warehouse?Math.max(30,dep*.7):dep,height:warehouse?this.rng.range(22,38):archetype==='apartment'?this.rng.range(75,115):height,kind,archetype,footprint,wing:footprint==='L'?{x:x+w*.48,y:y+dep*.42,w:w*.52,d:dep*.58}:null,shade:this.rng.range(.86,1.12),district:d.id,color,roof:this.rng.pick(['#b6a28a','#8f8577','#c4ad88','#777d79','#a88e78','#d0b68d']),treatment:this.rng.int(0,2),awning:d.id==='coral'&&y<d.y+155,commercial:['coral','downtown','marina','porto'].includes(d.id)&&!house,house,roofProps:this.rng.int(1,3),storefronts:archetype==='shop'?this.rng.int(3,5):0,neon};this.buildings.push(record);
+      const warehouse=(d.id==='porto'||d.id==='airport')&&this.rng.chance(d.id==='porto'?.22:.15),footprint=this.rng.chance(.23)?'L':'rect';let kind=warehouse?'warehouse':d.kind,archetype=house?'house':d.kind==='tower'?(this.rng.chance(.45)?'apartment':'tower'):(['coral','downtown','marina','porto'].includes(d.id)&&this.rng.chance(.52)?'shop':'office');const record={x,y,w:warehouse?Math.min(step*1.2,d.x+d.w-x-18):w,d:warehouse?Math.max(30,dep*.7):dep,height:warehouse?this.rng.range(22,38):archetype==='apartment'?this.rng.range(75,115):height,kind,archetype,footprint,wing:footprint==='L'?{x:x+w*.48,y:y+dep*.42,w:w*.52,d:dep*.58}:null,shade:this.rng.range(.86,1.12),district:d.id,color,roof:this.rng.pick(['#b6a28a','#8f8577','#c4ad88','#777d79','#a88e78','#d0b68d']),treatment:this.rng.int(0,2),awning:d.id==='coral'&&y<d.y+155,commercial:['coral','downtown','marina','porto'].includes(d.id)&&!house,house,roofProps:this.rng.int(1,3),storefronts:archetype==='shop'?this.rng.int(3,5):0,neon};
+      // The frontage points toward the nearest street edge: south=0, west=90, north=180, east=270.
+      let frontage=null,frontageDistance=Infinity;
+      for(const road of this.roads){const vertical=road.x1===road.x2;if(vertical){const side=x+w/2<road.x1?1:-1,edge=road.x1+side*road.width/2,dist=Math.abs((side>0?x+w:x)-edge);if(dist<frontageDistance){frontageDistance=dist;frontage=side>0?270:90;}}else{const side=y+dep/2<road.y1?1:-1,edge=road.y1+side*road.width/2,dist=Math.abs((side>0?y+dep:y)-edge);if(dist<frontageDistance){frontageDistance=dist;frontage=side>0?0:180;}}}
+      record.rotation=d.id==='airport'?0:(frontage||0);this.buildings.push(record);
       if(house){const count=this.rng.int(1,3);for(let i=0;i<count;i++){const hx=x+9+(i%2)*43,hy=y+Math.floor(i/2)*43;if(hx+38<d.x+d.w-10&&hy+36<d.y+d.h-10)this.buildings.push({...record,x:hx,y:hy,w:38,d:36,height:this.rng.range(15,24),roofProps:1,roof:this.rng.pick(['#b6a28a','#c4ad88','#a88e78','#d0b68d'])});}}
     }
   }
