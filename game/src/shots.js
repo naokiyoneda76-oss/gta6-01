@@ -69,7 +69,9 @@ export const ShotDirector=class ShotDirector{
    const pier=w.gang.spawnGroup(530,1950,3,{faction:'Ambush',color:'#B65D59'});
    pier.members.forEach((p,i)=>{p.x=525+i*18;p.y=1995+i*18;p.state='combat';p.angle=Math.atan2(w.player.y-p.y,w.player.x-p.x);p._flash=true;p._advancing=true;p.cover={x:p.x,y:p.y};});
    const road=w.gang.spawnGroup(710,1930,3,{faction:'Ambush',color:'#B65D59'});
-   road.members.forEach((p,i)=>{p.x=695+i*14;p.y=1973+i*14;p.state='combat';p.angle=Math.atan2(w.player.y-p.y,w.player.x-p.x);p._flash=true;p._advancing=false;p.cover={x:p.x,y:p.y};});road.members[0].y+=118;
+   road.members.forEach((p,i)=>{p.x=695+i*14;p.y=1973+i*14;p.state='combat';p.angle=Math.atan2(w.player.y-p.y,w.player.x-p.x);p._flash=true;p._advancing=false;p.cover={x:p.x,y:p.y};});road.members[0].y+=34; // round-113 staging; preserve member 0
+   road.members[1].y+=26; // title clearance; capture can tune this world-space offset
+   road.members[2].y+=8; // clear the subtitle band at the right edge
    // Incoming rounds strike the cover; Danny returns one short bright tracer west.
    w.combat.bullets.push({x:650,y:2059,prevX:700,prevY:2059,vx:0,vy:0,life:1,range:300,owner:'gang'});
    w.combat.bullets.push({x:635,y:2055,prevX:670,prevY:2055,sx:670,sy:2055,vx:0,vy:0,life:1,range:300,owner:'player',staged:true});
