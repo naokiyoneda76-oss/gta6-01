@@ -4,7 +4,7 @@ import {Vehicle,VEHICLE_TYPES} from './vehicles.js';
 
 export const ShotDirector=class ShotDirector{
   stageShot(name,game){
-  game.camera._homecomingWestClamp=0;const params=new URLSearchParams(location.search),seed=Number(params.get('seed')||1),variant=params.get('variant')||'',cover2=params.get('cover2')==='1';game.rng=new SeededRandom(seed);game.world=new World(game.rng);const w=game.world;game.screen='play';const dress=(cars,people)=>{for(const [x,y,type,color,a] of cars){const q=new Vehicle(x,y,type,color,a);q.driver='traffic';q.speed=45;w.vehicles.push(q);w.traffic.cars.push(q);}for(const [x,y] of people){const p=w.pedestrians.people[w.pedestrians.people.length-1];const q={...p,x,y,vx:0,vy:0,angle:0,timer:0,run:false};w.pedestrians.people.push(q);}};
+  game.camera._homecomingWestClamp=0;const params=new URLSearchParams(location.search),seed=Number(params.get('seed')||1),variant=params.get('variant')||'',cover2=params.get('cover2')==='1',cover3=!cover2&&params.get('cover3')!=='0';game.rng=new SeededRandom(seed);game.world=new World(game.rng);const w=game.world;w._stagedShot=true;w._fxLegacy=params.get('fx')==='0';game.screen='play';const dress=(cars,people)=>{for(const [x,y,type,color,a] of cars){const q=new Vehicle(x,y,type,color,a);q.driver='traffic';q.speed=45;w.vehicles.push(q);w.traffic.cars.push(q);}for(const [x,y] of people){const p=w.pedestrians.people[w.pedestrians.people.length-1];const q={...p,x,y,vx:0,vy:0,angle:0,timer:0,run:false};w.pedestrians.people.push(q);}};
   if(name==='title'){game.screen='title';game.camera.x=535;game.camera.y=950;game.time=8;return false;}
   if(name==='map'){w._showMap=true;w.objective={x:820,y:950,label:'MISSION: MEET MIA'};game.camera.x=535;game.camera.y=950;return true;}
   if(name==='styletest'){
@@ -89,17 +89,26 @@ export const ShotDirector=class ShotDirector{
      {head:{x:1,y:-11},shoulder:[{x:-4.5,y:-9},{x:4.5,y:-9}],hip:{x:0,y:-2},elbow:[{x:-8,y:-7},{x:8,y:-7}],hand:[{x:-12,y:-5},{x:12,y:-5}],knee:[{x:-6,y:-1},{x:4,y:0}],foot:[{x:-10,y:4},{x:7,y:5}]}
     ];
     [...road.members,...pier.members].forEach((p,i)=>{p.joints=poses[i];p._cover2Weapon=true;p._cover2Firing=i<2||i===3;p._weaponAngle=Math.atan2(2050-p.y,650-p.x);p._cover2Pose=['run','cover','aim','walk','aim','cover'][i];});
-    const ally={...pier.members[0],x:649,y:2085,state:'combat',color:'#398F91',joints:{head:{x:0,y:-12},shoulder:[{x:-4.5,y:-9},{x:4.5,y:-9}],hip:{x:0,y:-2},elbow:[{x:-8,y:-12},{x:8,y:-12}],hand:[{x:-9,y:-15},{x:9,y:-15}],knee:[{x:-5,y:4},{x:5,y:4}],foot:[{x:-8,y:5},{x:8,y:5}]},_cover2Weapon:true,_cover2Firing:true,_weaponAngle:Math.atan2(1995-2085,735-649),_cover2Ally:true,_cover2Pose:'cover'};
+    const ally={...pier.members[0],x:649,y:2085,state:'combat',color:'#398F91',joints:{head:{x:0,y:-13},shoulder:[{x:-4.5,y:-10},{x:4.5,y:-10}],hip:{x:0,y:-2},elbow:[{x:-7,y:-8},{x:7,y:-9}],hand:[{x:4,y:-9},{x:13,y:-8}],knee:[{x:-5,y:3},{x:5,y:5}],foot:[{x:-8,y:5},{x:6,y:5}]},_cover2Weapon:true,_cover2Firing:true,_weaponAngle:Math.atan2(1995-2085,735-649),_cover2Ally:true,_cover2Pose:'cover'};
     const support={faction:'Support',color:'#398F91',members:[ally]};w.gang.crews.push(support);
     w.player._marinaCover2Joints={head:{x:1,y:-14},shoulder:[{x:-4.8,y:-10.5},{x:3.8,y:-10.8}],hip:{x:0,y:-2.2},elbow:[{x:-10,y:-8.2},{x:-10,y:-8.4}],hand:[{x:-6,y:-4.1},{x:-23,y:-8}],knee:[{x:-4,y:1},{x:3,y:0}],foot:[{x:-7,y:4},{x:4,y:3}]};
     for(const p of [road.members[0],road.members[1],pier.members[0],ally]){const j=p.joints,a=p._weaponAngle||p._marinaAimAngle,h={x:j.hand[1].x* .8715,y:j.hand[1].y*.8715},m={x:p.x+h.x+Math.cos(a)*10,y:p.y+h.y+Math.sin(a)*10};w.combat.bullets.push({x:m.x+Math.cos(a)*25,y:m.y+Math.sin(a)*25,prevX:m.x,prevY:m.y,vx:0,vy:0,life:1,range:300,owner:'gang',staged:true,tapered:true,coverRightTracer:true});}
    }
+   if(cover3){
+    // Round 127: grounded road-side poses; support shoes sit at the person shadow anchor (4,6).
+    const roadPoses=[
+     {head:{x:-1,y:-14},shoulder:[{x:-5,y:-10.5},{x:4,y:-10.5}],hip:{x:0,y:-2.2},elbow:[{x:-7,y:-8},{x:7,y:-8}],hand:[{x:-5,y:-6},{x:11,y:-6}],knee:[{x:-4,y:-1},{x:5,y:2}],foot:[{x:-4,y:6},{x:4,y:6}]},
+     {head:{x:0,y:-14},shoulder:[{x:-4.5,y:-10.5},{x:4.5,y:-10.5}],hip:{x:0,y:-2.2},elbow:[{x:-7,y:-8},{x:7,y:-8}],hand:[{x:-5,y:-6},{x:10,y:-6}],knee:[{x:-5,y:2},{x:5,y:2}],foot:[{x:-4,y:6},{x:4,y:6}]},
+     {head:{x:5.5,y:-14},shoulder:[{x:-.5,y:-10.5},{x:7.5,y:-10.5}],hip:{x:2.5,y:-2.2},elbow:[{x:-4,y:-8},{x:10,y:-8}],hand:[{x:-2,y:-6},{x:13,y:-6}],knee:[{x:-1,y:-1},{x:6,y:2}],foot:[{x:-3,y:6},{x:4,y:6}]}
+    ];
+    road.members.forEach((p,i)=>{p.joints=roadPoses[i];p._cover3Weapon=true;});
+   }
    for(const p of [...pier.members,...road.members])p._marinaAimAngle=Math.atan2(p._marinaAimTarget.y-p.y,p._marinaAimTarget.x-p.x);
    // Left group keeps one round; the right group fires two brighter, longer tapered rounds.
-   if(!cover2)for(const p of [pier.members[0],road.members[0],road.members[1]]){const a=p._marinaAimAngle,hx=8*.8715,hy=-4.5*.8715,muzzle={x:p.x+hx*Math.cos(a)-hy*Math.sin(a)+10*Math.cos(a),y:p.y+hx*Math.sin(a)+hy*Math.cos(a)+10*Math.sin(a)},length=p._coverRightFiring?29.5:25;w.combat.bullets.push({x:muzzle.x+Math.cos(a)*length,y:muzzle.y+Math.sin(a)*length,prevX:muzzle.x,prevY:muzzle.y,vx:0,vy:0,life:1,range:300,owner:'gang',staged:true,tapered:true,coverRightTracer:!!p._coverRightFiring});}
-   w.combat.bullets.push({x:635,y:2055,prevX:670,prevY:2055,sx:670,sy:2055,vx:0,vy:0,life:1,range:300,owner:'player',staged:true});
-   w.effects.impacts.push({x:628,y:2047},{x:644,y:2043},{x:628,y:2047},{x:644,y:2043});
-   w.effects.lightPool(650,2059,'rgba(255,166,91,.055)',44);w.effects.lightPool(628,2047,'rgba(255,151,76,.035)',38);
+   if(!cover2){const members=[pier.members[0],road.members[0],road.members[1]];if(w._fxLegacy){for(const p of members){const a=p._marinaAimAngle,anchor=p._cover3Weapon?p.joints.hand[1]:{x:8,y:-4.5},hx=anchor.x*.8715,hy=anchor.y*.8715,muzzle={x:p.x+hx*Math.cos(a)-hy*Math.sin(a)+10*Math.cos(a),y:p.y+hx*Math.sin(a)+hy*Math.cos(a)+10*Math.sin(a)},length=p._coverRightFiring?29.5:25;w.combat.bullets.push({x:muzzle.x+Math.cos(a)*length,y:muzzle.y+Math.sin(a)*length,prevX:muzzle.x,prevY:muzzle.y,vx:0,vy:0,life:1,range:300,owner:'gang',staged:true,tapered:true,coverRightTracer:!!p._coverRightFiring});}}else{for(const [i,p] of members.entries()){const a=p._marinaAimAngle,[x,y,length]=i===0?[644,2043,25]:i===1?[640,2034,29.5]:[655,2075,29.5];w.combat.bullets.push({x,y,prevX:x-Math.cos(a)*length,prevY:y-Math.sin(a)*length,vx:0,vy:0,life:1,range:300,owner:'gang',staged:true,tapered:true,coverRightTracer:i>0});}}}
+   w.combat.bullets.push(w._fxLegacy?{x:635,y:2055,prevX:670,prevY:2055,sx:670,sy:2055,vx:0,vy:0,life:1,range:300,owner:'player',staged:true}:{x:636,y:2056,prevX:646,prevY:2056,sx:670,sy:2055,vx:0,vy:0,life:1,range:300,owner:'player',staged:true,tapered:true});
+   if(w._fxLegacy)w.effects.impacts.push({x:628,y:2047},{x:644,y:2043},{x:628,y:2047},{x:644,y:2043});else w.effects.impacts.push({x:644,y:2043});
+   if(w._fxLegacy){w.effects.lightPool(650,2059,'rgba(255,166,91,.055)',44);w.effects.lightPool(628,2047,'rgba(255,151,76,.035)',38);}else w.effects.lightPool(644,2043,'rgba(255,151,76,.025)',9);
    w.dialogue.active=false;w.heat=2;w.wanted.heat=2;w.activities.flags=[];w.activities.cards=[];w.pinCallout('BETRAYAL','SURVIVE THE AMBUSH',{x:640,y:176});game.camera.x=648;game.camera.y=2045;game.camera.zoom=2.7;dress([[500,1850,'sedan','#47747a',Math.PI/2],[745,2165,'pickup','#526d59',Math.PI/2]],[[465,1945],[795,2110],[520,2145],[340,2245],[385,2275],[430,2250]]);const marinaVan=new Vehicle(650,1870,'van','#477b82',Math.PI/2);marinaVan._parked=true;w.city.parkedCars.push(marinaVan);
    const crouchJoints={head:{x:0,y:-12},shoulder:[{x:-4.5,y:-9},{x:4.5,y:-9}],hip:{x:0,y:-2},elbow:[{x:-7,y:-13},{x:7,y:-13}],hand:[{x:-8,y:-17},{x:8,y:-17}],knee:[{x:-5,y:4},{x:5,y:4}],foot:[{x:-7,y:7},{x:7,y:7}]};
    w._marinaFreight={barrels:[{x:686,y:2140},{x:694,y:2142},{x:690,y:2149},{x:698,y:2151}],pallet:{x:682,y:2170},van:{x:691,y:2117,angle:.20}};
