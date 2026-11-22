@@ -17,8 +17,16 @@ export class Vehicle{
   c.fillStyle=skirt;c.fillRect(bx+1,t.l*.37,bw-2,t.l*.1);
   // Body ribs make the truck's cargo box distinct from its forward cab.
   if(truck){c.fillStyle=ART.palette.grassDark;c.fillRect(-t.w*.44,-t.l*.48,t.w*.88,t.l*.43);c.strokeStyle=ART.palette.outline;c.lineWidth=.8;for(let y=-t.l*.43;y<-t.l*.08;y+=5){c.beginPath();c.moveTo(-t.w*.43,y);c.lineTo(t.w*.43,y);c.stroke();}c.fillStyle=body;c.fillRect(-t.w*.49,-t.l*.07,t.w*.98,t.l*.52);c.strokeStyle=ART.palette.outline;c.strokeRect(-t.w*.49,-t.l*.07,t.w*.98,t.l*.52);}
-  // Side doors and handles, aligned with the matching open-door zone.
-  c.strokeStyle=ART.palette.swatches.s171;c.lineWidth=.7;for(const side of [-1,1]){c.beginPath();c.moveTo(side*t.w*.43,-t.l*.04);c.lineTo(side*t.w*.43,t.l*.3);c.stroke();c.fillStyle=ART.palette.sandLight;c.fillRect(side*(t.w*.43)-1.3,t.l*.13,2.5,1.1);}
+  // Door seams remain visible when closed; an open driver's aperture replaces its side seam.
+  if(t.driverDoor){const door=t.driverDoor,L=t.l*door.length,hy=t.l*door.hingeY,y0=hy-L/2,y1=hy+L/2;
+   c.strokeStyle=ART.palette.swatches.s171;c.lineWidth=.7;
+   for(const side of [-1,1]){const x=side*t.w*.46,open=this._doorOpen&&this.driver==='player'&&side<0;
+    if(open){c.fillStyle=ART.palette.doorInterior;c.fillRect(x-side*1.4,y0,t.w*.045,L);}
+    else{c.beginPath();c.moveTo(x,y0);c.lineTo(x,y1);c.stroke();c.fillStyle=ART.palette.sandLight;c.fillRect(x-1.3,hy-1.1,2.5,1.1);}
+   }
+   // Front and rear boundaries complete the two door outlines on both flanks.
+   for(const side of [-1,1]){const x=side*t.w*.46;c.beginPath();c.moveTo(x,y0);c.lineTo(x-side*1.2,y0);c.moveTo(x,y1);c.lineTo(x-side*1.2,y1);c.stroke();}
+  }
   // Sedan/sport/pickup glasshouse: windshield, body-colour roof, rear glass.
   const cabTop=truck?-t.l*.08:-t.l*.34,cabBottom=truck?t.l*.29:t.l*.23,cabW=truck?t.w*.76:t.w*.69;
   c.fillStyle=dark;c.beginPath();c.moveTo(-cabW*.45,cabTop);c.lineTo(cabW*.45,cabTop);c.lineTo(cabW*.5,cabTop+t.l*.18);c.lineTo(-cabW*.5,cabTop+t.l*.18);c.closePath();c.fill();
@@ -36,15 +44,19 @@ export class Vehicle{
   if(this._braking||this._hardBrake){c.fillStyle=ART.lights.brake;if(this._brakeGlow||world.timeOfDay!=='day'){c.shadowColor=ART.palette.brakeGlow;c.shadowBlur=this._brakeGlow?10:world.timeOfDay==='night'?11:6;}c.fillRect(-t.w*.43,t.l*.43,4,2.5);c.fillRect(t.w*.43-4,t.l*.43,4,2.5);c.shadowBlur=0;}
   if(this._headlights){c.shadowColor=ART.lights.headlight;c.shadowBlur=8;c.fillStyle=ART.lights.headlight;c.fillRect(-t.w*.43,-t.l*.49,4,2.4);c.fillRect(t.w*.43-4,-t.l*.49,4,2.4);c.shadowBlur=0;}
   if(this._crash>0&&Math.floor(world.time*5)%2===0){c.fillStyle=ART.palette.brake;c.fillRect(-t.w*.43,t.l*.43,4,2.5);c.fillRect(t.w*.43-4,t.l*.43,4,2.5);}
-  if(hero){
-   if(this._doorOpen){const door=t.driverDoor||{hingeX:-.45,hingeY:.04,length:.38,width:.33};c.fillStyle=ART.palette.doorInterior;c.fillRect(-t.w*.49,t.l*.045,t.w*.055,t.l*.265);const a=(this._coverDoorAngle||50)*Math.PI/180,L=t.l*door.length,W=t.w*door.width,hx=t.w*door.hingeX,hy=t.l*door.hingeY;
-    if(!this._coverDoor){const dx=-Math.sin(a)*L,dy=-Math.cos(a)*L,px=Math.cos(a),py=Math.sin(a);c.fillStyle=this.color;c.beginPath();c.moveTo(hx,hy);c.lineTo(hx+dx,hy+dy);c.lineTo(hx+dx+px*W,hy+dy+py*W);c.lineTo(hx+px*W,hy+py*W);c.closePath();c.fill();c.strokeStyle=ART.palette.doorOutline;c.lineWidth=1;c.stroke();c.fillStyle=ART.palette.doorGlass;c.fillRect(hx+px*W*.2,hy+py*W*.2,1,1);}}
-   else if(sport){c.fillStyle=ART.palette.swatches.s173;c.fillRect(-t.w*.44,t.l*.48,t.w*.88,1.5);}
-  }
+  if(hero&&sport){c.fillStyle=ART.palette.swatches.s173;c.fillRect(-t.w*.44,t.l*.48,t.w*.88,1.5);}
   if(this._honk>0){c.save();c.rotate(-this.angle);c.fillStyle=ART.palette.swatches.s174;c.font='bold 14px sans-serif';c.fillText('!',8,-t.l*.65);c.restore();}
   if(Math.abs(this.speed)*.14>120){c.strokeStyle=ART.palette.swatches.s175;c.lineWidth=1;c.beginPath();for(let i=-1;i<=1;i++){c.moveTo(i*7,t.l*.55);c.lineTo(i*11,t.l*.55+18+Math.abs(this.speed)*.03);}c.stroke();}
   if(this.damage>.6){for(let i=0;i<4;i++){c.fillStyle=`rgba(${ART.palette.damageSmokeRgb},${.24+Math.sin(world.time*2+i)*.12})`;c.beginPath();c.arc(Math.sin(world.time+i)*10,-t.l*.5-i*7,Math.min(12,5+i*1.7),0,Math.PI*2);c.fill();}}
   c.restore();
  }
- drawCoverDoor(c){if(!this._coverDoor||!this._doorOpen||this.driver!=='player')return;const t=VEHICLE_TYPES[this.type],door=t.driverDoor||{hingeX:-.45,hingeY:.04,length:.38,width:.33};c.save();c.translate(this.x,this.y);c.rotate(this.angle);const a=(this._coverDoorAngle||50)*Math.PI/180,L=t.l*door.length,W=t.w*door.width,hx=t.w*door.hingeX,hy=t.l*door.hingeY,outer={x:-Math.sin(a)*L,y:-Math.cos(a)*L},outward={x:-Math.cos(a)*W,y:Math.sin(a)*W},point=(u,v)=>({x:hx+outer.x*u+outward.x*v,y:hy+outer.y*u+outward.y*v});c.fillStyle=this.color;c.beginPath();for(const [u,v] of [[0,0],[1,0],[1,1],[0,1]]){const q=point(u,v);u===0&&v===0?c.moveTo(q.x,q.y):c.lineTo(q.x,q.y);}c.closePath();c.fill();c.strokeStyle=ART.palette.doorOutline;c.lineWidth=1;c.stroke();c.fillStyle=ART.palette.doorGlass;c.beginPath();for(const [u,v] of [[.12,.12],[.78,.12],[.78,.82],[.12,.82]]){const q=point(u,v);u===.12&&v===.12?c.moveTo(q.x,q.y):c.lineTo(q.x,q.y);}c.closePath();c.fill();c.restore();}
+ getDriverDoorWorldPosition(){const t=VEHICLE_TYPES[this.type],d=t.driverDoor;if(!d)return{x:this.x,y:this.y};const L=t.l*d.length,W=t.w*d.width,hy=t.l*d.hingeY,hx=t.w*d.hingeX,center={x:hx-L*.5,y:hy-L/2+W*.5};return{x:this.x+Math.cos(this.angle)*center.x-Math.sin(this.angle)*center.y,y:this.y+Math.sin(this.angle)*center.x+Math.cos(this.angle)*center.y};}
+ drawCoverDoor(c){if(!this._doorOpen||this.driver!=='player')return;const t=VEHICLE_TYPES[this.type],door=t.driverDoor;if(!door)return;const L=t.l*door.length,W=t.w*door.width,hy=t.l*door.hingeY,hx=t.w*door.hingeX,y0=hy-L/2,angle=Math.PI/2,dx=-Math.sin(angle)*L,dy=Math.cos(angle)*L,thickness=2.3;c.save();c.translate(this.x,this.y);c.rotate(this.angle);
+  // The leaf pivots at the forward end of the aperture and swings fully outboard.
+  const x0=hx,y=y0,x1=x0+dx,y2=y+dy;
+  c.fillStyle=ART.palette.doorOutline;c.fillRect(Math.min(x0,x1),y,Math.abs(dx)+thickness,W);
+  c.fillStyle=this.color;c.fillRect(Math.min(x0,x1),y,Math.abs(dx),W);
+  c.strokeStyle=ART.palette.doorOutline;c.lineWidth=1;c.strokeRect(Math.min(x0,x1),y,Math.abs(dx),W);
+  c.fillStyle=ART.palette.doorGlass;c.fillRect(Math.min(x0,x1)+Math.abs(dx)*.16,y+W*.16,Math.abs(dx)*.68,W*.68);
+  c.fillStyle=ART.palette.swatches.s172;c.fillRect(Math.min(x0,x1),y,Math.max(1,Math.abs(dx)*.14),W);c.restore();}
 }
