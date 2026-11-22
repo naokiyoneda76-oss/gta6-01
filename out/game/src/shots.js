@@ -37,10 +37,12 @@ export const ShotDirector=class ShotDirector{
    for(const [x,y,type,color] of [[1887,690,'sedan','#47747a'],[1887,900,'pickup','#d8d2bd'],[2048,700,'sedan','#526d59'],[2048,890,'taxi','#e8bc3e']]){const q=new Vehicle(x,y,type,color,0);q._parked=true;w.city.parkedCars.push(q);}
    // The hero car sits at the shop curb, with its driver door opening toward the sidewalk.
    // Keep the incident beside the market: car on the road, shove on the sidewalk.
-   const v=new Vehicle(1960,720,'sport','#e94f45',Math.PI/2);v.speed=0;v.driver='player';v._doorOpen=true;v._coverDoorAngle=-62;v._groundMarker=false;v._handbrake=false;v._coverDoor=true;w.vehicles=[v];w.traffic.cars=[];w.gang.crews=[];w._shotSpeed=0;
-   const opening={world:v.getDriverDoorWorldPosition(),side:{x:-Math.cos(v.angle),y:-Math.sin(v.angle)}},danny={x:opening.world.x+opening.side.x*5,y:opening.world.y+opening.side.y*5},owner={x:danny.x+14,y:danny.y};
+   const v=new Vehicle(1960,720,'sport','#e94f45',0);v.speed=0;v.driver='player';v._doorOpen=true;v._coverDoorAngle=-62;v._groundMarker=false;v._handbrake=false;v._coverDoor=true;w.vehicles=[v];w.traffic.cars=[];w.gang.crews=[];w._shotSpeed=0;
+   // The frozen door leaf swings screen-left at this heading. Keep both ground
+   // anchors beyond its outer edge so the later vehicle draw cannot bury them.
+   const opening={world:v.getDriverDoorWorldPosition()},danny={x:opening.world.x-37,y:opening.world.y},owner={x:danny.x+18,y:danny.y};
    w.player.x=danny.x;w.player.y=danny.y;w.player.angle=0;w.player._coverShove={head:{x:0,y:-14.2},shoulder:[{x:-4.5,y:-10.5},{x:4.5,y:-10.5}],hip:{x:0,y:-2.2},elbow:[{x:4,y:-9.3},{x:12,y:-5.8}],hand:[{x:10,y:-11.8},{x:18,y:-4.7}],knee:[{x:-2.3,y:1.1},{x:2.3,y:1.1}],foot:[{x:-2.3,y:3},{x:2.3,y:3}]};w._shotHudMode='pistol';
-   const p=w.pedestrians.people[0];p.x=owner.x;p.y=owner.y;p.run=false;p._recoil=false;p._alarmed=false;p._coverOwnerStagger=true;p.pose='stumble';p.joints={head:{x:-1.2,y:-15.6},shoulder:[{x:-4.6,y:-10.6},{x:4.4,y:-10.2}],hip:{x:-0.3,y:-2.0},elbow:[{x:-8.8,y:-9.6},{x:7.4,y:-4.6}],hand:[{x:-11.6,y:-13.8},{x:9.5,y:0.5}],knee:[{x:-4.6,y:0.6},{x:3.4,y:1.6}],foot:[{x:-7.6,y:0.2},{x:4.8,y:4.6}]};p.timer=0;p.vx=0;p.vy=0;p.angle=0;game.camera.x=(v.x+danny.x+owner.x)/3;game.camera.y=(v.y+danny.y+owner.y)/3;game.camera.zoom=4.6;
+   const p=w.pedestrians.people[0];p.x=owner.x;p.y=owner.y;p.run=false;p._recoil=false;p._alarmed=false;p._coverOwnerStagger=true;p.pose='stumble';p.joints={head:{x:-1.2,y:-15.6},shoulder:[{x:-4.6,y:-10.6},{x:4.4,y:-10.2}],hip:{x:-0.3,y:-2.0},elbow:[{x:-8.8,y:-9.6},{x:7.4,y:-4.6}],hand:[{x:-11.6,y:-13.8},{x:9.5,y:0.5}],knee:[{x:-4.6,y:0.6},{x:3.4,y:1.6}],foot:[{x:-7.6,y:0.2},{x:4.8,y:4.6}]};p.timer=0;p.vx=0;p.vy=0;p.angle=0;game.camera.x=(v.x+danny.x+owner.x)/3;game.camera.y=(v.y+danny.y+owner.y)/3;game.camera.zoom=8;
    // Clear only the local palm crowns whose fronds cross this shot's owner silhouette.
    w.city.palms=w.city.palms.filter(t=>[danny,owner].every(f=>Math.hypot((t.x-3)-f.x,(t.y-32)-f.y)>=56));w.city.streetProps=w.city.streetProps.filter(q=>[danny,owner].every(f=>Math.hypot(q.x-f.x,q.y-f.y)>30));
    w.pedestrians.people=[p];p.color='#C2AA78';p.skin='#dbad83';p.pants='#51483a';p.hair='#302923';p.hairStyle='short';
@@ -67,7 +69,7 @@ export const ShotDirector=class ShotDirector{
    w.combat.bullets.push({x:563,y:2076,prevX:625,prevY:2076,vx:0,vy:0,life:1,range:300,owner:'gang'});
    w.combat.bullets.push({x:515,y:2102,prevX:581,prevY:2102,sx:581,sy:2102,vx:0,vy:0,life:1,range:300,owner:'player',staged:true});
    w.effects.impacts.push({x:561,y:2076},{x:563,y:2076},{x:570,y:2057});
-   w.dialogue.active=false;w.heat=2;w.wanted.heat=2;w.activities.flags=[];w.activities.cards=[];w.pinCallout('BETRAYAL','SURVIVE THE AMBUSH',{x:640,y:176});game.camera.x=580;game.camera.y=2070;game.camera.zoom=2.05;dress([[500,1895,'sedan','#47747a',Math.PI/2],[790,2180,'pickup','#526d59',Math.PI/2]],[[465,1990],[795,2110],[520,2190],[340,2290],[385,2320],[430,2295]]);const marinaVan=new Vehicle(650,1915,'van','#477b82',Math.PI/2);marinaVan._parked=true;w.city.parkedCars.push(marinaVan);
+   w.dialogue.active=false;w.heat=2;w.wanted.heat=2;w.activities.flags=[];w.activities.cards=[];w.pinCallout('BETRAYAL','SURVIVE THE AMBUSH',{x:640,y:176});game.camera.x=530;game.camera.y=2070;game.camera.zoom=2.05;dress([[500,1895,'sedan','#47747a',Math.PI/2],[790,2180,'pickup','#526d59',Math.PI/2]],[[465,1990],[795,2110],[520,2190],[340,2290],[385,2320],[430,2295]]);const marinaVan=new Vehicle(650,1915,'van','#477b82',Math.PI/2);marinaVan._parked=true;w.city.parkedCars.push(marinaVan);
    const croucher=w.pedestrians.people[0];croucher.pose='cover';croucher.joints={head:{x:0,y:-12},shoulder:[{x:-4.5,y:-9},{x:4.5,y:-9}],hip:{x:0,y:-2},elbow:[{x:-7,y:-13},{x:7,y:-13}],hand:[{x:-8,y:-17},{x:8,y:-17}],knee:[{x:-5,y:4},{x:5,y:4}],foot:[{x:-7,y:7},{x:7,y:7}]};
    const fleer=w.pedestrians.people[1];fleer.x=812;fleer.y=2120;fleer.vx=34;fleer.vy=24;fleer.run=true;fleer.pose='run';fleer.angle=Math.PI/4;
   }
@@ -80,15 +82,15 @@ export const ShotDirector=class ShotDirector{
    const car=new Vehicle(614,1000,'sedan','#e8a078',0);car.speed=0;car.driver='player';car._doorOpen=true;
    const doorAnchor=car.getDriverDoorWorldPosition();
    const miaAt={x:582,y:doorAnchor.y+28},dannyAt={x:560,y:doorAnchor.y+28};
-   const danny={...pedestrianTemplate,x:dannyAt.x,y:dannyAt.y,vx:0,vy:0,angle:0,timer:0,run:false,hero:true,color:'#E9DFC8',inner:'#24292D',skin:'#e8bd91',pants:'#30343B',hair:'#302923',_shotScale:1,_homecomingPose:true,pose:'idle',joints:{head:{x:0,y:-14.2},shoulder:[{x:-4.5,y:-10.5},{x:4.5,y:-10.5}],hip:{x:0,y:-2.2},elbow:[{x:-5.6,y:-7.5},{x:7,y:-13.5}],hand:[{x:-6,y:-4.1},{x:5,y:-17}],knee:[{x:-2.3,y:1.1},{x:2.3,y:1.1}],foot:[{x:-2.3,y:3},{x:2.3,y:3}]}};
-   const mia={...pedestrianTemplate,x:miaAt.x,y:miaAt.y,vx:0,vy:0,angle:Math.PI,timer:0,run:false,color:'#f2a85e',hairStyle:'long',_shotScale:1,_homecomingPose:true,pose:'walk',phase:1.4};
+   const danny={...pedestrianTemplate,x:dannyAt.x,y:dannyAt.y,vx:0,vy:0,angle:0,timer:0,run:false,hero:true,color:'#F3E8D2',inner:'#D8C7A7',skin:'#e8bd91',pants:'#30343B',hair:'#302923',_shotScale:1,_homecomingPose:true,pose:'idle',joints:{head:{x:0,y:-14.2},shoulder:[{x:-4.5,y:-10.5},{x:4.5,y:-10.5}],hip:{x:0,y:-2.2},elbow:[{x:-5.6,y:-7.5},{x:7,y:-13.5}],hand:[{x:-6,y:-4.1},{x:5,y:-17}],knee:[{x:-2.3,y:1.1},{x:2.3,y:1.1}],foot:[{x:-2.3,y:3},{x:2.3,y:3}]}};
+   const mia={...pedestrianTemplate,x:miaAt.x,y:miaAt.y,vx:0,vy:0,angle:Math.PI,timer:0,run:false,color:'#F06F67',pants:'#51443E',hairStyle:'long',_shotScale:1,_homecomingPose:true,pose:'idle',joints:{head:{x:0,y:-14.2},shoulder:[{x:-4.5,y:-10.5},{x:4.5,y:-10.5}],hip:{x:0,y:-2.2},elbow:[{x:-5.8,y:-7.4},{x:5.8,y:-7.1}],hand:[{x:-6.4,y:-3.8},{x:6.5,y:-3.6}],knee:[{x:-2.3,y:1.1},{x:2.3,y:1.1}],foot:[{x:-2.3,y:3},{x:2.3,y:3}]}};
    w.player._homecomingHidden=true;w.pedestrians.people=[danny,mia];w.vehicles.push(car);
    // Keep the ambient crowd on the beach pier decks and boulevard sidewalk.
    dress([],[[350,2027],[390,2028],[400,2189],[535,1900],[535,2260],[460,2268],[490,2325],[420,2380]]);w.pedestrians.people.slice(2).forEach((p,i)=>{p.color=['#4d8290','#d28c59','#718d58','#b86b69','#d7b75f','#568578','#d18c62','#617b9b'][i];p.skin=['#dca77f','#ae7655','#efc8a2','#c88e6d','#e8b88d','#c78f69','#e3b58b','#af795a'][i];p.pants=['#394653','#3b4651','#665342','#34414e','#51443e','#324a48','#55423b','#394754'][i];if(i===4){p.vx=24;p.vy=0;}});
    const promenade={...pedestrianTemplate,x:740,y:2170,vx:18,vy:0,angle:Math.PI/2,timer:0,run:false,pose:'walk',phase:.6,color:'#73808a',skin:'#c78f69',pants:'#394653'};w.pedestrians.people.push(promenade);
-   w.objective={x:mia.x,y:mia.y,label:'TALK TO MIA'};w._shotObjectiveBanner='TALK TO MIA';w._homecomingShotMarkerSuppressed=true;w._homecomingScene=true;w._homecomingAnchors={car:{x:car.x,y:car.y,heading:car.angle},door:doorAnchor,danny:dannyAt,mia:miaAt,silhouetteGapWorld:Math.max(0,Math.hypot(dannyAt.x-miaAt.x,dannyAt.y-miaAt.y)-14),zoom:3.2};
+   w.objective={x:mia.x,y:mia.y,label:'TALK TO MIA'};w._shotObjectiveBanner='TALK TO MIA';w._homecomingShotMarkerSuppressed=true;w._homecomingScene=true;w._homecomingAnchors={car:{x:car.x,y:car.y,heading:car.angle},door:doorAnchor,danny:dannyAt,mia:miaAt,silhouetteGapWorld:Math.max(0,Math.hypot(dannyAt.x-miaAt.x,dannyAt.y-miaAt.y)-14),zoom:9};
    w.heat=0;w.wanted.heat=0;w.pinCallout('HOMECOMING','CORAL BEACH',{y:176});
-   w._shotHudMode='unarmed';game.camera.x=588;game.camera.y=1015;game.camera.zoom=3.2;
+   w._shotHudMode='unarmed';game.camera.x=571;game.camera.y=1032;game.camera.zoom=9;
   }
   else if(name==='getaway'){
    w.setTimeOfDay('night');w._shotHudMode='driving';w._getawayCargoShift=true;w.vehicles=[];w.traffic.cars=[];w.pedestrians.people=[];
