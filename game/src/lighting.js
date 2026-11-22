@@ -1,6 +1,6 @@
 export const LIGHTING = new URLSearchParams(location.search).get('lighting') !== '0';
 export const FIGURES_V2 = new URLSearchParams(location.search).get('figures') !== '1';
-export const UNIFIED_SHADOWS = new URLSearchParams(location.search).get('shadow') !== '0';
+export const UNIFIED_SHADOWS = new URLSearchParams(location.search).get('shadow') === '1';
 
 // Shared world-space light: down-right on screen. Long shapes stay low and soft.
 export const SHADOW_DIRECTION = {x:.6,y:.8};
