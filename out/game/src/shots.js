@@ -25,7 +25,7 @@ export const ShotDirector=class ShotDirector{
    w._styleCrates=[{x:700,y:1028,w:18,h:18},{x:724,y:1032,w:18,h:18}];game.camera.x=842;game.camera.y=1060;game.camera.zoom=1.55;w.objective=null;w.heat=0;w.wanted.heat=0;return true;
   }
   if(name==='cover'){
-   w.setTimeOfDay('day');game.camera.zoom=2.0;game.camera.x=1960;game.camera.y=790;
+   w.setTimeOfDay('day');game.camera.zoom=2.7;game.camera.x=1982.5;game.camera.y=783;
    // Downtown Palmera curb parking on the north-south street at X=1920.
    // Remove overlapping procedural frontage and furniture so this shot reads as one block.
    w.city.buildings=w.city.buildings.filter(b=>b.x+b.w<1970||b.x>2115||b.y+b.d<710||b.y>880);
@@ -38,8 +38,8 @@ export const ShotDirector=class ShotDirector{
    // The hero car sits at the shop curb, with its driver door opening toward the sidewalk.
    const v=new Vehicle(1950,783,'sport','#e94f45',0);v.speed=0;v.driver='player';v._doorOpen=true;v._coverDoorAngle=-62;v._groundMarker=false;v._handbrake=false;v._coverDoor=true;w.vehicles=[v];w.traffic.cars=[];w.gang.crews=[];w._shotSpeed=0;
    // Stage the shove on the light frontage sidewalk, to the east of the car.
-   w.player.x=1970;w.player.y=783;w.player.angle=0;w.player._coverShove={head:{x:0,y:-14.2},shoulder:[{x:-4.5,y:-10.5},{x:4.5,y:-10.5}],hip:{x:0,y:-2.2},elbow:[{x:-8,y:-9.3},{x:-1,y:-5.8}],hand:[{x:-12,y:-11.8},{x:-7,y:-4.7}],knee:[{x:-2.3,y:1.1},{x:2.3,y:1.1}],foot:[{x:-2.3,y:3},{x:2.3,y:3}]};w._shotHudMode='pistol';
-   const p=w.pedestrians.people[0];p.x=1995;p.y=783;p.run=false;p._recoil=false;p._alarmed=false;p._coverOwnerStagger=true;p.pose='stumble';p.joints={head:{x:-1.2,y:-15.6},shoulder:[{x:-4.6,y:-10.6},{x:4.4,y:-10.2}],hip:{x:-0.3,y:-2.0},elbow:[{x:-8.8,y:-9.6},{x:7.4,y:-4.6}],hand:[{x:-11.6,y:-13.8},{x:9.5,y:0.5}],knee:[{x:-4.6,y:0.6},{x:3.4,y:1.6}],foot:[{x:-7.6,y:0.2},{x:4.8,y:4.6}]};p.timer=0;p.vx=0;p.vy=0;p.angle=0;
+   w.player.x=1980;w.player.y=818;w.player.angle=0;w.player._coverShove={head:{x:0,y:-14.2},shoulder:[{x:-4.5,y:-10.5},{x:4.5,y:-10.5}],hip:{x:0,y:-2.2},elbow:[{x:-8,y:-9.3},{x:-1,y:-5.8}],hand:[{x:-12,y:-11.8},{x:-7,y:-4.7}],knee:[{x:-2.3,y:1.1},{x:2.3,y:1.1}],foot:[{x:-2.3,y:3},{x:2.3,y:3}]};w._shotHudMode='pistol';
+   const p=w.pedestrians.people[0];p.x=2005;p.y=818;p.run=false;p._recoil=false;p._alarmed=false;p._coverOwnerStagger=true;p.pose='stumble';p.joints={head:{x:-1.2,y:-15.6},shoulder:[{x:-4.6,y:-10.6},{x:4.4,y:-10.2}],hip:{x:-0.3,y:-2.0},elbow:[{x:-8.8,y:-9.6},{x:7.4,y:-4.6}],hand:[{x:-11.6,y:-13.8},{x:9.5,y:0.5}],knee:[{x:-4.6,y:0.6},{x:3.4,y:1.6}],foot:[{x:-7.6,y:0.2},{x:4.8,y:4.6}]};p.timer=0;p.vx=0;p.vy=0;p.angle=0;game.camera.x=1992.5;game.camera.y=818;
    // Clear only the local palm crowns whose fronds cross this shot's owner silhouette.
    w.city.palms=w.city.palms.filter(t=>Math.hypot((t.x-3)-p.x,(t.y-32)-p.y)>=56);
    w.pedestrians.people=[p];p.color='#C2AA78';p.skin='#dbad83';p.pants='#51483a';p.hair='#302923';p.hairStyle='short';
@@ -69,6 +69,9 @@ export const ShotDirector=class ShotDirector{
    for(const [target,from] of [[pier.members[0],[568,2084]],[pier.members[1],[568,2084]],[pier.members[2],[568,2084]]])w.combat.bullets.push({x:target.x,y:target.y-9,prevX:from[0],prevY:from[1],sx:from[0],sy:from[1],vx:0,vy:0,life:1,range:300,owner:'player',staged:true});
    w.effects.impacts.push({x:568,y:2084},{x:574,y:2051},{x:596,y:2051},{x:pier.members[0].x,y:pier.members[0].y-9},{x:pier.members[1].x,y:pier.members[1].y-9},{x:pier.members[2].x,y:pier.members[2].y-9});
    w.dialogue.play([{who:'ROSA',text:'Danny, get behind the crates! It’s an ambush — they’re coming in from the pier!'}]);w.dialogue.revealAll();w.heat=2;w.wanted.heat=2;w.activities.flags=[];w.activities.cards=[];w.pinCallout('BETRAYAL','SURVIVE THE AMBUSH',{x:640,y:176});game.camera.x=514;game.camera.y=2070;game.camera.zoom=1.9;dress([[500,1895,'sedan','#47747a',Math.PI/2],[790,2180,'pickup','#526d59',Math.PI/2]],[[465,1990],[795,2110],[520,2190],[340,2290],[385,2320],[430,2295]]);
+   const croucher=w.pedestrians.people[0];croucher.pose='cover';croucher.joints={head:{x:0,y:-12},shoulder:[{x:-4.5,y:-9},{x:4.5,y:-9}],hip:{x:0,y:-2},elbow:[{x:-7,y:-13},{x:7,y:-13}],hand:[{x:-8,y:-17},{x:8,y:-17}],knee:[{x:-5,y:4},{x:5,y:4}],foot:[{x:-7,y:7},{x:7,y:7}]};
+   const fleer=w.pedestrians.people[1];fleer.x=812;fleer.y=2120;fleer.vx=34;fleer.vy=24;fleer.run=true;fleer.pose='run';fleer.angle=Math.PI/4;
+   w.city.crates.push({x:350,y:2035,w:23,h:19},{x:350,y:2065,w:23,h:19},{x:350,y:2095,w:23,h:19});
   }
   else if(name==='homecoming'){
    w.setTimeOfDay('dusk');
@@ -80,16 +83,17 @@ export const ShotDirector=class ShotDirector{
    const mia={...pedestrianTemplate,x:676,y:2114,vx:0,vy:0,angle:-Math.PI/2,timer:0,run:false,color:'#f2a85e',hairStyle:'long',_shotScale:1,_homecomingPose:true,pose:'walk',phase:1.4};
    w.player._homecomingHidden=true;w.pedestrians.people=[danny,mia];
    // Mia's sedan is parked on the inland shoulder beside her.
-   const car=new Vehicle(692,2122,'sedan','#e8a078',.22);car.speed=0;car.driver=null;w.vehicles.push(car);
+   const car=new Vehicle(692,2122,'sedan','#e8a078',.22);car.speed=0;car.driver='player';car._doorOpen=true;w.vehicles.push(car);
    // Keep the ambient crowd on the beach pier decks and boulevard sidewalk.
    dress([],[[350,2027],[390,2028],[400,2189],[535,1900],[535,2260],[460,2268],[490,2325],[420,2380]]);w.pedestrians.people.slice(2).forEach((p,i)=>{p.color=['#4d8290','#d28c59','#718d58','#b86b69','#d7b75f','#568578','#d18c62','#617b9b'][i];p.skin=['#dca77f','#ae7655','#efc8a2','#c88e6d','#e8b88d','#c78f69','#e3b58b','#af795a'][i];p.pants=['#394653','#3b4651','#665342','#34414e','#51443e','#324a48','#55423b','#394754'][i];if(i===4){p.vx=24;p.vy=0;}});
+   const promenade={...pedestrianTemplate,x:740,y:2170,vx:18,vy:0,angle:Math.PI/2,timer:0,run:false,pose:'walk',phase:.6,color:'#568578',skin:'#c78f69',pants:'#324a48'};w.pedestrians.people.push(promenade);
    w.objective={x:mia.x,y:mia.y,label:'TALK TO MIA'};w._shotObjectiveBanner='TALK TO MIA';w._homecomingShotMarkerSuppressed=true;w._homecomingScene=true;
    w.heat=0;w.wanted.heat=0;w.pinCallout('HOMECOMING','CORAL BEACH',{y:176});
    w._shotHudMode='unarmed';game.camera.x=648;game.camera.y=2100;game.camera.zoom=3.2;
   }
   else if(name==='getaway'){
-   w.setTimeOfDay('night');w._shotHudMode='driving';w.vehicles=[];w.traffic.cars=[];w.pedestrians.people=[];
-   const x=4095,y=2505,heading=.61,v=new Vehicle(x,y,'sport','#e94f45',heading);v.speed=820;v.driver='player';v._handbrake=true;v._headlights=true;v._groundMarker=true;w.vehicles.push(v);w.driving=v;w.player.x=x;w.player.y=y;
+   w.setTimeOfDay('night');w._shotHudMode='driving';w._getawayCargoShift=true;w.vehicles=[];w.traffic.cars=[];w.pedestrians.people=[];
+   const x=4095,y=2505,heading=.61,v=new Vehicle(x,y,'sport','#f27b68',heading);v.speed=820;v.driver='player';v._handbrake=true;v._headlights=true;v._groundMarker=true;w.vehicles.push(v);w.driving=v;w.player.x=x;w.player.y=y;
    // Keep the ramp, hero car, and police funnel on one clean apron sightline.
    const ramp={x:4119,y:2470};w.objective={x:ramp.x,y:ramp.y,label:'REACH THE CARGO PLANE'};w._getawayShotMarkerSuppressed=true;w._shotObjectiveBanner='REACH THE CARGO PLANE';w._shotSpeed=122;w.heat=w.wanted.heat=5;
    w.missions.index=5;w.missions.state='active';

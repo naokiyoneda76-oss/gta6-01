@@ -102,8 +102,9 @@ export const CityRenderer = class CityRenderer {
     for(const [ex,ey] of [[-33,-47],[19,-38],[-33,47],[19,38]]){c.fillStyle=ART.palette.swatches.s84;c.beginPath();c.roundRect(ex-12,ey-6,34,12,6);c.fill();c.fillStyle=ART.palette.swatches.s85;c.fillRect(ex+13,ey-4,5,8);}
     c.restore();
     // Freight staged beside the lowered ramp: three crates and a strapped pallet stack.
-    this._crate(c,{x:4105,y:2512,w:20,h:17});this._crate(c,{x:4128,y:2517,w:20,h:17});this._crate(c,{x:4100,y:2532,w:20,h:17});
-    this._crate(c,{x:4130,y:2538,w:25,h:14});this._crate(c,{x:4132,y:2524,w:25,h:14});
+    const cargoShift=w._getawayCargoShift?{x:28*Math.cos(.61),y:28*Math.sin(.61)}:{x:0,y:0};
+    this._crate(c,{x:4105+cargoShift.x,y:2512+cargoShift.y,w:20,h:17});this._crate(c,{x:4128+cargoShift.x,y:2517+cargoShift.y,w:20,h:17});this._crate(c,{x:4100+cargoShift.x,y:2532+cargoShift.y,w:20,h:17});
+    this._crate(c,{x:4130+cargoShift.x,y:2538+cargoShift.y,w:25,h:14});this._crate(c,{x:4132+cargoShift.x,y:2524+cargoShift.y,w:25,h:14});
     c.fillStyle=ART.palette.swatches.s86;c.fillRect(408,2088,18,77);c.fillStyle=ART.palette.swatches.s87;c.fillRect(405,2080,24,12);c.fillStyle=ART.palette.swatches.s88;c.shadowColor=ART.palette.swatches.s89;c.shadowBlur=18;c.beginPath();c.arc(417,2078,6,0,7);c.fill();c.shadowBlur=0;
     const t=w.city.terminal;c.fillStyle=ART.palette.swatches.s90;c.fillRect(t.x,t.y,t.w,t.h);c.fillStyle=ART.palette.swatches.s91;c.fillRect(t.x+8,t.y+35,t.w-16,48);c.fillStyle=ART.palette.swatches.s92;for(let wx=t.x+15;wx<t.x+t.w-12;wx+=24)c.fillRect(wx,t.y+41,17,35);c.fillStyle=ART.palette.swatches.s93;c.fillRect(t.x,t.y+88,t.w,8);c.fillStyle=ART.palette.swatches.s94;c.fillRect(t.x+25,t.y+112,48,55);c.fillRect(t.x+101,t.y+112,48,55);c.fillRect(t.x+177,t.y+112,48,55);
     // Two simple parked aircraft beside the terminal.
