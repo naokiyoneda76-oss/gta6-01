@@ -47,7 +47,7 @@ export const ShotDirector=class ShotDirector{
    const opening={world:v.getDriverDoorWorldPosition()},danny={x:opening.world.x-27,y:opening.world.y},owner={x:danny.x-25,y:danny.y+8};
    w.player.x=danny.x;w.player.y=danny.y;w.player.angle=0;w.player._carjackHoldUp=true;w._shotHudMode='pistol';
    const p=w.pedestrians.people[0];p.x=owner.x;p.y=owner.y;p.run=false;p._recoil=false;p._alarmed=false;p._coverOwnerStagger=false;p.pose='idle';p.joints={head:{x:3,y:-14.2},shoulder:[{x:-5,y:-11},{x:4,y:-10}],hip:{x:1,y:-2.2},elbow:[{x:-10,y:-8.2},{x:10,y:-8.2}],hand:[{x:-14,y:-14},{x:14,y:-14}],knee:[{x:-2.3,y:1.1},{x:2.3,y:1.1}],foot:[{x:-2.3,y:3},{x:2.3,y:3}]};p.timer=0;p.vx=0;p.vy=0;p.angle=0;game.camera.x=(danny.x+owner.x)/2+24;game.camera.y=(danny.y+owner.y)/2-6;game.camera.zoom=4.6;
-   for(const q of w.city.parkedCars)if(q.color==='#47747a'&&Math.hypot(q.x-owner.x,q.y-owner.y)<100)q.y-=150;w._carjackAnchors={danny,owner,centerDistanceWorld:Math.hypot(danny.x-owner.x,danny.y-owner.y),zoom:4.6};
+   for(const q of w.city.parkedCars)if(q.color==='#47747a'&&Math.hypot(q.x-owner.x,q.y-owner.y)<100)q.y-=150;w._carjackAnchors={danny,owner,centerDistanceWorld:Math.hypot(danny.x-owner.x,danny.y-owner.y),zoom:4.6};const edgeVehicle=new Vehicle(1815,danny.y+80,'pickup','#526d59',0);edgeVehicle._parked=true;w.vehicles.push(edgeVehicle);w.city.parkedCars.push(edgeVehicle);const sidewalkPed={...p,x:1812,y:danny.y-48,vx:0,vy:0,run:false,angle:0,timer:0,pose:'stumble'};w.pedestrians.people.push(sidewalkPed);
    // Clear only the local palm crowns whose fronds cross this shot's owner silhouette.
    w.city.palms=w.city.palms.filter(t=>[danny,owner].every(f=>Math.hypot((t.x-3)-f.x,(t.y-32)-f.y)>=56));w.city.streetProps=w.city.streetProps.filter(q=>[danny,owner].every(f=>Math.hypot(q.x-f.x,q.y-f.y)>30));
    w.pedestrians.people=[p];p.color='#C2AA78';p.skin='#dbad83';p.pants='#51483a';p.hair='#302923';p.hairStyle='short';
@@ -69,7 +69,7 @@ export const ShotDirector=class ShotDirector{
    const pier=w.gang.spawnGroup(530,1950,3,{faction:'Ambush',color:'#B65D59'});
    pier.members.forEach((p,i)=>{p.x=525+i*18;p.y=1995+i*18;p.state='combat';p.angle=Math.atan2(w.player.y-p.y,w.player.x-p.x);p._flash=true;p._advancing=true;p.cover={x:p.x,y:p.y};});
    const road=w.gang.spawnGroup(710,1930,3,{faction:'Ambush',color:'#B65D59'});
-   road.members.forEach((p,i)=>{p.x=695+i*14;p.y=1973+i*14;p.state='combat';p.angle=Math.atan2(w.player.y-p.y,w.player.x-p.x);p._flash=true;p._advancing=false;p.cover={x:p.x,y:p.y};});road.members[0].y+=9;
+   road.members.forEach((p,i)=>{p.x=695+i*14;p.y=1973+i*14;p.state='combat';p.angle=Math.atan2(w.player.y-p.y,w.player.x-p.x);p._flash=true;p._advancing=false;p.cover={x:p.x,y:p.y};});road.members[0].y+=22;
    // Incoming rounds strike the cover; Danny returns one short bright tracer west.
    w.combat.bullets.push({x:650,y:2059,prevX:700,prevY:2059,vx:0,vy:0,life:1,range:300,owner:'gang'});
    w.combat.bullets.push({x:635,y:2055,prevX:670,prevY:2055,sx:670,sy:2055,vx:0,vy:0,life:1,range:300,owner:'player',staged:true});
@@ -95,7 +95,7 @@ export const ShotDirector=class ShotDirector{
    const doorAnchor=car.getDriverDoorWorldPosition();
    const miaAt={x:566,y:doorAnchor.y+28},dannyAt={x:544,y:doorAnchor.y+28};
    const danny={...pedestrianTemplate,x:dannyAt.x,y:dannyAt.y,vx:0,vy:0,angle:.28,timer:0,run:false,hero:true,color:'#F3E8D2',inner:'#D8C7A7',skin:'#e8bd91',pants:'#30343B',hair:'#302923',_shotScale:1,_homecomingPose:true,pose:'idle',joints:{head:{x:1.5,y:-14.2},shoulder:[{x:-4.5,y:-10.5},{x:4.5,y:-10.5}],hip:{x:0,y:-2.2},elbow:[{x:-5.6,y:-7.5},{x:9,y:-12}],hand:[{x:-6,y:-4.1},{x:14,y:-17}],knee:[{x:-2.3,y:1.1},{x:2.3,y:1.1}],foot:[{x:-2.3,y:3},{x:2.3,y:3}]}};
-   const mia={...pedestrianTemplate,x:miaAt.x,y:miaAt.y,vx:0,vy:0,angle:-.28,timer:0,run:false,color:'#F06F67',pants:'#51443E',hairStyle:'long',_shotScale:1,_homecomingPose:true,pose:'idle',joints:{head:{x:-2.5,y:-14.2},shoulder:[{x:-4.5,y:-10.5},{x:4.5,y:-10.5}],hip:{x:0,y:-2.2},elbow:[{x:-6.2,y:-6.8},{x:6.2,y:-6.8}],hand:[{x:-7.1,y:-2.8},{x:7.1,y:-2.8}],knee:[{x:-3.2,y:1.1},{x:3.2,y:1.1}],foot:[{x:-3.8,y:3},{x:3.8,y:3}]}};
+   const mia={...pedestrianTemplate,x:miaAt.x,y:miaAt.y,vx:0,vy:0,angle:.12,timer:0,run:false,color:'#F06F67',pants:'#51443E',hairStyle:'long',_shotScale:1,_homecomingPose:true,pose:'idle',joints:{head:{x:-1.5,y:-14.2},shoulder:[{x:-4.5,y:-10.5},{x:4.5,y:-10.5}],hip:{x:0,y:-2.2},elbow:[{x:-6.2,y:-6.8},{x:6.2,y:-5.2}],hand:[{x:-7.1,y:-2.8},{x:10,y:-1.5}],knee:[{x:-3.2,y:1.1},{x:3.2,y:1.1}],foot:[{x:-3.8,y:3},{x:3.8,y:3}]}};
    w.player._homecomingHidden=true;w.pedestrians.people=[danny,mia];w.vehicles.push(car);
    // Keep the ambient crowd on the beach pier decks and boulevard sidewalk.
    dress([],[[350,2027],[390,2028],[400,2189],[535,1900],[535,2260],[460,2268],[490,2325],[420,2380]]);w.pedestrians.people.slice(2).forEach((p,i)=>{p.color=['#4d8290','#d28c59','#718d58','#b86b69','#d7b75f','#568578','#d18c62','#617b9b'][i];p.skin=['#dca77f','#ae7655','#efc8a2','#c88e6d','#e8b88d','#c78f69','#e3b58b','#af795a'][i];p.pants=['#394653','#3b4651','#665342','#34414e','#51443e','#324a48','#55423b','#394754'][i];if(i===4){p.vx=24;p.vy=0;}});
