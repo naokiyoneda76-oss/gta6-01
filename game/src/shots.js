@@ -63,7 +63,7 @@ export const ShotDirector=class ShotDirector{
    // Three bright return rounds connect the exposed muzzle to distinct road-side attackers.
    for(const [target,from] of [[road.members[0],[604,2021]],[road.members[1],[604,2021]],[road.members[2],[604,2021]]])w.combat.bullets.push({x:target.x,y:target.y-9,prevX:from[0],prevY:from[1],sx:from[0],sy:from[1],vx:0,vy:0,life:1,range:300,owner:'player',staged:true});
    w.effects.impacts.push({x:604,y:2021},{x:574,y:2051},{x:596,y:2051},{x:road.members[0].x,y:road.members[0].y-9},{x:road.members[1].x,y:road.members[1].y-9},{x:road.members[2].x,y:road.members[2].y-9});
-   w.dialogue.play([{who:'ROSA',text:'Danny, get behind the crates! It’s an ambush — they’re coming in from the pier!'}]);w.dialogue.revealAll();w.heat=2;w.wanted.heat=2;w.activities.flags=[];w.activities.cards=[];w.pinCallout('BETRAYAL','SURVIVE THE AMBUSH',{x:640,y:176});game.camera.x=640;game.camera.y=2010;game.camera.zoom=1.6;dress([[465,1950,'sedan','#47747a',Math.PI/2],[790,2180,'pickup','#526d59',Math.PI/2]],[[465,1990],[795,2110],[520,2190],[340,2290],[385,2320],[430,2295]]);
+   w.dialogue.play([{who:'ROSA',text:'Danny, get behind the crates! It’s an ambush — they’re coming in from the pier!'}]);w.dialogue.revealAll();w.heat=2;w.wanted.heat=2;w.activities.flags=[];w.activities.cards=[];w.pinCallout('BETRAYAL','SURVIVE THE AMBUSH',{x:640,y:176});game.camera.x=578;game.camera.y=2040;game.camera.zoom=2.15;dress([[500,1895,'sedan','#47747a',Math.PI/2],[790,2180,'pickup','#526d59',Math.PI/2]],[[465,1990],[795,2110],[520,2190],[340,2290],[385,2320],[430,2295]]);
   }
   else if(name==='homecoming'){
    w.setTimeOfDay('dusk');
