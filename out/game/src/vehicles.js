@@ -8,7 +8,7 @@ export class Vehicle{
   const t=VEHICLE_TYPES[this.type],hero=this.driver==='player',sc=1;
   c.save();c.translate(this.x,this.y);c.scale(sc,sc);c.rotate(this.angle);
   c.fillStyle=`rgba(${ART.palette.vehicleShadowRgb},${ART.shadow.vehicleColorAlpha})`;c.beginPath();c.roundRect(2,5+ART.shadow.vehicle.y-8,t.w*.61,t.l*.43,4);c.fill();
-  const truck=this.type==='truck',sport=this.type==='sport',police=this.type==='police',pickup=this.type==='pickup',van=this.type==='van',convertible=this.type==='convertible';
+  const truck=this.type==='truck',sport=this.type==='sport',police=this.type==='police'&&(this.driver==='police'||this.driver==='roadblock'),pickup=this.type==='pickup',van=this.type==='van',convertible=this.type==='convertible';
   const baseBody=police?ART.palette.policeBody:this.color, body=LIGHTING?shade(baseBody,1.12):baseBody, dark=LIGHTING?shade(ART.palette.bodyDark,.73):ART.palette.bodyDark, skirt=LIGHTING?shade(ART.palette.skirt,.73):ART.palette.skirt;
   const bx=truck?-t.w/2:-t.w*.46,bw=truck?t.w:t.w*.92,by=-t.l/2,bh=t.l;
   // Four corner tyres and hubs sit just beyond the body edge.
