@@ -36,7 +36,7 @@ export const ShotDirector=class ShotDirector{
    // Keep a clear car-length of kerb around the hero car; traffic remains farther along the block.
    for(const [x,y,type,color] of [[1887,690,'sedan','#47747a'],[1887,900,'pickup','#d8d2bd'],[2010,700,'sedan','#526d59'],[2010,890,'taxi','#e8bc3e']]){const q=new Vehicle(x,y,type,color,0);q._parked=true;w.city.parkedCars.push(q);}
    // The hero car sits at the shop curb, with its driver door opening toward the sidewalk.
-   const v=new Vehicle(1960,720,'sport','#e94f45',0);v.speed=0;v.driver='player';v._doorOpen=true;v._coverDoorAngle=-62;v._groundMarker=false;v._handbrake=false;v._coverDoor=true;w.vehicles=[v];w.traffic.cars=[];w.gang.crews=[];w._shotSpeed=0;
+   const v=new Vehicle(1955,720,'sport','#e94f45',0);v.speed=0;v.driver='player';v._doorOpen=true;v._coverDoorAngle=-62;v._groundMarker=false;v._handbrake=false;v._coverDoor=true;w.vehicles=[v];w.traffic.cars=[];w.gang.crews=[];w._shotSpeed=0;
    // The frozen door leaf swings screen-left at this heading. Keep both ground
    // anchors beyond its outer edge so the later vehicle draw cannot bury them.
    const opening={world:v.getDriverDoorWorldPosition()},danny={x:opening.world.x-27,y:opening.world.y},owner={x:danny.x-25,y:danny.y+8};
@@ -83,10 +83,10 @@ export const ShotDirector=class ShotDirector{
    const pedestrianTemplate=w.pedestrians.people[0];w.pedestrians.people=[];w.vehicles=[];w.traffic.cars=[];w.police.units=[];w.gang.crews=[];
    w.effects.skids=[];w.effects.particles=[];w.effects.impacts=[];w.effects.lightPools=[];w.combat.bullets=[];w.activities.flags=[];w.activities.cards=[];
    // Park at the beach boulevard kerb; the reunion stands west of the car on the promenade.
-   const car=new Vehicle(614,1000,'sedan','#e8a078',0);car.speed=0;car.driver='player';car._doorOpen=true;
+   const car=new Vehicle(598,1000,'sedan','#e8a078',0);car.speed=0;car.driver='player';car._doorOpen=true;
    const doorAnchor=car.getDriverDoorWorldPosition();
-   const miaAt={x:582,y:doorAnchor.y+28},dannyAt={x:560,y:doorAnchor.y+28};
-   const danny={...pedestrianTemplate,x:dannyAt.x,y:dannyAt.y,vx:0,vy:0,angle:.28,timer:0,run:false,hero:true,color:'#F3E8D2',inner:'#D8C7A7',skin:'#e8bd91',pants:'#30343B',hair:'#302923',_shotScale:1,_homecomingPose:true,pose:'idle',joints:{head:{x:1.5,y:-14.2},shoulder:[{x:-4.5,y:-10.5},{x:4.5,y:-10.5}],hip:{x:0,y:-2.2},elbow:[{x:-5.6,y:-7.5},{x:9,y:-14.5}],hand:[{x:-6,y:-4.1},{x:11,y:-18}],knee:[{x:-2.3,y:1.1},{x:2.3,y:1.1}],foot:[{x:-2.3,y:3},{x:2.3,y:3}]}};
+   const miaAt={x:566,y:doorAnchor.y+28},dannyAt={x:544,y:doorAnchor.y+28};
+   const danny={...pedestrianTemplate,x:dannyAt.x,y:dannyAt.y,vx:0,vy:0,angle:.28,timer:0,run:false,hero:true,color:'#F3E8D2',inner:'#D8C7A7',skin:'#e8bd91',pants:'#30343B',hair:'#302923',_shotScale:1,_homecomingPose:true,pose:'idle',joints:{head:{x:1.5,y:-14.2},shoulder:[{x:-4.5,y:-10.5},{x:4.5,y:-10.5}],hip:{x:0,y:-2.2},elbow:[{x:-5.6,y:-7.5},{x:9,y:-12}],hand:[{x:-6,y:-4.1},{x:14,y:-17}],knee:[{x:-2.3,y:1.1},{x:2.3,y:1.1}],foot:[{x:-2.3,y:3},{x:2.3,y:3}]}};
    const mia={...pedestrianTemplate,x:miaAt.x,y:miaAt.y,vx:0,vy:0,angle:-.28,timer:0,run:false,color:'#F06F67',pants:'#51443E',hairStyle:'long',_shotScale:1,_homecomingPose:true,pose:'idle',joints:{head:{x:-2.5,y:-14.2},shoulder:[{x:-4.5,y:-10.5},{x:4.5,y:-10.5}],hip:{x:0,y:-2.2},elbow:[{x:-6.2,y:-6.8},{x:6.2,y:-6.8}],hand:[{x:-7.1,y:-2.8},{x:7.1,y:-2.8}],knee:[{x:-3.2,y:1.1},{x:3.2,y:1.1}],foot:[{x:-3.8,y:3},{x:3.8,y:3}]}};
    w.player._homecomingHidden=true;w.pedestrians.people=[danny,mia];w.vehicles.push(car);
    // Keep the ambient crowd on the beach pier decks and boulevard sidewalk.
@@ -94,7 +94,7 @@ export const ShotDirector=class ShotDirector{
    const promenade={...pedestrianTemplate,x:740,y:2170,vx:18,vy:0,angle:Math.PI/2,timer:0,run:false,pose:'walk',phase:.6,color:'#73808a',skin:'#c78f69',pants:'#394653'};w.pedestrians.people.push(promenade);
    w.objective={x:mia.x,y:mia.y,label:'TALK TO MIA'};w._shotObjectiveBanner='TALK TO MIA';w._homecomingShotMarkerSuppressed=true;w._homecomingScene=true;w._homecomingAnchors={car:{x:car.x,y:car.y,heading:car.angle},door:doorAnchor,danny:dannyAt,mia:miaAt,silhouetteGapWorld:Math.max(0,Math.hypot(dannyAt.x-miaAt.x,dannyAt.y-miaAt.y)-14),zoom:4.2};
    w.heat=0;w.wanted.heat=0;w.pinCallout('HOMECOMING','CORAL BEACH',{y:176});
-   w._shotHudMode='unarmed';game.camera.x=571;game.camera.y=1032;game.camera.zoom=4.2;
+   w._shotHudMode='unarmed';game.camera.x=555;game.camera.y=1032;game.camera.zoom=4.2;
   }
   else if(name==='getaway'){
    w.setTimeOfDay('night');w._shotHudMode='driving';w._getawayCargoShift=true;w.vehicles=[];w.traffic.cars=[];w.pedestrians.people=[];
