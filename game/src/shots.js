@@ -1,6 +1,6 @@
 import {SeededRandom} from './random.js';
 import {World} from './world.js';
-import {Vehicle} from './vehicles.js';
+import {Vehicle,VEHICLE_TYPES} from './vehicles.js';
 
 export const ShotDirector=class ShotDirector{
  stageShot(name,game){
@@ -38,10 +38,12 @@ export const ShotDirector=class ShotDirector{
    // The hero car sits at the shop curb, with its driver door opening toward the sidewalk.
    // Keep the incident beside the market: car on the road, shove on the sidewalk.
    const v=new Vehicle(1960,720,'sport','#e94f45',Math.PI/2);v.speed=0;v.driver='player';v._doorOpen=true;v._coverDoorAngle=-62;v._groundMarker=false;v._handbrake=false;v._coverDoor=true;w.vehicles=[v];w.traffic.cars=[];w.gang.crews=[];w._shotSpeed=0;
-   w.player.x=1960;w.player.y=688;w.player.angle=0;w.player._coverShove={head:{x:0,y:-14.2},shoulder:[{x:-4.5,y:-10.5},{x:4.5,y:-10.5}],hip:{x:0,y:-2.2},elbow:[{x:4,y:-9.3},{x:12,y:-5.8}],hand:[{x:10,y:-11.8},{x:18,y:-4.7}],knee:[{x:-2.3,y:1.1},{x:2.3,y:1.1}],foot:[{x:-2.3,y:3},{x:2.3,y:3}]};w._shotHudMode='pistol';
-   const p=w.pedestrians.people[0];p.x=1985;p.y=688;p.run=false;p._recoil=false;p._alarmed=false;p._coverOwnerStagger=true;p.pose='stumble';p.joints={head:{x:-1.2,y:-15.6},shoulder:[{x:-4.6,y:-10.6},{x:4.4,y:-10.2}],hip:{x:-0.3,y:-2.0},elbow:[{x:-8.8,y:-9.6},{x:7.4,y:-4.6}],hand:[{x:-11.6,y:-13.8},{x:9.5,y:0.5}],knee:[{x:-4.6,y:0.6},{x:3.4,y:1.6}],foot:[{x:-7.6,y:0.2},{x:4.8,y:4.6}]};p.timer=0;p.vx=0;p.vy=0;p.angle=0;game.camera.x=1972;game.camera.y=697;game.camera.zoom=4.6;
+   const door=v=>{const t=VEHICLE_TYPES[v.type],d=t.driverDoor,hx=t.w*d.hingeX,hy=t.l*d.hingeY,a=v._coverDoorAngle*Math.PI/180,L=t.l*d.length,W=t.w*d.width,outer={x:-Math.sin(a)*L,y:-Math.cos(a)*L},outward={x:-Math.cos(a)*W,y:Math.sin(a)*W},local={x:hx+outer.x*.5+outward.x,y:hy+outer.y*.5+outward.y},world={x:v.x+Math.cos(v.angle)*local.x-Math.sin(v.angle)*local.y,y:v.y+Math.sin(v.angle)*local.x+Math.cos(v.angle)*local.y},side={x:-Math.cos(v.angle),y:-Math.sin(v.angle)};return{world,side};};
+   const opening=door(v),danny={x:opening.world.x+opening.side.x*5,y:opening.world.y+opening.side.y*5},owner={x:danny.x+14,y:danny.y};
+   w.player.x=danny.x;w.player.y=danny.y;w.player.angle=0;w.player._coverShove={head:{x:0,y:-14.2},shoulder:[{x:-4.5,y:-10.5},{x:4.5,y:-10.5}],hip:{x:0,y:-2.2},elbow:[{x:4,y:-9.3},{x:12,y:-5.8}],hand:[{x:10,y:-11.8},{x:18,y:-4.7}],knee:[{x:-2.3,y:1.1},{x:2.3,y:1.1}],foot:[{x:-2.3,y:3},{x:2.3,y:3}]};w._shotHudMode='pistol';
+   const p=w.pedestrians.people[0];p.x=owner.x;p.y=owner.y;p.run=false;p._recoil=false;p._alarmed=false;p._coverOwnerStagger=true;p.pose='stumble';p.joints={head:{x:-1.2,y:-15.6},shoulder:[{x:-4.6,y:-10.6},{x:4.4,y:-10.2}],hip:{x:-0.3,y:-2.0},elbow:[{x:-8.8,y:-9.6},{x:7.4,y:-4.6}],hand:[{x:-11.6,y:-13.8},{x:9.5,y:0.5}],knee:[{x:-4.6,y:0.6},{x:3.4,y:1.6}],foot:[{x:-7.6,y:0.2},{x:4.8,y:4.6}]};p.timer=0;p.vx=0;p.vy=0;p.angle=0;game.camera.x=(v.x+danny.x+owner.x)/3;game.camera.y=(v.y+danny.y+owner.y)/3;game.camera.zoom=4.6;
    // Clear only the local palm crowns whose fronds cross this shot's owner silhouette.
-   w.city.palms=w.city.palms.filter(t=>Math.hypot((t.x-3)-p.x,(t.y-32)-p.y)>=56);
+   w.city.palms=w.city.palms.filter(t=>[danny,owner].every(f=>Math.hypot((t.x-3)-f.x,(t.y-32)-f.y)>=56));w.city.streetProps=w.city.streetProps.filter(q=>[danny,owner].every(f=>Math.hypot(q.x-f.x,q.y-f.y)>30));
    w.pedestrians.people=[p];p.color='#C2AA78';p.skin='#dbad83';p.pants='#51483a';p.hair='#302923';p.hairStyle='short';
    w.missions.index=1;w.missions.state='active';w.missions.car=v;w.objective=null;w._shotObjectiveBanner='GET IN THE CAR';w.heat=2;w.wanted.heat=2;
    w.effects.skids=[];w.effects.particles=w.effects.particles.filter(q=>!q._smoke);w.pinCallout('STOLEN!','FIRST WHEELS',{y:176});
