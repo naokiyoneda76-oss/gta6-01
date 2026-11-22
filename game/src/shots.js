@@ -76,7 +76,7 @@ export const ShotDirector=class ShotDirector{
    const pedestrianTemplate=w.pedestrians.people[0];w.pedestrians.people=[];w.vehicles=[];w.traffic.cars=[];w.police.units=[];w.gang.crews=[];
    w.effects.skids=[];w.effects.particles=[];w.effects.impacts=[];w.effects.lightPools=[];w.combat.bullets=[];w.activities.flags=[];w.activities.cards=[];
    // Stage the reunion on the promenade where the clamped camera can frame it.
-   const danny={...pedestrianTemplate,x:652,y:2104,vx:0,vy:0,angle:Math.PI/2,timer:0,run:false,color:'#418b83',pants:'#394653',_shotScale:1,_homecomingPose:true,pose:'idle',joints:{head:{x:0,y:-14.2},shoulder:[{x:-4.5,y:-10.5},{x:4.5,y:-10.5}],hip:{x:0,y:-2.2},elbow:[{x:-5.6,y:-7.5},{x:7,y:-13.5}],hand:[{x:-6,y:-4.1},{x:5,y:-17}],knee:[{x:-2.3,y:1.1},{x:2.3,y:1.1}],foot:[{x:-2.3,y:3},{x:2.3,y:3}]}};
+   const danny={...pedestrianTemplate,x:652,y:2104,vx:0,vy:0,angle:Math.PI/2,timer:0,run:false,hero:true,color:'#E9DFC8',inner:'#24292D',skin:'#e8bd91',pants:'#30343B',hair:'#302923',_shotScale:1,_homecomingPose:true,pose:'idle',joints:{head:{x:0,y:-14.2},shoulder:[{x:-4.5,y:-10.5},{x:4.5,y:-10.5}],hip:{x:0,y:-2.2},elbow:[{x:-5.6,y:-7.5},{x:7,y:-13.5}],hand:[{x:-6,y:-4.1},{x:5,y:-17}],knee:[{x:-2.3,y:1.1},{x:2.3,y:1.1}],foot:[{x:-2.3,y:3},{x:2.3,y:3}]}};
    const mia={...pedestrianTemplate,x:680,y:2118,vx:0,vy:0,angle:-Math.PI/2,timer:0,run:false,color:'#f2a85e',hairStyle:'long',_shotScale:1,_homecomingPose:true,pose:'walk',phase:1.4};
    w.player._homecomingHidden=true;w.pedestrians.people=[danny,mia];
    // Mia's sedan is parked on the inland shoulder beside her.
