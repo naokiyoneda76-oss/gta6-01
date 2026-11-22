@@ -1,0 +1,28 @@
+import {spawn} from 'node:child_process';
+import {mkdir,writeFile} from 'node:fs/promises';
+import {existsSync} from 'node:fs';
+import path from 'node:path';
+import os from 'node:os';
+import readline from 'node:readline';
+import {setTimeout as delay} from 'node:timers/promises';
+const out='/home/hatch/workspace/makefun/r122_evidence';
+await mkdir(out,{recursive:true});
+const bin=path.join(os.homedir(),'.cache/puppeteer/chrome-headless-shell/linux-156.0.8078.47/chrome-headless-shell-linux64/chrome-headless-shell');
+if(!existsSync(bin)) throw Error('required chrome-headless-shell missing: '+bin);
+const chrome=spawn(bin,['--headless','--no-sandbox','--disable-gpu','--hide-scrollbars','--no-proxy-server','--remote-debugging-port=9222','--user-data-dir='+path.join(os.tmpdir(),'palmera-r122-r2'),'--window-size=1280,800','--hatch-webgl-allowed-domains-file=/var/lib/hatch-browser/rootfs-base/usr/share/hatch/chromium/webgl-allowed-domains.txt','--hatch-webgl-allowed-domains-sha256=8097045f0459c96c4cdc76e3a1af4e0f43f640b4b59c43d6db35e3641c0264c6','about:blank'],{stdio:'ignore'});
+const start=Date.now(),events=[],errors=[];let ws;
+try {
+ let tab;for(let i=0;i<100;i++){try{tab=await(await fetch('http://localhost:9222/json/new?about:blank',{method:'PUT'})).json();break;}catch{}await delay(200);}if(!tab)throw Error('CDP failed');
+ ws=new WebSocket(tab.webSocketDebuggerUrl);await new Promise((r,j)=>{ws.onopen=r;ws.onerror=j;});let id=0;const pending=new Map();
+ ws.onmessage=e=>{const m=JSON.parse(e.data);if(m.method==='Runtime.consoleAPICalled'){const v={type:m.params.type,args:m.params.args.map(a=>a.value??a.description??'')};events.push({t:Date.now()-start,event:'console',...v});if(v.type==='error')errors.push(v);}if(m.method==='Runtime.exceptionThrown'){const v={text:m.params.exceptionDetails.text,exception:m.params.exceptionDetails.exception?.description||'',url:m.params.exceptionDetails.url,line:m.params.exceptionDetails.lineNumber};events.push({t:Date.now()-start,event:'exception',...v});errors.push(v);}if(m.id&&pending.has(m.id)){pending.get(m.id)(m);pending.delete(m.id);}};
+ const call=(method,params={})=>new Promise(resolve=>{const n=++id;pending.set(n,resolve);ws.send(JSON.stringify({id:n,method,params}));});await call('Runtime.enable');await call('Page.enable');await call('Emulation.setDeviceMetricsOverride',{width:1280,height:800,deviceScaleFactor:1,mobile:false});
+ async function key(code,ms=400){const name=code.replace('Key','').replace('Arrow','');const vk={Enter:13,Space:32,ShiftLeft:16,ShiftRight:16,Escape:27,Tab:9,KeyE:69,KeyR:82,KeyP:80};await call('Input.dispatchKeyEvent',{type:'keyDown',key:name,code,windowsVirtualKeyCode:vk[code]||code.charCodeAt(code.length-1)});await delay(ms);await call('Input.dispatchKeyEvent',{type:'keyUp',key:name,code});}
+ async function hold(codes,ms){for(const code of codes){const name=code.replace('Key','').replace('Arrow','');await call('Input.dispatchKeyEvent',{type:'keyDown',key:name,code,windowsVirtualKeyCode:code==='ShiftLeft'?16:code.charCodeAt(code.length-1)});}await delay(ms);for(const code of codes){const name=code.replace('Key','').replace('Arrow','');await call('Input.dispatchKeyEvent',{type:'keyUp',key:name,code});}}
+ async function mouse(x,y,ms=100){await call('Input.dispatchMouseEvent',{type:'mouseMoved',x,y});await call('Input.dispatchMouseEvent',{type:'mousePressed',x,y,button:'left',clickCount:1});await delay(ms);await call('Input.dispatchMouseEvent',{type:'mouseReleased',x,y,button:'left',clickCount:1});}
+ async function shot(name){const r=await call('Page.captureScreenshot',{format:'png'});const file=`r2_${name}.png`;await writeFile(path.join(out,file),Buffer.from(r.result.data,'base64'));events.push({t:Date.now()-start,event:'screenshot',file});console.log(file);}
+ async function nav(){await call('Page.navigate',{url:'http://localhost:8080/'});await delay(1800);}
+ await nav();await shot('00_title');console.log('READY: send JSON lines: {"op":"key","code":"Enter","ms":500}, {"op":"hold","keys":["KeyW"],"ms":1000}, {"op":"mouse","x":640,"y":400}, {"op":"wait","ms":1000}, {"op":"shot","name":"checkpoint"}, {"op":"reload"}, {"op":"nav"}, {"op":"close"}. Input is CDP only.');
+ const rl=readline.createInterface({input:process.stdin,crlfDelay:Infinity});
+ for await(const line of rl){try{const c=JSON.parse(line);if(c.op==='key')await key(c.code,c.ms||400);else if(c.op==='hold')await hold(c.keys,c.ms);else if(c.op==='mouse')await mouse(c.x,c.y,c.ms||100);else if(c.op==='wait')await delay(c.ms);else if(c.op==='shot')await shot(c.name);else if(c.op==='reload')await call('Page.reload',{ignoreCache:true});else if(c.op==='nav')await nav();else if(c.op==='close')break;events.push({t:Date.now()-start,command:c});await writeFile(path.join(out,'r2_playtest_log.json'),JSON.stringify({round:122,run:'re-verification',started:new Date(start).toISOString(),elapsedMs:Date.now()-start,consoleErrors:errors,events},null,2));console.log('DONE '+JSON.stringify(c));}catch(e){console.error('COMMAND ERROR',e.stack||e);}}
+ await writeFile(path.join(out,'r2_playtest_log.json'),JSON.stringify({round:122,run:'re-verification',started:new Date(start).toISOString(),elapsedMs:Date.now()-start,consoleErrors:errors,events},null,2));
+} finally {ws?.close();chrome.kill('SIGTERM');}
