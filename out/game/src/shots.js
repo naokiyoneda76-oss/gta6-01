@@ -67,15 +67,17 @@ export const ShotDirector=class ShotDirector{
    w.setTimeOfDay('dusk');for(const v of w.vehicles)if(v.type==='police'){v.type='sedan';v.color='#d8d2bd';}w.player.x=670;w.player.y=2065;w.player.angle=-Math.PI/2;w.player._cover=true;w.player._marinaAim=true;w.player._marinaLeanOut=true;w.player._marinaMuzzleFlash=true;w._shotHudMode='pistol';w._marinaShotMarker=true;w._homecomingShotMarkerSuppressed=true;w.objective={x:554,y:2029,label:'SURVIVE THE AMBUSH'};w.city.crates=[{x:623,y:2039,w:30,h:28},{x:610,y:2065,w:23,h:19},{x:610,y:2042,w:23,h:19},{x:610,y:2025,w:23,h:19}];w.city.streetProps=w.city.streetProps.filter(q=>!(q.x>590&&q.x<680&&q.y>1930&&q.y<2190&&q.kind==='planter'));w.city.parkedCars=w.city.parkedCars.filter(q=>!(q.x>535&&q.x<700&&q.y>2030&&q.y<2140));
    // Pier-side and road-side teams converge on the marked crate cover.
    const pier=w.gang.spawnGroup(530,1950,3,{faction:'Ambush',color:'#B65D59'});
-   pier.members.forEach((p,i)=>{p.x=525+i*18;p.y=1995+i*18;p.state='combat';p.angle=Math.atan2(w.player.y-p.y,w.player.x-p.x);p._flash=true;p._advancing=true;p.cover={x:p.x,y:p.y};});
+   pier.members.forEach((p,i)=>{p.x=525+i*18;p.y=1995+i*18;p.state='combat';p.angle=Math.atan2(w.player.y-p.y,w.player.x-p.x);p._marinaWeapon=true;p._marinaAimTarget={x:i===2?628:644,y:i===2?2047:2043};p._marinaAimAngle=Math.atan2(p._marinaAimTarget.y-p.y,p._marinaAimTarget.x-p.x);p._flash=i===0;p._advancing=true;p.cover={x:p.x,y:p.y};});
    const road=w.gang.spawnGroup(710,1930,3,{faction:'Ambush',color:'#B65D59'});
-   road.members.forEach((p,i)=>{p.x=695+i*14;p.y=1973+i*14;p.state='combat';p.angle=Math.atan2(w.player.y-p.y,w.player.x-p.x);p._flash=true;p._advancing=false;p.cover={x:p.x,y:p.y};});road.members[0].y+=34; // round-113 staging; preserve member 0
+   road.members.forEach((p,i)=>{p.x=695+i*14;p.y=1973+i*14;p.state='combat';p.angle=Math.atan2(w.player.y-p.y,w.player.x-p.x);p._marinaWeapon=true;p._marinaAimTarget={x:i===2?628:644,y:i===2?2047:2043};p._marinaAimAngle=Math.atan2(p._marinaAimTarget.y-p.y,p._marinaAimTarget.x-p.x);p._flash=i===0;p._advancing=false;p.cover={x:p.x,y:p.y};});road.members[0].y+=34; // round-113 staging; preserve member 0
    road.members[1].y+=26; // title clearance; capture can tune this world-space offset
    road.members[2].y+=8; // clear the subtitle band at the right edge
-   // Incoming rounds strike the cover; Danny returns one short bright tracer west.
-   w.combat.bullets.push({x:650,y:2059,prevX:700,prevY:2059,vx:0,vy:0,life:1,range:300,owner:'gang'});
+   for(const p of [...pier.members,...road.members])p._marinaAimAngle=Math.atan2(p._marinaAimTarget.y-p.y,p._marinaAimTarget.x-p.x);
+   // Two firing members, one from each side, send short tapered rounds into crate faces.
+   for(const p of [pier.members[0],road.members[0]]){const a=p._marinaAimAngle,hx=8*.8715,hy=-4.5*.8715,muzzle={x:p.x+hx*Math.cos(a)-hy*Math.sin(a)+10*Math.cos(a),y:p.y+hx*Math.sin(a)+hy*Math.cos(a)+10*Math.sin(a)},length=25;w.combat.bullets.push({x:muzzle.x+Math.cos(a)*length,y:muzzle.y+Math.sin(a)*length,prevX:muzzle.x,prevY:muzzle.y,vx:0,vy:0,life:1,range:300,owner:'gang',staged:true,tapered:true});}
    w.combat.bullets.push({x:635,y:2055,prevX:670,prevY:2055,sx:670,sy:2055,vx:0,vy:0,life:1,range:300,owner:'player',staged:true});
-   w.effects.impacts.push({x:666,y:2058},{x:668,y:2058},{x:660,y:2043},{x:628,y:2047},{x:644,y:2043});
+   w.effects.impacts.push({x:628,y:2047},{x:644,y:2043},{x:628,y:2047},{x:644,y:2043});
+   w.effects.lightPool(650,2059,'rgba(255,166,91,.055)',44);w.effects.lightPool(628,2047,'rgba(255,151,76,.035)',38);
    w.dialogue.active=false;w.heat=2;w.wanted.heat=2;w.activities.flags=[];w.activities.cards=[];w.pinCallout('BETRAYAL','SURVIVE THE AMBUSH',{x:640,y:176});game.camera.x=648;game.camera.y=2045;game.camera.zoom=2.7;dress([[500,1850,'sedan','#47747a',Math.PI/2],[790,2135,'pickup','#526d59',Math.PI/2]],[[465,1945],[795,2110],[520,2145],[340,2245],[385,2275],[430,2250]]);const marinaVan=new Vehicle(650,1870,'van','#477b82',Math.PI/2);marinaVan._parked=true;w.city.parkedCars.push(marinaVan);
    const crouchJoints={head:{x:0,y:-12},shoulder:[{x:-4.5,y:-9},{x:4.5,y:-9}],hip:{x:0,y:-2},elbow:[{x:-7,y:-13},{x:7,y:-13}],hand:[{x:-8,y:-17},{x:8,y:-17}],knee:[{x:-5,y:4},{x:5,y:4}],foot:[{x:-7,y:7},{x:7,y:7}]};
    w._marinaFreight={barrels:[{x:686,y:2140},{x:694,y:2142},{x:690,y:2149},{x:698,y:2151}],pallet:{x:682,y:2170},van:{x:691,y:2117,angle:.20}};
@@ -85,7 +87,6 @@ export const ShotDirector=class ShotDirector{
    const cower=nearby[0];if(cower){cower.pose='cover';cower.joints=crouchJoints;cower.run=false;cower.vx=0;cower.vy=0;cower._marinaReaction=true;cower.angle=0;}
    const fleer=nearby[1];if(fleer){fleer.pose='run';fleer.joints=null;fleer.run=true;fleer.vx=34;fleer.vy=24;fleer.angle=Math.PI/4;fleer._marinaReaction=true;}
    // Sparse warm rounds visibly converge on Danny's cover from both ambush angles.
-   for(const [sx,sy,ex,ey] of [[551,2016,628,2047],[563,2019,628,2047],[616,2014,644,2043],[619,2021,644,2043]])w.combat.bullets.push({x:ex,y:ey,prevX:sx,prevY:sy,vx:0,vy:0,life:1,range:400,owner:'gang',staged:true});
   }
   else if(name==='homecoming'){
    w.setTimeOfDay('day');w._homecomingMorning=true;
@@ -114,8 +115,8 @@ export const ShotDirector=class ShotDirector{
    w.missions.index=5;w.missions.state='active';
    const forward={x:Math.sin(heading),y:-Math.cos(heading)},lateral={x:Math.cos(heading),y:Math.sin(heading)};
    const cops=[[4030,2535],[3975,2483],[3930,2567]];
-   w.police.units=[];for(let i=0;i<cops.length;i++){const [cx,cy]=cops[i],a=heading+(i-1)*.13,q=new Vehicle(cx,cy,'police','#e7e4d8',a);q.driver='police';q.speed=95;q._headlights=true;q._braking=true;q._brakeGlow=true;w.vehicles.push(q);w.police.units.push(q);const lx=cx+lateral.x*7,ly=cy+lateral.y*7;w.effects.lightPool(lx,ly,'rgba(42,112,255,.58)',70);w.effects.lightPool(cx-lateral.x*7,cy-lateral.y*7,'rgba(255,48,58,.56)',68);}
-   w.effects.lightPool(4148,2470,'rgba(255,174,88,.62)',52);w.effects.lightPool(4118,2485,'rgba(255,163,74,.34)',104);
+   w.police.units=[];for(let i=0;i<cops.length;i++){const [cx,cy]=cops[i],a=heading+(i-1)*.13,q=new Vehicle(cx,cy,'police','#e7e4d8',a);q.driver='police';q.speed=95;q._headlights=true;q._braking=true;q._brakeGlow=true;w.vehicles.push(q);w.police.units.push(q);const lx=cx+lateral.x*7,ly=cy+lateral.y*7;w.effects.lightPool(lx,ly,'rgba(42,112,255,.14)',48);w.effects.lightPool(cx-lateral.x*7,cy-lateral.y*7,'rgba(255,48,58,.14)',48);}
+   w.effects.lightPool(4030,2535,'rgba(255,48,58,.20)',55);w.effects.lightPool(4037,2542,'rgba(42,112,255,.20)',55);w.effects.lightPool(3975,2483,'rgba(255,48,58,.20)',55);w.effects.lightPool(3968,2476,'rgba(42,112,255,.20)',55);w.effects.lightPool(3930,2567,'rgba(255,48,58,.20)',55);w.effects.lightPool(3937,2574,'rgba(42,112,255,.20)',55);
    // Paired curved tyre trails and smoke trail the red car through the turn.
    for(let i=0;i<15;i++){const back=30+i*7,side=(i%2?1:-1)*11;w.effects.skid(x-forward.x*back+lateral.x*side,y-forward.y*back+lateral.y*side,heading,30);}
    for(let i=0;i<9;i++)w.effects.particles.push({x:x-forward.x*(25+i*8)+lateral.x*(i%2?10:-10),y:y-forward.y*(25+i*8)+lateral.y*(i%2?10:-10),vx:-forward.x*10,vy:-forward.y*10,life:1.2,size:10+(i%3)*3,color:'rgba(246,244,235,.68)',_smoke:true,angle:heading});

@@ -35,7 +35,7 @@ export const CityRenderer = class CityRenderer {
     const paintCargoApron=()=>{c.fillStyle='#949397';c.fillRect(g.cargo.x,g.cargo.y,g.cargo.w,g.cargo.h);c.save();c.beginPath();c.rect(g.cargo.x,g.cargo.y,g.cargo.w,g.cargo.h);c.clip();c.strokeStyle='rgba(65,68,67,.24)';c.lineWidth=1.5;for(const y of [1990,2105]){c.beginPath();c.moveTo(555,y);c.lineTo(w.city.width,y+5);c.stroke();}c.beginPath();c.moveTo(590,g.cargo.y);c.lineTo(597,g.cargo.y+g.cargo.h);c.stroke();c.restore();};
     const plain=new URLSearchParams(location.search).get('roadPlain')==='1';if(plain){paintCargoApron();return;}
     // Markings are independent of ground construction and never enter the combat yard.
-    for(const r of roads){const v=vert(r),lo=v?Math.min(r.y1,r.y2):Math.min(r.x1,r.x2),hi=v?Math.max(r.y1,r.y2):Math.max(r.x1,r.x2),cuts=junctions.filter(j=>j.v===r||j.h===r).map(j=>v?j.y:j.x).sort((a,b)=>a-b);let spans=[],cursor=lo;for(const at of cuts){if(at-42>cursor)spans.push([cursor,at-42]);cursor=Math.max(cursor,at+42);}if(cursor<hi)spans.push([cursor,hi]);const masked=[];for(const at of cuts)for(const dir of [-1,1])masked.push([at+dir*77,at+dir*133]);for(const [a,b] of masked){const next=[];for(const [s,e] of spans){if(b<=s||a>=e)next.push([s,e]);else{if(a>s)next.push([s,a]);if(b<e)next.push([b,e]);}}spans=next;}for(const offset of [-1.5,1.5]){c.strokeStyle='#d8bc4f';c.lineWidth=1.5;c.beginPath();for(const [a,b] of spans){if(v){c.moveTo(r.x1+offset,a);c.lineTo(r.x1+offset,b);}else{c.moveTo(a,r.y1+offset);c.lineTo(b,r.y1+offset);}}c.stroke();}
+    for(const r of roads){const v=vert(r),lo=v?Math.min(r.y1,r.y2):Math.min(r.x1,r.x2),hi=v?Math.max(r.y1,r.y2):Math.max(r.x1,r.x2),cuts=junctions.filter(j=>j.v===r||j.h===r).map(j=>v?j.y:j.x).sort((a,b)=>a-b);let spans=[],cursor=lo;for(const at of cuts){if(at-110>cursor)spans.push([cursor,at-110]);cursor=Math.max(cursor,at+110);}if(cursor<hi)spans.push([cursor,hi]);const masked=[];for(const at of cuts)for(const dir of [-1,1])masked.push([at+dir*77,at+dir*155]);for(const [a,b] of masked){const next=[];for(const [s,e] of spans){if(b<=s||a>=e)next.push([s,e]);else{if(a>s)next.push([s,a]);if(b<e)next.push([b,e]);}}spans=next;}for(const offset of [-1.5,1.5]){c.strokeStyle='#d8bc4f';c.lineWidth=1.5;c.beginPath();for(const [a,b] of spans){if(v){c.moveTo(r.x1+offset,a);c.lineTo(r.x1+offset,b);}else{c.moveTo(a,r.y1+offset);c.lineTo(b,r.y1+offset);}}c.stroke();}
       // Continental crossing bands span each road mouth as one connected route between sidewalks.
       for(const j of junctions.filter(j=>j.v===r||j.h===r))for(const dir of [-1,1]){const at=v?j.y:j.x,band=at+dir*105;c.fillStyle='#eee9da';if(v){for(let x=r.x1-39;x<r.x1+39;x+=13)c.fillRect(x,band-20,6,40);}else{for(let y=r.y1-39;y<r.y1+39;y+=13)c.fillRect(band-20,y,40,6);}}
       // Stop bars sit between the junction and each crosswalk on the incoming
@@ -187,14 +187,16 @@ export const CityRenderer = class CityRenderer {
     c.strokeStyle=ART.palette.swatches.s79;c.lineWidth=1;c.beginPath();c.moveTo(-91,-10);c.lineTo(-91,10);c.moveTo(-50,-7);c.lineTo(-50,7);c.stroke();
     c.fillStyle=ART.palette.swatches.s80;c.fillRect(-58,-2,3,4);
     // Open west-facing cargo hold, with cream-grey doors and a lowered ramp.
-    c.fillStyle=w._getawayShotMarkerSuppressed?'#745536':ART.palette.swatches.s78;c.fillRect(-160,-13,25,26);
-    c.strokeStyle=ART.palette.swatches.s79;c.lineWidth=2;c.strokeRect(-159,-12,23,24);
+    c.fillStyle=w._getawayShotMarkerSuppressed?'#211d1a':ART.palette.swatches.s78;c.fillRect(-163,-16,32,32);
+    c.strokeStyle='#f4d39b';c.lineWidth=3;c.strokeRect(-162,-15,30,30);
+    const rampGlow=c.createRadialGradient(-170,8,1,-170,8,46);rampGlow.addColorStop(0,'rgba(255,184,105,.20)');rampGlow.addColorStop(1,'rgba(255,155,79,0)');c.fillStyle=rampGlow;c.beginPath();c.arc(-170,8,46,0,Math.PI*2);c.fill();
     c.fillStyle=ART.palette.swatches.s72;c.fillRect(-158,-34,22,18);c.fillRect(-158,16,22,18);
     c.strokeStyle=ART.palette.swatches.s80;c.lineWidth=1;c.strokeRect(-158,-34,22,18);c.strokeRect(-158,16,22,18);
     // A broad grey plate slopes down and west toward Danny on the apron.
-    c.fillStyle=ART.palette.swatches.s81;c.beginPath();c.moveTo(-145,-12);c.lineTo(-190,27);c.lineTo(-190,42);c.lineTo(-145,12);c.closePath();c.fill();
-    c.strokeStyle=ART.palette.swatches.s82;c.lineWidth=2;c.beginPath();c.moveTo(-145,-12);c.lineTo(-190,27);c.lineTo(-190,42);c.lineTo(-145,12);c.stroke();
-    c.strokeStyle=ART.palette.swatches.s83;c.lineWidth=1;c.beginPath();c.moveTo(-151,-7);c.lineTo(-184,28);c.stroke();
+    c.fillStyle='#b38b60';c.beginPath();c.moveTo(-145,-16);c.lineTo(-184,24);c.lineTo(-196,42);c.lineTo(-196,52);c.lineTo(-145,16);c.closePath();c.fill();
+    c.fillStyle='#d2aa78';c.beginPath();c.moveTo(-146,-12);c.lineTo(-186,27);c.lineTo(-190,43);c.lineTo(-145,12);c.closePath();c.fill();
+    c.strokeStyle='#f0c58a';c.lineWidth=2;c.beginPath();c.moveTo(-145,-16);c.lineTo(-184,24);c.lineTo(-196,42);c.lineTo(-196,52);c.lineTo(-145,16);c.stroke();
+    c.strokeStyle='#f2d5a5';c.lineWidth=1.3;c.beginPath();c.moveTo(-151,-8);c.lineTo(-186,30);c.stroke();
     // four under-wing nacelles, two on either side of the fuselage
     for(const [ex,ey] of [[-33,-47],[19,-38],[-33,47],[19,38]]){c.fillStyle=ART.palette.swatches.s84;c.beginPath();c.roundRect(ex-12,ey-6,34,12,6);c.fill();c.fillStyle=ART.palette.swatches.s85;c.fillRect(ex+13,ey-4,5,8);}
     c.restore();
