@@ -16,16 +16,17 @@ export const CityRenderer = class CityRenderer {
     const x=g.x,y=g.y,W=g.w,H=g.h,roads=w.city.roads.filter(r=>r.groundProfile==='marina');
     // District base, then the working quay immediately inland of the pier edge.
     c.fillStyle=ART.palette.grass;c.fillRect(x,y,W,H);
-    c.fillStyle='#a69677';c.fillRect(g.cargo.x,g.cargo.y,g.cargo.w,g.cargo.h);
+    c.save();c.beginPath();c.rect(g.cargo.x,g.cargo.y,g.cargo.w,g.cargo.h);for(const r of roads){if(r.x1===r.x2)c.rect(r.x1-r.width/2,Math.min(r.y1,r.y2),r.width,Math.abs(r.y2-r.y1));else c.rect(Math.min(r.x1,r.x2),r.y1-r.width/2,Math.abs(r.x2-r.x1),r.width);}c.clip('evenodd');c.fillStyle='#a69677';c.fillRect(g.cargo.x,g.cargo.y,g.cargo.w,g.cargo.h);c.restore();
     // Worn timber/concrete cargo apron: seams and pallet scuffs distinguish it from asphalt.
     c.save();c.beginPath();c.rect(g.cargo.x,g.cargo.y,g.cargo.w,g.cargo.h);c.clip();
     c.strokeStyle='rgba(75,65,49,.28)';c.lineWidth=1;for(let xx=g.cargo.x+22;xx<g.cargo.x+g.cargo.w;xx+=34){c.beginPath();c.moveTo(xx,g.cargo.y);c.lineTo(xx,g.cargo.y+g.cargo.h);c.stroke();}
     c.fillStyle='rgba(218,196,151,.22)';for(let yy=g.cargo.y+12;yy<g.cargo.y+g.cargo.h;yy+=31)for(let xx=g.cargo.x+8;xx<g.cargo.x+g.cargo.w;xx+=47)c.fillRect(xx,yy,25,2);
     c.restore();c.fillStyle='#8d795e';for(let yy=g.cargo.y+8;yy<g.cargo.y+g.cargo.h;yy+=24){c.fillRect(g.cargo.x+3,yy,2,12);c.fillRect(g.cargo.x+g.cargo.w-6,yy,2,12);}
     // Concrete forecourt strips bridge each nearby Marina plot to a sidewalk.
+    c.save();c.beginPath();for(const r of roads){if(r.x1===r.x2)c.rect(r.x1-r.width/2,Math.min(r.y1,r.y2),r.width,Math.abs(r.y2-r.y1));else c.rect(Math.min(r.x1,r.x2),r.y1-r.width/2,Math.abs(r.x2-r.x1),r.width);}c.clip('evenodd');
     for(const b of w.city.buildings){if(b.district!=='marina')continue;let best=null,bestDist=Infinity;
       for(const r of roads){const v=r.x1===r.x2;if(v){const py=Math.max(Math.min(r.y1,r.y2),Math.min(Math.max(r.y1,r.y2),b.y+b.d*.72)),side=b.x+b.w/2<r.x1?-1:1,edge=r.x1+side*(r.width/2+g.sidewalk),dist=Math.abs((side<0?b.x+b.w:b.x)-edge);if(dist<bestDist){bestDist=dist;best={v,py,edge,side,b};}}else{const px=Math.max(Math.min(r.x1,r.x2),Math.min(Math.max(r.x1,r.x2),b.x+b.w*.5)),side=b.y+b.d/2<r.y1?-1:1,edge=r.y1+side*(r.width/2+g.sidewalk),dist=Math.abs((side<0?b.y+b.d:b.y)-edge);if(dist<bestDist){bestDist=dist;best={v,px,edge,side,b};}}}
-      if(best&&bestDist<100&&bestDist>0){c.fillStyle='#d1c5aa';if(best.v)c.fillRect(Math.min(best.side<0?best.b.x+best.b.w:best.b.x,best.edge),best.py-15,bestDist,30);else c.fillRect(best.px-15,Math.min(best.side<0?best.b.y+best.b.d:best.b.y,best.edge),30,bestDist);}}
+      if(best&&bestDist<100&&bestDist>0){c.fillStyle='#d1c5aa';if(best.v)c.fillRect(Math.min(best.side<0?best.b.x+best.b.w:best.b.x,best.edge),best.py-15,bestDist,30);else c.fillRect(best.px-15,Math.min(best.side<0?best.b.y+best.b.d:best.b.y,best.edge),30,bestDist);}}c.restore();
     c.lineCap='round';c.lineJoin='round';
     // Sidewalk ribbon is laid first, so asphalt strokes merge over every junction.
     for(const r of roads){c.strokeStyle='#c5b99d';c.lineWidth=r.width+g.sidewalk*2;c.beginPath();c.moveTo(r.x1,r.y1);c.lineTo(r.x2,r.y2);c.stroke();}
