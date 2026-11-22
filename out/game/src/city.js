@@ -11,11 +11,12 @@ export const CityMap = class CityMap {
     for (let y = 120; y < this.height; y += 300) this.roads.push({ x1: 500, y1: y, x2: this.width, y2: y, width: y % 900 === 120 ? 30 : 20 });
     // A parallel coastal road opens onto the marina and beach neighborhoods.
     this.roads.push({ x1: 635, y1: 0, x2: 635, y2: this.height, width: 18 });
+    this._buildMarinaRoads();
     for (const district of this.districts) this._fillDistrict(district);
     for(const id of ['coral','downtown','marina','porto','laspalmas','airport']){const q=this.districts.find(v=>v.id===id);for(let i=0;i<12;i++)if(this.rng.chance(.77)){const x=this.rng.range(q.x+12,q.x+q.w-120),y=this.rng.range(q.y+12,q.y+q.h-100),w=this.rng.range(76,124),depth=this.rng.range(65,102);if(!this._nearRoad(x+w/2,y+depth/2,w,depth)&&!this.buildings.some(b=>x<b.x+b.w&&x+w>b.x&&y<b.y+b.d&&y+depth>b.y))this.lots.push({x,y,w,d:depth,type:this.rng.pick(['parking','plaza','yard','construction']),cars:this.rng.int(2,5)});}}
     // Sidewalk furniture and curb parking use stable road coordinates, leaving the carriageway clear.
     const tryPark=(car)=>{const hw=car.angle===0?10:16,hh=car.angle===0?16:10;if(this.buildings.some(b=>car.x+hw>b.x&&car.x-hw<b.x+b.w&&car.y+hh>b.y&&car.y-hh<b.y+b.d))return;if(this.parkedCars.some(v=>Math.abs(v.x-car.x)<(v.angle===0?10:16)+hw&&Math.abs(v.y-car.y)<(v.angle===0?16:10)+hh))return;this.parkedCars.push(car);};
-    for(const r of this.roads){if(r.x1===r.x2){for(let y=180;y<this.height-60;y+=330){this.streetProps.push({x:r.x1+r.width*.5+13,y,kind:this.rng.pick(['bench','planter','postbox','bin','bus'])});if(r.width>=30&&this.rng.chance(.55))tryPark({x:r.x1-r.width*.5-18,y:y+42,type:this.rng.pick(['sedan','pickup','taxi']),color:this.rng.pick(['#47747a','#d8d2bd','#b98d5b','#e8bc3e']),angle:0});}}else{for(let x=720;x<this.width-80;x+=420)if(this.rng.chance(.65)){this.streetProps.push({x,y:r.y1-r.width*.5-13,kind:this.rng.pick(['bench','planter','postbox','bin','bus'])});if(r.width>=30&&this.rng.chance(.5))tryPark({x:x+43,y:r.y1-r.width*.5-18,type:this.rng.pick(['sedan','pickup']),color:this.rng.pick(['#47747a','#d8d2bd','#b98d5b']),angle:Math.PI/2});}}}
+    for(const r of this.roads){if(r.groundProfile==='marina')continue;if(r.x1===r.x2){for(let y=180;y<this.height-60;y+=330){this.streetProps.push({x:r.x1+r.width*.5+13,y,kind:this.rng.pick(['bench','planter','postbox','bin','bus'])});if(r.width>=30&&this.rng.chance(.55))tryPark({x:r.x1-r.width*.5-18,y:y+42,type:this.rng.pick(['sedan','pickup','taxi']),color:this.rng.pick(['#47747a','#d8d2bd','#b98d5b','#e8bc3e']),angle:0});}}else{for(let x=720;x<this.width-80;x+=420)if(this.rng.chance(.65)){this.streetProps.push({x,y:r.y1-r.width*.5-13,kind:this.rng.pick(['bench','planter','postbox','bin','bus'])});if(r.width>=30&&this.rng.chance(.5))tryPark({x:x+43,y:r.y1-r.width*.5-18,type:this.rng.pick(['sedan','pickup']),color:this.rng.pick(['#47747a','#d8d2bd','#b98d5b']),angle:Math.PI/2});}}}
     for (let y = 60; y < this.height; y += 46) this.palms.push({ x: 482 + this.rng.range(-8, 18), y });
     const las=this.districts.find(q=>q.id==='laspalmas');for(let i=0;i<24;i++)this.palms.push({x:this.rng.range(las.x+12,las.x+las.w-12),y:this.rng.range(las.y+12,las.y+las.h-12)});
     for (let y = 1900; y < 2600; y += 145) this.piers.push({ x1: 500, y1: y, x2: this.rng.range(280, 430), y2: y + this.rng.range(-24, 24), width: 18 });
@@ -24,6 +25,11 @@ export const CityMap = class CityMap {
     // Irregular marina freight pile; the front crate remains beside Danny's cover.
     for(const [x,y] of [[565,2055],[647,2053],[560,2082],[617,2080],[649,2088],[566,2114],[594,2110],[624,2118],[651,2112],[700,2100]])this.crates.push({x,y,w:23,h:19});
     this.runway = { x: 3930, y: 2430, w: 760, h: 90 }; this.terminal = { x: 3700, y: 2160, w: 260, h: 180 };
+  }
+  _buildMarinaRoads() {
+    const marina=this.districts.find(d=>d.id==='marina'),y0=marina.y,y1=marina.y+marina.h,x0=500,x1=marina.x+marina.w,out=[];
+    for(const r of this.roads){const vertical=r.x1===r.x2;if(vertical&&r.y1===0&&r.y2===this.height&&r.x1>=x0&&r.x1<=x1){out.push({...r,y2:y0},{...r,y1:y0,y2:y1,width:84,groundProfile:'marina'},{...r,y1:y1});}else if(!vertical&&r.x1===500&&r.x2===this.width&&r.y1>=y0&&r.y1<=y1){out.push({...r,x2:x0},{...r,x1:x0,x2:x1,width:84,groundProfile:'marina'} ,{...r,x1:x1});}else out.push(r);}
+    this.roads=out;this.marinaGround={x:marina.x,y:marina.y,w:marina.w,h:marina.h,sidewalk:24,parking:38,cargo:{x:558,y:1988,w:184,h:205}};
   }
   _fillDistrict(d) {
     const [minH, maxH] = d.heights; const step = d.kind === 'tower' ? 130 : d.kind === 'house' ? 95 : 120;
