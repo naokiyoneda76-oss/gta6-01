@@ -32,9 +32,10 @@ export const ShotDirector=class ShotDirector{
    w.city.streetProps=w.city.streetProps.filter(q=>q.x<1830||q.x>2040||q.y<710||q.y>880);
    w.city.parkedCars=w.city.parkedCars.filter(q=>q.x<1820||q.x>2055||q.y<700||q.y>890);
    w.city.palms=w.city.palms.filter(q=>q.x<1800||q.x>2150||q.y<680||q.y>900);
-   w.city.buildings.push({x:1925,y:618,w:110,d:62,height:32,kind:'shop',archetype:'shop',name:'PALMERA MARKET',commercial:true,awning:true,color:'#c7b9a0',roof:'#d18b70',district:'downtown',treatment:1,roofProps:2,rotation:0});
+   // The storefront faces west onto the 40u sidewalk; its full footprint sits east of the arterial.
+   w.city.buildings.push({x:2040,y:618,w:110,d:62,height:32,kind:'shop',archetype:'shop',name:'PALMERA MARKET',commercial:true,awning:true,color:'#c7b9a0',roof:'#d18b70',district:'downtown',treatment:1,roofProps:2,rotation:90});
    // Keep a clear car-length of kerb around the hero car; traffic remains farther along the block.
-   for(const [x,y,type,color] of [[1887,690,'sedan','#47747a'],[1887,900,'pickup','#d8d2bd'],[2010,700,'sedan','#526d59'],[2010,890,'taxi','#e8bc3e']]){const q=new Vehicle(x,y,type,color,0);q._parked=true;w.city.parkedCars.push(q);}
+   for(const [x,y,type,color] of [[1887,690,'sedan','#47747a'],[1887,900,'pickup','#d8d2bd'],[2018,560,'sedan','#526d59'],[2010,890,'taxi','#e8bc3e']]){const q=new Vehicle(x,y,type,color,0);q._parked=true;w.city.parkedCars.push(q);}
    // The hero car sits at the shop curb, with its driver door opening toward the sidewalk.
    const v=new Vehicle(1955,720,'sport','#e94f45',0);v.speed=0;v.driver='player';v._doorOpen=true;v._coverDoorAngle=-62;v._groundMarker=false;v._handbrake=false;v._coverDoor=true;w.vehicles=[v];w.traffic.cars=[];w.gang.crews=[];w._shotSpeed=0;
    // The frozen door leaf swings screen-left at this heading. Keep both ground

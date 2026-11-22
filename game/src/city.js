@@ -13,7 +13,7 @@ export const CityMap = class CityMap {
     this.roads.push({ x1: 635, y1: 0, x2: 635, y2: this.height, width: 84 });
     this._buildMarinaRoads();
     // Shot-district surface footprints are authored alongside the road graph.
-    this.shotGround={coral:{shore:470,sandEnd:524,promenadeEnd:577,road:{x:619,width:100},median:{x:611,y1:900,y2:1008,y3:1032,y4:1110,w:16},park:{x:684,y:930,w:74,h:130}},downtown:{road:{x:1920,width:84},parking:38,sidewalk:24,park:{x:2050,y:742,w:50,h:86}},airport:{apron:{x:3860,y:2350,w:600,h:320}}};
+    this.shotGround={coral:{shore:470,sandEnd:524,promenadeEnd:577,road:{x:619,width:100},median:{x:611,y1:900,y2:1008,y3:1032,y4:1110,w:16},park:{x:684,y:930,w:74,h:130}},downtown:{road:{x:1920,width:84},parking:38,sidewalk:40,park:{x:2050,y:742,w:50,h:86}},airport:{apron:{x:3860,y:2350,w:600,h:320}}};
     for (const district of this.districts) this._fillDistrict(district);
     for(const id of ['coral','downtown','marina','porto','laspalmas','airport']){const q=this.districts.find(v=>v.id===id);for(let i=0;i<12;i++)if(this.rng.chance(.77)){const x=this.rng.range(q.x+12,q.x+q.w-120),y=this.rng.range(q.y+12,q.y+q.h-100),w=this.rng.range(76,124),depth=this.rng.range(65,102);if(!this._nearRoad(x+w/2,y+depth/2,w,depth)&&!this.buildings.some(b=>x<b.x+b.w&&x+w>b.x&&y<b.y+b.d&&y+depth>b.y))this.lots.push({x,y,w,d:depth,type:this.rng.pick(['parking','plaza','yard','construction']),cars:this.rng.int(2,5)});}}
     // Sidewalk furniture and curb parking use stable road coordinates, leaving the carriageway clear.
