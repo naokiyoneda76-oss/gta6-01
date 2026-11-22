@@ -1,5 +1,5 @@
 import {ART} from './art.js';
-export const VEHICLE_TYPES={sedan:{name:'Sedan',accel:150,topSpeed:250,grip:7,health:100,colors:[ART.palette.swatches.s37,ART.palette.swatches.s162,ART.palette.swatches.s163,ART.palette.swatches.s164],w:24,l:43,driverDoor:{hingeX:-.45,hingeY:.04,length:.38,width:.33}},sport:{name:'Sport',accel:230,topSpeed:340,grip:8,health:85,colors:[ART.palette.swatches.s165,ART.palette.swatches.s166,ART.palette.swatches.s167],w:23,l:42,driverDoor:{hingeX:-.45,hingeY:-.04,length:.34,width:.52}},pickup:{name:'Pickup',accel:120,topSpeed:205,grip:5,health:120,colors:[ART.palette.swatches.s39,ART.palette.swatches.s168,ART.palette.swatches.s169],w:27,l:48},taxi:{name:'Taxi',accel:135,topSpeed:220,grip:6,health:100,colors:[ART.palette.swatches.s40],w:24,l:43},police:{name:'Police',accel:180,topSpeed:275,grip:7,health:110,colors:[ART.palette.policeBand],w:25,l:45},truck:{name:'Armoured Truck',accel:62,topSpeed:125,grip:4,health:320,colors:[ART.palette.swatches.s170],w:34,l:64}};
+export const VEHICLE_TYPES={sedan:{name:'Sedan',accel:150,topSpeed:250,grip:7,health:100,colors:[ART.palette.swatches.s37,ART.palette.swatches.s162,ART.palette.swatches.s163,ART.palette.swatches.s164],w:24,l:43,driverDoor:{hingeX:-.45,hingeY:.04,length:.38,width:.33}},sport:{name:'Sport',accel:230,topSpeed:340,grip:8,health:85,colors:[ART.palette.swatches.s165,ART.palette.swatches.s166,ART.palette.swatches.s167],w:23,l:42,driverDoor:{hingeX:-.45,hingeY:-.04,length:.34,width:.52}},pickup:{name:'Pickup',accel:120,topSpeed:205,grip:5,health:120,colors:[ART.palette.swatches.s39,ART.palette.swatches.s168,ART.palette.swatches.s169],w:27,l:48,driverDoor:{hingeX:-.45,hingeY:-.15,length:.34,width:.38}},van:{name:'Delivery Van',accel:105,topSpeed:185,grip:5,health:135,colors:[ART.palette.swatches.s67,ART.palette.swatches.s97,ART.palette.swatches.s121],w:29,l:50},convertible:{name:'Convertible',accel:160,topSpeed:245,grip:7,health:95,colors:[ART.palette.swatches.s65,ART.palette.swatches.s67,ART.palette.swatches.s123],w:24,l:43,driverDoor:{hingeX:-.45,hingeY:.04,length:.38,width:.33}},taxi:{name:'Taxi',accel:135,topSpeed:220,grip:6,health:100,colors:[ART.palette.swatches.s40],w:24,l:43},police:{name:'Police',accel:180,topSpeed:275,grip:7,health:110,colors:[ART.palette.policeBand],w:25,l:45},truck:{name:'Armoured Truck',accel:62,topSpeed:125,grip:4,health:320,colors:[ART.palette.swatches.s170],w:34,l:64}};
 export class Vehicle{
  constructor(x,y,type='sedan',color=null,angle=0){this.x=x;this.y=y;this.type=type;this.color=color||VEHICLE_TYPES[type].colors[0];this.angle=angle;this.speed=0;this.driver=null;this.damage=0;this.health=VEHICLE_TYPES[type].health||100;}
  update(dt,control={},world){const t=VEHICLE_TYPES[this.type],th=control.throttle||0,steer=control.steer||0;this.speed+=th*t.accel*dt;if(!th)this.speed*=Math.max(0,1-dt*(control.handbrake?1.5:2.3));this.speed=Math.max(-t.topSpeed*.35,Math.min(t.topSpeed,this.speed));this.angle+=steer*(.35+Math.min(1,Math.abs(this.speed)/100))*dt*Math.sign(this.speed||1)*(control.handbrake?1.45:1);let vx=Math.sin(this.angle)*this.speed,vy=-Math.cos(this.angle)*this.speed;const grip=1-Math.exp(-t.grip*(control.handbrake?.22:1)*dt);const side=vx*Math.cos(this.angle)-vy*Math.sin(this.angle);vx-=Math.cos(this.angle)*side*grip;vy+=Math.sin(this.angle)*side*grip;const nx=this.x+vx*dt,ny=this.y+vy*dt,city=world.city,hit=(x,y)=>city.collidesBuilding(x,y,t.w*.48);let blocked=false;for(const s of [-t.l*.42,t.l*.42]){const x=nx+Math.sin(this.angle)*s,y=ny-Math.cos(this.angle)*s;if(hit(x,y)||city.isWater(x,y)){blocked=true;break;}}if(blocked){if(Math.abs(this.speed)>80)this.damage=Math.min(1,this.damage+.012);this.speed=0;}else{this.x=nx;this.y=ny;}}
@@ -7,13 +7,25 @@ export class Vehicle{
   const t=VEHICLE_TYPES[this.type],hero=this.driver==='player',sc=1;
   c.save();c.translate(this.x,this.y);c.scale(sc,sc);c.rotate(this.angle);
   c.fillStyle=`rgba(${ART.palette.vehicleShadowRgb},${ART.shadow.vehicleColorAlpha})`;c.beginPath();c.roundRect(2,5+ART.shadow.vehicle.y-8,t.w*.61,t.l*.43,4);c.fill();
-  const truck=this.type==='truck',sport=this.type==='sport',police=this.type==='police';
+  const truck=this.type==='truck',sport=this.type==='sport',police=this.type==='police',pickup=this.type==='pickup',van=this.type==='van',convertible=this.type==='convertible';
   const body=police?ART.palette.policeBody:this.color, dark=ART.palette.bodyDark, skirt=ART.palette.skirt;
   const bx=truck?-t.w/2:-t.w*.46,bw=truck?t.w:t.w*.92,by=-t.l/2,bh=t.l;
   // Four corner tyres and hubs sit just beyond the body edge.
   const wheelY=[-t.l*.34,t.l*.34],wheelX=[-t.w*.48,t.w*.48];
   c.fillStyle=ART.palette.tire;for(const x of wheelX)for(const y of wheelY){c.fillRect(x-2.3,y-4.1,4.6,8.2);c.fillStyle=ART.palette.hub;c.fillRect(x-.8,y-1.3,1.6,2.6);c.fillStyle=ART.palette.tire;}
   c.fillStyle=body;c.strokeStyle=ART.palette.outline;c.lineWidth=ART.outline.world;c.beginPath();c.roundRect(bx,by,bw,bh,truck?2:3);c.fill();c.stroke();
+  if(pickup){
+   // Open bed behind a forward cab: shaded floor, raised side rails, and tailgate.
+   c.fillStyle=ART.palette.bodyDark;c.fillRect(-t.w*.39,t.l*.02,t.w*.78,t.l*.39);
+   c.fillStyle=ART.palette.skirt;c.fillRect(-t.w*.34,t.l*.045,t.w*.68,t.l*.31);
+   c.fillStyle=body;c.fillRect(-t.w*.48,t.l*.015,t.w*.12,t.l*.39);c.fillRect(t.w*.36,t.l*.015,t.w*.12,t.l*.39);
+   c.strokeStyle=ART.palette.outline;c.lineWidth=1;c.strokeRect(-t.w*.39,t.l*.02,t.w*.78,t.l*.39);c.beginPath();c.moveTo(-t.w*.48,t.l*.4);c.lineTo(t.w*.48,t.l*.4);c.stroke();
+  }else if(van){
+   // Tall delivery box with a short, sloped nose and broad flat windshield.
+   c.fillStyle=body;c.beginPath();c.moveTo(-t.w*.46,-t.l*.49);c.lineTo(t.w*.46,-t.l*.49);c.lineTo(t.w*.5,-t.l*.27);c.lineTo(t.w*.5,t.l*.47);c.lineTo(-t.w*.5,t.l*.47);c.lineTo(-t.w*.5,-t.l*.27);c.closePath();c.fill();c.strokeStyle=ART.palette.outline;c.lineWidth=ART.outline.world;c.stroke();
+   c.fillStyle=ART.palette.bodyDark;c.fillRect(-t.w*.42,-t.l*.24,t.w*.84,t.l*.68);
+   c.fillStyle=body;c.beginPath();c.moveTo(-t.w*.41,-t.l*.27);c.lineTo(t.w*.41,-t.l*.27);c.lineTo(t.w*.36,-t.l*.43);c.lineTo(-t.w*.36,-t.l*.43);c.closePath();c.fill();
+  }
   c.fillStyle=skirt;c.fillRect(bx+1,t.l*.37,bw-2,t.l*.1);
   // Body ribs make the truck's cargo box distinct from its forward cab.
   if(truck){c.fillStyle=ART.palette.grassDark;c.fillRect(-t.w*.44,-t.l*.48,t.w*.88,t.l*.43);c.strokeStyle=ART.palette.outline;c.lineWidth=.8;for(let y=-t.l*.43;y<-t.l*.08;y+=5){c.beginPath();c.moveTo(-t.w*.43,y);c.lineTo(t.w*.43,y);c.stroke();}c.fillStyle=body;c.fillRect(-t.w*.49,-t.l*.07,t.w*.98,t.l*.52);c.strokeStyle=ART.palette.outline;c.strokeRect(-t.w*.49,-t.l*.07,t.w*.98,t.l*.52);}
@@ -27,11 +39,14 @@ export class Vehicle{
    // Front and rear boundaries complete the two door outlines on both flanks.
    for(const side of [-1,1]){const x=side*t.w*.46;c.beginPath();c.moveTo(x,y0);c.lineTo(x-side*1.2,y0);c.moveTo(x,y1);c.lineTo(x-side*1.2,y1);c.stroke();}
   }
+  if(van){c.strokeStyle=ART.palette.outline;c.lineWidth=.8;c.beginPath();c.moveTo(t.w*.47,-t.l*.2);c.lineTo(t.w*.47,t.l*.39);c.moveTo(t.w*.47,t.l*.39);c.lineTo(-t.w*.47,t.l*.39);c.stroke();c.fillStyle=ART.palette.glass;c.fillRect(-t.w*.43,-t.l*.4,t.w*.86,t.l*.12);c.strokeStyle='rgba(230,245,239,.55)';c.beginPath();c.moveTo(-t.w*.3,-t.l*.39);c.lineTo(-t.w*.08,-t.l*.3);c.stroke();}
   // Sedan/sport/pickup glasshouse: windshield, body-colour roof, rear glass.
-  const cabTop=truck?-t.l*.08:-t.l*.34,cabBottom=truck?t.l*.29:t.l*.23,cabW=truck?t.w*.76:t.w*.69;
+  const cabTop=truck?-t.l*.08:pickup?-t.l*.44:van?-t.l*.43:-t.l*.34,cabBottom=truck?t.l*.29:pickup?-t.l*.02:van?-t.l*.25:t.l*.23,cabW=truck?t.w*.76:pickup?t.w*.76:van?t.w*.82:t.w*.69;
   c.fillStyle=dark;c.beginPath();c.moveTo(-cabW*.45,cabTop);c.lineTo(cabW*.45,cabTop);c.lineTo(cabW*.5,cabTop+t.l*.18);c.lineTo(-cabW*.5,cabTop+t.l*.18);c.closePath();c.fill();
-  c.fillStyle=this.type==='taxi'?ART.palette.carYellow:police?ART.palette.policeBand:this.color;c.beginPath();c.moveTo(-cabW*.47,cabTop+t.l*.185);c.lineTo(cabW*.47,cabTop+t.l*.185);c.lineTo(cabW*.43,cabBottom-t.l*.1);c.lineTo(-cabW*.43,cabBottom-t.l*.1);c.closePath();c.fill();c.strokeStyle=ART.palette.swatches.s172;c.lineWidth=.7;c.stroke();
-  c.fillStyle=dark;c.beginPath();c.moveTo(-cabW*.43,cabBottom-t.l*.09);c.lineTo(cabW*.43,cabBottom-t.l*.09);c.lineTo(cabW*.38,cabBottom);c.lineTo(-cabW*.38,cabBottom);c.closePath();c.fill();
+  if(pickup||van||convertible){c.fillStyle=ART.palette.glass;c.beginPath();c.moveTo(-cabW*.47,cabTop+t.l*.185);c.lineTo(cabW*.47,cabTop+t.l*.185);c.lineTo(cabW*.43,cabBottom-t.l*.1);c.lineTo(-cabW*.43,cabBottom-t.l*.1);c.closePath();c.fill();c.strokeStyle=ART.palette.outline;c.lineWidth=.7;c.stroke();c.strokeStyle='rgba(230,245,239,.55)';c.beginPath();c.moveTo(-cabW*.34,cabTop+t.l*.2);c.lineTo(-cabW*.08,cabTop+t.l*.2);c.stroke();}
+  else{c.fillStyle=this.type==='taxi'?ART.palette.carYellow:police?ART.palette.policeBand:this.color;c.beginPath();c.moveTo(-cabW*.47,cabTop+t.l*.185);c.lineTo(cabW*.47,cabTop+t.l*.185);c.lineTo(cabW*.43,cabBottom-t.l*.1);c.lineTo(-cabW*.43,cabBottom-t.l*.1);c.closePath();c.fill();c.strokeStyle=ART.palette.swatches.s172;c.lineWidth=.7;c.stroke();}
+  c.fillStyle=convertible?ART.palette.bodyDark:dark;c.beginPath();c.moveTo(-cabW*.43,cabBottom-t.l*.09);c.lineTo(cabW*.43,cabBottom-t.l*.09);c.lineTo(cabW*.38,cabBottom);c.lineTo(-cabW*.38,cabBottom);c.closePath();c.fill();
+  if(convertible){c.fillStyle=ART.palette.boatSeat;c.fillRect(-t.w*.27,-t.l*.08,t.w*.19,t.l*.18);c.fillRect(t.w*.08,-t.l*.08,t.w*.19,t.l*.18);c.fillStyle=ART.palette.bodyDark;c.fillRect(-t.w*.38,-t.l*.16,t.w*.76,2);c.fillRect(-t.w*.38,t.l*.13,t.w*.76,2);}
   // Mirrors, bumpers, lamps, grille and sport spoiler.
   c.fillStyle=ART.palette.outline;c.fillRect(-cabW*.57,cabTop+t.l*.11,2.6,3.4);c.fillRect(cabW*.48,cabTop+t.l*.11,2.6,3.4);
   c.fillStyle=ART.palette.roadDark;c.fillRect(-t.w*.43,-t.l*.51,t.w*.86,2);c.fillRect(-t.w*.43,t.l*.47,t.w*.86,2);
