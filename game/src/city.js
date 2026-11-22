@@ -47,11 +47,11 @@ export const CityMap = class CityMap {
       // The frontage points toward the nearest street edge: south=0, west=90, north=180, east=270.
       let frontage=null,frontageDistance=Infinity;
       for(const road of this.roads){const vertical=road.x1===road.x2;if(vertical){const side=x+w/2<road.x1?1:-1,edge=road.x1+side*road.width/2,dist=Math.abs((side>0?x+w:x)-edge);if(dist<frontageDistance){frontageDistance=dist;frontage=side>0?270:90;}}else{const side=y+dep/2<road.y1?1:-1,edge=road.y1+side*road.width/2,dist=Math.abs((side>0?y+dep:y)-edge);if(dist<frontageDistance){frontageDistance=dist;frontage=side>0?0:180;}}}
-      record.rotation=d.id==='airport'?0:(frontage||0);this.buildings.push(record);
-      if(house){const count=this.rng.int(1,3);for(let i=0;i<count;i++){const hx=x+9+(i%2)*43,hy=y+Math.floor(i/2)*43;if(hx+38<d.x+d.w-10&&hy+36<d.y+d.h-10)this.buildings.push({...record,x:hx,y:hy,w:38,d:36,height:this.rng.range(15,24),roofProps:1,roof:this.rng.pick(['#b6a28a','#c4ad88','#a88e78','#d0b68d'])});}}
+      record.rotation=d.id==='airport'?0:(frontage||0);if(warehouse)record.w=Math.min(w,record.w);this.buildings.push(record);
+      if(house){const count=this.rng.int(1,3);for(let i=0;i<count;i++){const hx=x+9+(i%2)*43,hy=y+Math.floor(i/2)*43;if(hx+38<d.x+d.w-10&&hy+36<d.y+d.h-10&&!this._nearRoad(hx+19,hy+18,38,36))this.buildings.push({...record,x:hx,y:hy,w:38,d:36,height:this.rng.range(15,24),roofProps:1,roof:this.rng.pick(['#b6a28a','#c4ad88','#a88e78','#d0b68d'])});}}
     }
   }
-  _nearRoad(x, y, w, h) { return this.roads.some(r => r.x1 === r.x2 ? Math.abs(x-r.x1) < w/2+r.width/2+12 : y > r.y1-r.width/2-h/2-12 && y < r.y1+r.width/2+h/2+12); }
+  _nearRoad(x, y, w, h) { const l=x-w/2-12,rr=x+w/2+12,t=y-h/2-12,b=y+h/2+12;return this.roads.some(r=>r.x1===r.x2?l<r.x1+r.width/2&&rr>r.x1-r.width/2:t<r.y1+r.width/2&&b>r.y1-r.width/2&&rr>Math.min(r.x1,r.x2)&&l<Math.max(r.x1,r.x2)); }
   isWater(x, y) { return x < this.waterline && y >= 0 && y < this.height; }
   isLand(x, y) { return x >= this.waterline && x <= this.width && y >= 0 && y <= this.height; }
   collidesBuilding(x, y, r = 0) { return this.buildings.some(b => x+r>b.x && x-r<b.x+b.w && y+r>b.y && y-r<b.y+b.d); }

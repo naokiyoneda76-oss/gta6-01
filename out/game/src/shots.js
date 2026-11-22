@@ -32,8 +32,8 @@ export const ShotDirector=class ShotDirector{
    w.city.streetProps=w.city.streetProps.filter(q=>q.x<1830||q.x>2040||q.y<710||q.y>880);
    w.city.parkedCars=w.city.parkedCars.filter(q=>q.x<1820||q.x>2055||q.y<700||q.y>890);
    w.city.palms=w.city.palms.filter(q=>q.x<1800||q.x>2150||q.y<680||q.y>900);
-   // The storefront faces west onto the 40u sidewalk; its full footprint sits east of the arterial.
-   w.city.buildings.push({x:2040,y:618,w:110,d:62,height:32,kind:'shop',archetype:'shop',name:'PALMERA MARKET',commercial:true,awning:true,color:'#c7b9a0',roof:'#d18b70',district:'downtown',treatment:1,roofProps:2,rotation:90});
+   // The storefront faces south; its footprint clears the arterial and sidewalk.
+   w.city.buildings.push({x:2040,y:618,w:110,d:62,height:32,kind:'shop',archetype:'shop',name:'PALMERA MARKET',commercial:true,awning:true,color:'#c7b9a0',roof:'#d18b70',district:'downtown',treatment:1,roofProps:2,rotation:0});
    // Keep a clear car-length of kerb around the hero car; traffic remains farther along the block.
    for(const [x,y,type,color] of [[1887,690,'sedan','#47747a'],[1887,900,'pickup','#d8d2bd'],[2018,560,'sedan','#526d59'],[2010,890,'taxi','#e8bc3e']]){const q=new Vehicle(x,y,type,color,0);q._parked=true;w.city.parkedCars.push(q);}
    // The hero car sits at the shop curb, with its driver door opening toward the sidewalk.
@@ -65,7 +65,7 @@ export const ShotDirector=class ShotDirector{
    const pier=w.gang.spawnGroup(530,1950,3,{faction:'Ambush',color:'#B65D59'});
    pier.members.forEach((p,i)=>{p.x=525+i*18;p.y=1995+i*18;p.state='combat';p.angle=Math.atan2(w.player.y-p.y,w.player.x-p.x);p._flash=true;p._advancing=true;p.cover={x:p.x,y:p.y};});
    const road=w.gang.spawnGroup(710,1930,3,{faction:'Ambush',color:'#B65D59'});
-   road.members.forEach((p,i)=>{p.x=695+i*14;p.y=1973+i*14;p.state='combat';p.angle=Math.atan2(w.player.y-p.y,w.player.x-p.x);p._flash=true;p._advancing=false;p.cover={x:p.x,y:p.y};});
+   road.members.forEach((p,i)=>{p.x=695+i*14;p.y=1973+i*14;p.state='combat';p.angle=Math.atan2(w.player.y-p.y,w.player.x-p.x);p._flash=true;p._advancing=false;p.cover={x:p.x,y:p.y};});road.members[0].y+=9;
    // Incoming rounds strike the cover; Danny returns one short bright tracer west.
    w.combat.bullets.push({x:650,y:2059,prevX:700,prevY:2059,vx:0,vy:0,life:1,range:300,owner:'gang'});
    w.combat.bullets.push({x:635,y:2055,prevX:670,prevY:2055,sx:670,sy:2055,vx:0,vy:0,life:1,range:300,owner:'player',staged:true});
