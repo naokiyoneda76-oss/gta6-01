@@ -4,7 +4,7 @@ import {Vehicle,VEHICLE_TYPES} from './vehicles.js';
 
 export const ShotDirector=class ShotDirector{
  stageShot(name,game){
-  game.camera._homecomingWestClamp=0;const seed=Number(new URLSearchParams(location.search).get('seed')||1);game.rng=new SeededRandom(seed);game.world=new World(game.rng);const w=game.world;game.screen='play';const dress=(cars,people)=>{for(const [x,y,type,color,a] of cars){const q=new Vehicle(x,y,type,color,a);q.driver='traffic';q.speed=45;w.vehicles.push(q);w.traffic.cars.push(q);}for(const [x,y] of people){const p=w.pedestrians.people[w.pedestrians.people.length-1];const q={...p,x,y,vx:0,vy:0,angle:0,timer:0,run:false};w.pedestrians.people.push(q);}};
+  game.camera._homecomingWestClamp=0;const params=new URLSearchParams(location.search),seed=Number(params.get('seed')||1),variant=params.get('variant')||'';game.rng=new SeededRandom(seed);game.world=new World(game.rng);const w=game.world;game.screen='play';const dress=(cars,people)=>{for(const [x,y,type,color,a] of cars){const q=new Vehicle(x,y,type,color,a);q.driver='traffic';q.speed=45;w.vehicles.push(q);w.traffic.cars.push(q);}for(const [x,y] of people){const p=w.pedestrians.people[w.pedestrians.people.length-1];const q={...p,x,y,vx:0,vy:0,angle:0,timer:0,run:false};w.pedestrians.people.push(q);}};
   if(name==='title'){game.screen='title';game.camera.x=535;game.camera.y=950;game.time=8;return false;}
   if(name==='map'){w._showMap=true;w.objective={x:820,y:950,label:'MISSION: MEET MIA'};game.camera.x=535;game.camera.y=950;return true;}
   if(name==='styletest'){
@@ -85,10 +85,11 @@ export const ShotDirector=class ShotDirector{
    w.combat.bullets.push({x:635,y:2055,prevX:670,prevY:2055,sx:670,sy:2055,vx:0,vy:0,life:1,range:300,owner:'player',staged:true});
    w.effects.impacts.push({x:628,y:2047},{x:644,y:2043},{x:628,y:2047},{x:644,y:2043});
    w.effects.lightPool(650,2059,'rgba(255,166,91,.055)',44);w.effects.lightPool(628,2047,'rgba(255,151,76,.035)',38);
-   w.dialogue.active=false;w.heat=2;w.wanted.heat=2;w.activities.flags=[];w.activities.cards=[];w.pinCallout('BETRAYAL','SURVIVE THE AMBUSH',{x:640,y:176});game.camera.x=648;game.camera.y=2045;game.camera.zoom=2.7;dress([[500,1850,'sedan','#47747a',Math.PI/2],[790,2135,'pickup','#526d59',Math.PI/2]],[[465,1945],[795,2110],[520,2145],[340,2245],[385,2275],[430,2250]]);const marinaVan=new Vehicle(650,1870,'van','#477b82',Math.PI/2);marinaVan._parked=true;w.city.parkedCars.push(marinaVan);
+   w.dialogue.active=false;w.heat=2;w.wanted.heat=2;w.activities.flags=[];w.activities.cards=[];w.pinCallout('BETRAYAL','SURVIVE THE AMBUSH',{x:640,y:176});game.camera.x=648;game.camera.y=2045;game.camera.zoom=2.7;dress([[500,1850,'sedan','#47747a',Math.PI/2],[745,2165,'pickup','#526d59',Math.PI/2]],[[465,1945],[795,2110],[520,2145],[340,2245],[385,2275],[430,2250]]);const marinaVan=new Vehicle(650,1870,'van','#477b82',Math.PI/2);marinaVan._parked=true;w.city.parkedCars.push(marinaVan);
    const crouchJoints={head:{x:0,y:-12},shoulder:[{x:-4.5,y:-9},{x:4.5,y:-9}],hip:{x:0,y:-2},elbow:[{x:-7,y:-13},{x:7,y:-13}],hand:[{x:-8,y:-17},{x:8,y:-17}],knee:[{x:-5,y:4},{x:5,y:4}],foot:[{x:-7,y:7},{x:7,y:7}]};
    w._marinaFreight={barrels:[{x:686,y:2140},{x:694,y:2142},{x:690,y:2149},{x:698,y:2151}],pallet:{x:682,y:2170},van:{x:691,y:2117,angle:.20}};
    const apronVan=new Vehicle(691,2117,'van','#477b82',.20);apronVan._parked=true;w.city.parkedCars.push(apronVan);
+   {const [px,py]=variant==='B1'?[758,2108]:[745,2097],angle=-1.12,police=new Vehicle(px,py,'police','#e7e4d8',angle);police.driver='police';police._headlights=true;w.vehicles.push(police);w.police.units.push(police);const lx=Math.cos(angle)*7,ly=Math.sin(angle)*7;w.effects.lightPool(px+lx,py+ly,'rgba(42,112,255,.14)',48);w.effects.lightPool(px-lx,py-ly,'rgba(255,48,58,.14)',48);}
    w.city.crates.push({x:681,y:2140,w:21,h:17},{x:681,y:2123,w:21,h:17},{x:690,y:2180,w:19,h:16},{x:690,y:2164,w:19,h:16},{x:699,y:2180,w:19,h:16});
    // ITEM 3 — lift the lower right cover crate to separate it from the flash.
    // At marina zoom 2.7, 7 world units is approximately 19 screen pixels.
@@ -118,20 +119,20 @@ export const ShotDirector=class ShotDirector{
    // the water, with relaxed arms and a grounded idle pose.
    Object.assign(npc2,{color:'#718d58',skin:'#efc8a2',pants:'#665342',pose:'idle',angle:0,run:false,vx:0,vy:0,joints:{head:{x:-1.5,y:-14.2},shoulder:[{x:-5.2,y:-10.5},{x:3.8,y:-10.5}],hip:{x:0,y:-2.2},elbow:[{x:-5.6,y:-7.5},{x:5.6,y:-7.5}],hand:[{x:-6,y:-4.1},{x:6,y:-4.1}],knee:[{x:-3.2,y:1.1},{x:2.3,y:1.1}],foot:[{x:-4.2,y:3},{x:2.3,y:3}]}});
    w.city.streetProps=w.city.streetProps.filter(q=>q.x<400||q.x>720||q.y<900||q.y>1160);w.city.streetProps.push({x:536,y:1090,kind:'bench',angle:0},{x:579,y:1068,kind:'lamp'});
-   w.objective={x:mia.x,y:mia.y,label:'TALK TO MIA'};w._shotObjectiveBanner='TALK TO MIA';w._homecomingShotMarkerSuppressed=true;w._homecomingScene=true;w._homecomingAnchors={car:{x:car.x,y:car.y,heading:car.angle},door:doorAnchor,danny:dannyAt,mia:miaAt,silhouetteGapWorld:Math.max(0,Math.hypot(dannyAt.x-miaAt.x,dannyAt.y-miaAt.y)-14),zoom:4.2};
+   w.objective={x:mia.x,y:mia.y,label:'TALK TO MIA'};w._shotObjectiveBanner='TALK TO MIA';w._homecomingShotMarkerSuppressed=true;w._homecomingScene=true;w._homecomingAnchors={car:{x:car.x,y:car.y,heading:car.angle},door:doorAnchor,danny:dannyAt,mia:miaAt,silhouetteGapWorld:Math.max(0,Math.hypot(dannyAt.x-miaAt.x,dannyAt.y-miaAt.y)-14),zoom:4.7};
    w.heat=0;w.wanted.heat=0;w.pinCallout('HOMECOMING','CORAL BEACH',{y:176});
-   w._shotHudMode='unarmed';game.camera.x=555;game.camera.y=1032;game.camera.zoom=4.2;
+   w._shotHudMode='unarmed';game.camera.x=(dannyAt.x+miaAt.x)/2;game.camera.y=dannyAt.y;game.camera.zoom=4.7;
   }
   else if(name==='getaway'){
    w.setTimeOfDay('night');w._shotHudMode='driving';w._getawayCargoShift=true;w.vehicles=[];w.traffic.cars=[];w.pedestrians.people=[];
-   const x=4095,y=2505,heading=.61,v=new Vehicle(x,y,'sport','#f27b68',heading);v.speed=820;v.driver='player';v._handbrake=true;v._headlights=true;v._groundMarker=true;w.vehicles.push(v);w.driving=v;w.player.x=x;w.player.y=y;
+   const heading=.61,forward={x:Math.sin(heading),y:-Math.cos(heading)},advance=18,x=4095+forward.x*advance,y=2505+forward.y*advance,v=new Vehicle(x,y,'sport','#f27b68',heading);v.speed=820;v.driver='player';v._handbrake=true;v._headlights=true;v._groundMarker=true;w.vehicles.push(v);w.driving=v;w.player.x=x;w.player.y=y;
    // Keep the ramp, hero car, and police funnel on one clean apron sightline.
    const ramp={x:4119,y:2470};w.objective={x:ramp.x,y:ramp.y,label:'REACH THE CARGO PLANE'};w._getawayShotMarkerSuppressed=true;w._shotObjectiveBanner='REACH THE CARGO PLANE';w._shotSpeed=122;w.heat=w.wanted.heat=5;
    w.missions.index=5;w.missions.state='active';
-   const forward={x:Math.sin(heading),y:-Math.cos(heading)},lateral={x:Math.cos(heading),y:Math.sin(heading)};
-   const cops=[[4030,2535],[3975,2483],[3930,2567]];
+   const lateral={x:Math.cos(heading),y:Math.sin(heading)};
+   const cops=[[4030+Math.sin(heading-.13)*18,2535-Math.cos(heading-.13)*18],[3975,2483],[3930,2567]];
    w.police.units=[];for(let i=0;i<cops.length;i++){const [cx,cy]=cops[i],a=heading+(i-1)*.13,q=new Vehicle(cx,cy,'police','#e7e4d8',a);q.driver='police';q.speed=95;q._headlights=true;q._braking=true;q._brakeGlow=true;w.vehicles.push(q);w.police.units.push(q);const lx=cx+lateral.x*7,ly=cy+lateral.y*7;w.effects.lightPool(lx,ly,'rgba(42,112,255,.14)',48);w.effects.lightPool(cx-lateral.x*7,cy-lateral.y*7,'rgba(255,48,58,.14)',48);}
-   w.effects.lightPool(4030,2535,'rgba(255,48,58,.20)',55);w.effects.lightPool(4037,2542,'rgba(42,112,255,.20)',55);w.effects.lightPool(3975,2483,'rgba(255,48,58,.20)',55);w.effects.lightPool(3968,2476,'rgba(42,112,255,.20)',55);w.effects.lightPool(3930,2567,'rgba(255,48,58,.20)',55);w.effects.lightPool(3937,2574,'rgba(42,112,255,.20)',55);
+   w.effects.lightPool(cops[0][0],cops[0][1],'rgba(255,48,58,.20)',55);w.effects.lightPool(4045.3,2526.1,'rgba(42,112,255,.20)',55);w.effects.lightPool(3975,2483,'rgba(255,48,58,.20)',55);w.effects.lightPool(3968,2476,'rgba(42,112,255,.20)',55);w.effects.lightPool(3930,2567,'rgba(255,48,58,.20)',55);w.effects.lightPool(3937,2574,'rgba(42,112,255,.20)',55);
    // Paired curved tyre trails and smoke trail the red car through the turn.
    for(let i=0;i<15;i++){const back=30+i*7,side=(i%2?1:-1)*11;w.effects.skid(x-forward.x*back+lateral.x*side,y-forward.y*back+lateral.y*side,heading,30);}
    for(let i=0;i<9;i++)w.effects.particles.push({x:x-forward.x*(25+i*8)+lateral.x*(i%2?10:-10),y:y-forward.y*(25+i*8)+lateral.y*(i%2?10:-10),vx:-forward.x*10,vy:-forward.y*10,life:1.2,size:10+(i%3)*3,color:'rgba(246,244,235,.68)',_smoke:true,angle:heading});
