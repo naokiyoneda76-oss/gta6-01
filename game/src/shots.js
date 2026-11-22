@@ -76,16 +76,18 @@ export const ShotDirector=class ShotDirector{
    // Clear the procedural crowd so the reunion has quiet space around it.
    const pedestrianTemplate=w.pedestrians.people[0];w.pedestrians.people=[];w.vehicles=[];w.traffic.cars=[];w.police.units=[];w.gang.crews=[];
    w.effects.skids=[];w.effects.particles=[];w.effects.impacts=[];w.effects.lightPools=[];w.combat.bullets=[];w.activities.flags=[];w.activities.cards=[];
-   // Stage the reunion on the promenade where the clamped camera can frame it.
-   const danny={...pedestrianTemplate,x:660,y:2112,vx:0,vy:0,angle:Math.PI/2,timer:0,run:false,hero:true,color:'#E9DFC8',inner:'#24292D',skin:'#e8bd91',pants:'#30343B',hair:'#302923',_shotScale:1,_homecomingPose:true,pose:'idle',joints:{head:{x:0,y:-14.2},shoulder:[{x:-4.5,y:-10.5},{x:4.5,y:-10.5}],hip:{x:0,y:-2.2},elbow:[{x:-5.6,y:-7.5},{x:7,y:-13.5}],hand:[{x:-6,y:-4.1},{x:5,y:-17}],knee:[{x:-2.3,y:1.1},{x:2.3,y:1.1}],foot:[{x:-2.3,y:3},{x:2.3,y:3}]}};
-   const mia={...pedestrianTemplate,x:676,y:2113,vx:0,vy:0,angle:-Math.PI/2,timer:0,run:false,color:'#f2a85e',hairStyle:'long',_shotScale:1,_homecomingPose:true,pose:'walk',phase:1.4};
-   w.player._homecomingHidden=true;w.pedestrians.people=[danny,mia];
-   // Mia's sedan is parked on the inland shoulder beside her.
-   const car=new Vehicle(692,2122,'sedan','#e8a078',.22);car.speed=0;car.driver='player';car._doorOpen=true;w.vehicles.push(car);
+   // Park parallel to the north/south boulevard in its 38px dropoff band.
+   const car=new Vehicle(623,2112,'sedan','#e8a078',0);car.speed=0;car.driver='player';car._doorOpen=true;
+   const doorAnchor=car.getDriverDoorWorldPosition(),doorSide={x:-Math.cos(car.angle),y:-Math.sin(car.angle)};
+   const miaAt={x:doorAnchor.x+doorSide.x*16,y:doorAnchor.y+doorSide.y*16};
+   const promenadeSide={x:-1,y:0},dannyAt={x:miaAt.x+promenadeSide.x*22,y:miaAt.y};
+   const danny={...pedestrianTemplate,x:dannyAt.x,y:dannyAt.y,vx:0,vy:0,angle:0,timer:0,run:false,hero:true,color:'#E9DFC8',inner:'#24292D',skin:'#e8bd91',pants:'#30343B',hair:'#302923',_shotScale:1,_homecomingPose:true,pose:'idle',joints:{head:{x:0,y:-14.2},shoulder:[{x:-4.5,y:-10.5},{x:4.5,y:-10.5}],hip:{x:0,y:-2.2},elbow:[{x:-5.6,y:-7.5},{x:7,y:-13.5}],hand:[{x:-6,y:-4.1},{x:5,y:-17}],knee:[{x:-2.3,y:1.1},{x:2.3,y:1.1}],foot:[{x:-2.3,y:3},{x:2.3,y:3}]}};
+   const mia={...pedestrianTemplate,x:miaAt.x,y:miaAt.y,vx:0,vy:0,angle:Math.PI,timer:0,run:false,color:'#f2a85e',hairStyle:'long',_shotScale:1,_homecomingPose:true,pose:'walk',phase:1.4};
+   w.player._homecomingHidden=true;w.pedestrians.people=[danny,mia];w.vehicles.push(car);
    // Keep the ambient crowd on the beach pier decks and boulevard sidewalk.
    dress([],[[350,2027],[390,2028],[400,2189],[535,1900],[535,2260],[460,2268],[490,2325],[420,2380]]);w.pedestrians.people.slice(2).forEach((p,i)=>{p.color=['#4d8290','#d28c59','#718d58','#b86b69','#d7b75f','#568578','#d18c62','#617b9b'][i];p.skin=['#dca77f','#ae7655','#efc8a2','#c88e6d','#e8b88d','#c78f69','#e3b58b','#af795a'][i];p.pants=['#394653','#3b4651','#665342','#34414e','#51443e','#324a48','#55423b','#394754'][i];if(i===4){p.vx=24;p.vy=0;}});
    const promenade={...pedestrianTemplate,x:740,y:2170,vx:18,vy:0,angle:Math.PI/2,timer:0,run:false,pose:'walk',phase:.6,color:'#73808a',skin:'#c78f69',pants:'#394653'};w.pedestrians.people.push(promenade);
-   w.objective={x:mia.x,y:mia.y,label:'TALK TO MIA'};w._shotObjectiveBanner='TALK TO MIA';w._homecomingShotMarkerSuppressed=true;w._homecomingScene=true;
+   w.objective={x:mia.x,y:mia.y,label:'TALK TO MIA'};w._shotObjectiveBanner='TALK TO MIA';w._homecomingShotMarkerSuppressed=true;w._homecomingScene=true;w._homecomingAnchors={car:{x:car.x,y:car.y,heading:car.angle},door:doorAnchor,danny:dannyAt,mia:miaAt,silhouetteGapWorld:Math.max(0,Math.hypot(dannyAt.x-miaAt.x,dannyAt.y-miaAt.y)-14),zoom:3.2};
    w.heat=0;w.wanted.heat=0;w.pinCallout('HOMECOMING','CORAL BEACH',{y:176});
    w._shotHudMode='unarmed';game.camera.x=648;game.camera.y=2100;game.camera.zoom=3.2;
   }
