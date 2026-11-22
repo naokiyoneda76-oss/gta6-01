@@ -1,5 +1,5 @@
 import {ART} from './art.js';
-import {LIGHTING,FIGURES_V2,shade} from './lighting.js';
+import {LIGHTING,FIGURES_V2,UNIFIED_SHADOWS,drawGroundShadow,shade} from './lighting.js';
 const POSES={idle:{lean:0,arm:0,leg:0},walk:{lean:0,arm:1.8,leg:2},run:{lean:2,arm:3,leg:3},stumble:{lean:3,arm:2.8,leg:2.5},'car-entry':{lean:4,arm:2.5,leg:2.5},aim:{lean:1,arm:4,leg:0},cover:{lean:2.5,arm:3.2,leg:1.8}};
 export function drawFigure(c,o={}){
  const hero=!!o.hero,litHero=LIGHTING&&hero,figureV2=FIGURES_V2,skinBase=o.skin||ART.palette.skin,shirtBase=o.torso||'#cf694f',pantsBase=o.pants||ART.palette.pants,hairBase=o.hair||ART.palette.hair;
@@ -17,7 +17,7 @@ export function drawFigure(c,o={}){
  const transform=p=>figureV2&&!hero?{x:p.x*bodyWidth,y:-2.2+(p.y+2.2)*bodyHeight}:p;
  const shoulder=(joints?.shoulder||shoulders).map(p=>transform(hero?{x:p.x*1.08,y:p.y}:p)),headPoint=transform(joints?.head||head),hipPoint=transform(joints?.hip||hip);
  const elbows=elbow.map(transform),hands=hand.map(transform),knees=knee.map(transform),drawFeet=feet?.map(transform);
- const shadow=ART.shadow.person;c.fillStyle=LIGHTING?'rgba(13,20,31,.27)':`rgba(25,30,29,${shadow.alpha})`;c.beginPath();c.ellipse(shadow.x+(LIGHTING?2:0),shadow.y+(LIGHTING?3:0),5.5,2.6,0,0,Math.PI*2);c.fill();
+ const shadow=ART.shadow.person;if(UNIFIED_SHADOWS)drawGroundShadow(c,0,3,9.2,6,.23,.12);else{c.fillStyle=LIGHTING?'rgba(13,20,31,.27)':`rgba(25,30,29,${shadow.alpha})`;c.beginPath();c.ellipse(shadow.x+(LIGHTING?2:0),shadow.y+(LIGHTING?3:0),5.5,2.6,0,0,Math.PI*2);c.fill();}
  const limb=(a,b,w,color)=>{c.strokeStyle=outline;c.lineWidth=w+ART.outline.detail*2;c.beginPath();c.moveTo(a.x,a.y);c.lineTo(b.x,b.y);c.stroke();c.strokeStyle=color;c.lineWidth=w;c.beginPath();c.moveTo(a.x,a.y);c.lineTo(b.x,b.y);c.stroke();};
  // Rear legs sit beneath the torso; shoes are short and overlap toward the front edge.
  for(let i=0;i<2;i++){const foot=drawFeet?.[i]||transform(shorten({x:knee[i].x+phase*.18,y:3}));limb(hipPoint,knees[i],3.5,pants);limb(knees[i],foot,3,pants);c.fillStyle=figureV2?shade('#29363a',.82):'#29363a';c.beginPath();c.ellipse(foot.x+1,foot.y+.15,1.8,1,0,0,Math.PI*2);c.fill();}
