@@ -40,7 +40,7 @@ export const ShotDirector=class ShotDirector{
    // The frozen door leaf swings screen-left at this heading. Keep both ground
    // anchors beyond its outer edge so the later vehicle draw cannot bury them.
    const opening={world:v.getDriverDoorWorldPosition()},danny={x:opening.world.x-27,y:opening.world.y},owner={x:danny.x-25,y:danny.y-4};
-   w.player.x=danny.x;w.player.y=danny.y;w.player.angle=Math.PI;w.player._carjackHoldUp=true;w._shotHudMode='pistol';
+   w.player.x=danny.x;w.player.y=danny.y;w.player.angle=0;w.player._carjackHoldUp=true;w._shotHudMode='pistol';
    const p=w.pedestrians.people[0];p.x=owner.x;p.y=owner.y;p.run=false;p._recoil=true;p._alarmed=false;p._coverOwnerStagger=false;p.pose='idle';p.joints={head:{x:3,y:-14.2},shoulder:[{x:-5,y:-11},{x:4,y:-10}],hip:{x:1,y:-2.2},elbow:[{x:-10,y:-8.2},{x:10,y:-8.2}],hand:[{x:-14,y:-14},{x:14,y:-14}],knee:[{x:-2.3,y:1.1},{x:2.3,y:1.1}],foot:[{x:-2.3,y:3},{x:2.3,y:3}]};p.timer=0;p.vx=0;p.vy=0;p.angle=0;game.camera.x=(danny.x+owner.x)/2;game.camera.y=(danny.y+owner.y)/2;game.camera.zoom=4.6;
    w._carjackAnchors={danny,owner,centerDistanceWorld:Math.hypot(danny.x-owner.x,danny.y-owner.y),zoom:4.6};
    // Clear only the local palm crowns whose fronds cross this shot's owner silhouette.
