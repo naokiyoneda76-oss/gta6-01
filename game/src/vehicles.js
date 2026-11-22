@@ -9,7 +9,7 @@ export class Vehicle{
   c.save();c.translate(this.x,this.y);c.scale(sc,sc);c.rotate(this.angle);
   c.fillStyle=`rgba(${ART.palette.vehicleShadowRgb},${ART.shadow.vehicleColorAlpha})`;c.beginPath();c.roundRect(2,5+ART.shadow.vehicle.y-8,t.w*.61,t.l*.43,4);c.fill();
   const truck=this.type==='truck',sport=this.type==='sport',police=this.type==='police',pickup=this.type==='pickup',van=this.type==='van',convertible=this.type==='convertible';
-  const baseBody=police?ART.palette.policeBody:this.color, body=LIGHTING?shade(baseBody,1.12):baseBody, dark=LIGHTING?shade(ART.palette.bodyDark,.84):ART.palette.bodyDark, skirt=LIGHTING?shade(ART.palette.skirt,.84):ART.palette.skirt;
+  const baseBody=police?ART.palette.policeBody:this.color, body=LIGHTING?shade(baseBody,1.12):baseBody, dark=LIGHTING?shade(ART.palette.bodyDark,.73):ART.palette.bodyDark, skirt=LIGHTING?shade(ART.palette.skirt,.73):ART.palette.skirt;
   const bx=truck?-t.w/2:-t.w*.46,bw=truck?t.w:t.w*.92,by=-t.l/2,bh=t.l;
   // Four corner tyres and hubs sit just beyond the body edge.
   const wheelY=[-t.l*.34,t.l*.34],wheelX=[-t.w*.48,t.w*.48];
@@ -46,7 +46,7 @@ export class Vehicle{
   c.fillStyle=dark;c.beginPath();c.moveTo(-cabW*.45,cabTop);c.lineTo(cabW*.45,cabTop);c.lineTo(cabW*.5,cabTop+t.l*.18);c.lineTo(-cabW*.5,cabTop+t.l*.18);c.closePath();c.fill();
   if(pickup||van||convertible){c.fillStyle=ART.palette.glass;c.beginPath();c.moveTo(-cabW*.47,cabTop+t.l*.185);c.lineTo(cabW*.47,cabTop+t.l*.185);c.lineTo(cabW*.43,cabBottom-t.l*.1);c.lineTo(-cabW*.43,cabBottom-t.l*.1);c.closePath();c.fill();c.strokeStyle=ART.palette.outline;c.lineWidth=.7;c.stroke();c.strokeStyle='rgba(230,245,239,.55)';c.beginPath();c.moveTo(-cabW*.34,cabTop+t.l*.2);c.lineTo(-cabW*.08,cabTop+t.l*.2);c.stroke();}
   else{const roofColor=this.type==='taxi'?ART.palette.carYellow:police?ART.palette.policeBand:body;c.fillStyle=LIGHTING&&this.type==='taxi'?shade(roofColor,1.12):roofColor;c.beginPath();c.moveTo(-cabW*.47,cabTop+t.l*.185);c.lineTo(cabW*.47,cabTop+t.l*.185);c.lineTo(cabW*.43,cabBottom-t.l*.1);c.lineTo(-cabW*.43,cabBottom-t.l*.1);c.closePath();c.fill();c.strokeStyle=ART.palette.swatches.s172;c.lineWidth=.7;c.stroke();}
-  if(LIGHTING){c.strokeStyle='rgba(143,177,194,.34)';c.lineWidth=1.2;c.beginPath();c.moveTo(-cabW*.32,cabTop+(pickup||van||convertible?t.l*.205:t.l*.11));c.lineTo(cabW*.12,cabTop+(pickup||van||convertible?t.l*.205:t.l*.11));c.stroke();}
+  if(LIGHTING){c.strokeStyle='rgba(176,207,218,.40)';c.lineWidth=1.1;c.beginPath();c.moveTo(-cabW*.32,cabTop+(pickup||van||convertible?t.l*.205:t.l*.11));c.lineTo(cabW*.12,cabTop+(pickup||van||convertible?t.l*.205:t.l*.11));c.stroke();c.strokeStyle='rgba(176,207,218,.28)';c.lineWidth=.75;c.beginPath();c.moveTo(cabW*.15,cabTop+t.l*.12);c.lineTo(cabW*.34,cabTop+t.l*.16);c.stroke();}
   c.fillStyle=dark;c.beginPath();c.moveTo(-cabW*.43,cabBottom-t.l*.09);c.lineTo(cabW*.43,cabBottom-t.l*.09);c.lineTo(cabW*.38,cabBottom);c.lineTo(-cabW*.38,cabBottom);c.closePath();c.fill();
   if(convertible){c.fillStyle=ART.palette.boatSeat;c.fillRect(-t.w*.27,-t.l*.08,t.w*.19,t.l*.18);c.fillRect(t.w*.08,-t.l*.08,t.w*.19,t.l*.18);c.fillStyle=dark;c.fillRect(-t.w*.38,-t.l*.16,t.w*.76,2);c.fillRect(-t.w*.38,t.l*.13,t.w*.76,2);}
   // Mirrors, bumpers, lamps, grille and sport spoiler.

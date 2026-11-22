@@ -1,4 +1,4 @@
-export const LIGHTING = new URLSearchParams(location.search).get('lighting') === '1';
+export const LIGHTING = new URLSearchParams(location.search).get('lighting') !== '0';
 
 export function shade(hex, factor) {
   const value = Number.parseInt(hex.slice(1), 16);
