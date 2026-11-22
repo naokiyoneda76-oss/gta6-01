@@ -32,14 +32,14 @@ export const ShotDirector=class ShotDirector{
    w.city.streetProps=w.city.streetProps.filter(q=>q.x<1830||q.x>2040||q.y<710||q.y>880);
    w.city.parkedCars=w.city.parkedCars.filter(q=>q.x<1820||q.x>2055||q.y<700||q.y>890);
    w.city.palms=w.city.palms.filter(q=>q.x<1800||q.x>2150||q.y<680||q.y>900);
-   w.city.buildings.push({x:1980,y:742,w:142,d:62,height:32,kind:'shop',archetype:'shop',name:'PALMERA MARKET',sign:'MARKET',commercial:true,awning:true,color:'#c7b9a0',roof:'#d18b70',district:'downtown',treatment:1,roofProps:2});
+   w.city.buildings.push({x:1980,y:618,w:142,d:62,height:32,kind:'shop',archetype:'shop',name:'PALMERA MARKET',sign:'MARKET',commercial:true,awning:true,color:'#c7b9a0',roof:'#d18b70',district:'downtown',treatment:1,roofProps:2});
    // Keep a clear car-length of kerb around the hero car; traffic remains farther along the block.
    for(const [x,y,type,color] of [[1887,690,'sedan','#47747a'],[1887,900,'pickup','#d8d2bd'],[2048,700,'sedan','#526d59'],[2048,890,'taxi','#e8bc3e']]){const q=new Vehicle(x,y,type,color,0);q._parked=true;w.city.parkedCars.push(q);}
    // The hero car sits at the shop curb, with its driver door opening toward the sidewalk.
-   const v=new Vehicle(1950,783,'sport','#e94f45',0);v.speed=0;v.driver='player';v._doorOpen=true;v._coverDoorAngle=-62;v._groundMarker=false;v._handbrake=false;v._coverDoor=true;w.vehicles=[v];w.traffic.cars=[];w.gang.crews=[];w._shotSpeed=0;
-   // Stage the shove on the light frontage sidewalk, to the east of the car.
-   w.player.x=1980;w.player.y=818;w.player.angle=0;w.player._coverShove={head:{x:0,y:-14.2},shoulder:[{x:-4.5,y:-10.5},{x:4.5,y:-10.5}],hip:{x:0,y:-2.2},elbow:[{x:-8,y:-9.3},{x:-1,y:-5.8}],hand:[{x:-12,y:-11.8},{x:-7,y:-4.7}],knee:[{x:-2.3,y:1.1},{x:2.3,y:1.1}],foot:[{x:-2.3,y:3},{x:2.3,y:3}]};w._shotHudMode='pistol';
-   const p=w.pedestrians.people[0];p.x=2005;p.y=818;p.run=false;p._recoil=false;p._alarmed=false;p._coverOwnerStagger=true;p.pose='stumble';p.joints={head:{x:-1.2,y:-15.6},shoulder:[{x:-4.6,y:-10.6},{x:4.4,y:-10.2}],hip:{x:-0.3,y:-2.0},elbow:[{x:-8.8,y:-9.6},{x:7.4,y:-4.6}],hand:[{x:-11.6,y:-13.8},{x:9.5,y:0.5}],knee:[{x:-4.6,y:0.6},{x:3.4,y:1.6}],foot:[{x:-7.6,y:0.2},{x:4.8,y:4.6}]};p.timer=0;p.vx=0;p.vy=0;p.angle=0;game.camera.x=1992.5;game.camera.y=818;
+   // Keep the incident beside the market: car on the road, shove on the sidewalk.
+   const v=new Vehicle(1960,720,'sport','#e94f45',Math.PI/2);v.speed=0;v.driver='player';v._doorOpen=true;v._coverDoorAngle=-62;v._groundMarker=false;v._handbrake=false;v._coverDoor=true;w.vehicles=[v];w.traffic.cars=[];w.gang.crews=[];w._shotSpeed=0;
+   w.player.x=1960;w.player.y=688;w.player.angle=0;w.player._coverShove={head:{x:0,y:-14.2},shoulder:[{x:-4.5,y:-10.5},{x:4.5,y:-10.5}],hip:{x:0,y:-2.2},elbow:[{x:4,y:-9.3},{x:12,y:-5.8}],hand:[{x:10,y:-11.8},{x:18,y:-4.7}],knee:[{x:-2.3,y:1.1},{x:2.3,y:1.1}],foot:[{x:-2.3,y:3},{x:2.3,y:3}]};w._shotHudMode='pistol';
+   const p=w.pedestrians.people[0];p.x=1985;p.y=688;p.run=false;p._recoil=false;p._alarmed=false;p._coverOwnerStagger=true;p.pose='stumble';p.joints={head:{x:-1.2,y:-15.6},shoulder:[{x:-4.6,y:-10.6},{x:4.4,y:-10.2}],hip:{x:-0.3,y:-2.0},elbow:[{x:-8.8,y:-9.6},{x:7.4,y:-4.6}],hand:[{x:-11.6,y:-13.8},{x:9.5,y:0.5}],knee:[{x:-4.6,y:0.6},{x:3.4,y:1.6}],foot:[{x:-7.6,y:0.2},{x:4.8,y:4.6}]};p.timer=0;p.vx=0;p.vy=0;p.angle=0;game.camera.x=1972;game.camera.y=697;game.camera.zoom=4.6;
    // Clear only the local palm crowns whose fronds cross this shot's owner silhouette.
    w.city.palms=w.city.palms.filter(t=>Math.hypot((t.x-3)-p.x,(t.y-32)-p.y)>=56);
    w.pedestrians.people=[p];p.color='#C2AA78';p.skin='#dbad83';p.pants='#51483a';p.hair='#302923';p.hairStyle='short';
@@ -56,22 +56,19 @@ export const ShotDirector=class ShotDirector{
    w.pinCallout('HIGH HEAT!','HEAT LEVEL 5',{y:176});game.camera.x=x+60;game.camera.y=y+66;game.camera.zoom=1.2;dress([[1120,790,'sedan','#d8d2bd',heading],[1370,650,'pickup','#526d59',heading]],[[1080,610],[1430,740],[1190,850]]);
   }
   else if(name==='marina'){
-   w.setTimeOfDay('dusk');for(const v of w.vehicles)if(v.type==='police'){v.type='sedan';v.color='#d8d2bd';}w.player.x=580;w.player.y=2084;w.player.angle=-Math.PI/2;w.player._cover=true;w.player._marinaAim=true;w._shotHudMode='pistol';w._marinaShotMarker=true;w._homecomingShotMarkerSuppressed=true;w.objective={x:554,y:2074,label:'SURVIVE THE AMBUSH'};const coverCrate=w.city.crates.find(b=>b.x===565&&b.y===2055);if(coverCrate){coverCrate.x=545;coverCrate.w=30;coverCrate.h=28;}for(const b of w.city.crates)if(b!==coverCrate)b.x-=80;
+   w.setTimeOfDay('dusk');for(const v of w.vehicles)if(v.type==='police'){v.type='sedan';v.color='#d8d2bd';}w.player.x=590;w.player.y=2084;w.player.angle=-Math.PI/2;w.player._cover=true;w.player._marinaAim=true;w.player._marinaLeanOut=true;w._shotHudMode='pistol';w._marinaShotMarker=true;w._homecomingShotMarkerSuppressed=true;w.objective={x:554,y:2074,label:'SURVIVE THE AMBUSH'};w.city.crates=[{x:563,y:2084,w:30,h:28},{x:550,y:2110,w:23,h:19},{x:577,y:2114,w:23,h:19},{x:600,y:2110,w:23,h:19}];
    // Pier-side and road-side teams converge on the marked crate cover.
    const pier=w.gang.spawnGroup(430,2050,3,{faction:'Ambush',color:'#813d4a'});
    pier.members.forEach((p,i)=>{p.x=405+i*24;p.y=2040+i*18;p.state='combat';p.angle=Math.atan2(w.player.y-p.y,w.player.x-p.x);p._flash=true;p._advancing=true;p.cover={x:p.x,y:p.y};});
    const road=w.gang.spawnGroup(630,2020,3,{faction:'Ambush',color:'#813d4a'});
    road.members.forEach((p,i)=>{p.x=622+i*16;p.y=2015+i*12;p.state='combat';p.angle=Math.atan2(w.player.y-p.y,w.player.x-p.x);p._flash=true;p._advancing=true;p.cover={x:p.x,y:p.y};});
-   // Two incoming rounds strike the front crate face from distinct bearings.
-   w.combat.bullets.push({x:574,y:2051,prevX:420,prevY:2046,vx:0,vy:0,life:1,range:300,owner:'gang'});
-   w.combat.bullets.push({x:596,y:2051,prevX:660,prevY:2008,vx:0,vy:0,life:1,range:300,owner:'gang'});
-   // Three bright return rounds connect the exposed muzzle to distinct road-side attackers.
-   for(const [target,from] of [[pier.members[0],[568,2084]],[pier.members[1],[568,2084]],[pier.members[2],[568,2084]]])w.combat.bullets.push({x:target.x,y:target.y-9,prevX:from[0],prevY:from[1],sx:from[0],sy:from[1],vx:0,vy:0,life:1,range:300,owner:'player',staged:true});
-   w.effects.impacts.push({x:568,y:2084},{x:574,y:2051},{x:596,y:2051},{x:pier.members[0].x,y:pier.members[0].y-9},{x:pier.members[1].x,y:pier.members[1].y-9},{x:pier.members[2].x,y:pier.members[2].y-9});
-   w.dialogue.play([{who:'ROSA',text:'Danny, get behind the crates! It’s an ambush — they’re coming in from the pier!'}]);w.dialogue.revealAll();w.heat=2;w.wanted.heat=2;w.activities.flags=[];w.activities.cards=[];w.pinCallout('BETRAYAL','SURVIVE THE AMBUSH',{x:640,y:176});game.camera.x=514;game.camera.y=2070;game.camera.zoom=1.9;dress([[500,1895,'sedan','#47747a',Math.PI/2],[790,2180,'pickup','#526d59',Math.PI/2]],[[465,1990],[795,2110],[520,2190],[340,2290],[385,2320],[430,2295]]);
+   // Incoming rounds strike the cover; Danny returns one short bright tracer west.
+   w.combat.bullets.push({x:563,y:2098,prevX:625,prevY:2098,vx:0,vy:0,life:1,range:300,owner:'gang'});
+   w.combat.bullets.push({x:515,y:2076,prevX:561,prevY:2076,sx:561,sy:2076,vx:0,vy:0,life:1,range:300,owner:'player',staged:true});
+   w.effects.impacts.push({x:561,y:2076},{x:563,y:2098},{x:570,y:2098});
+   w.dialogue.active=false;w.heat=2;w.wanted.heat=2;w.activities.flags=[];w.activities.cards=[];w.pinCallout('BETRAYAL','SURVIVE THE AMBUSH',{x:640,y:176});game.camera.x=580;game.camera.y=2070;game.camera.zoom=2.05;dress([[500,1895,'sedan','#47747a',Math.PI/2],[790,2180,'pickup','#526d59',Math.PI/2]],[[465,1990],[795,2110],[520,2190],[340,2290],[385,2320],[430,2295]]);
    const croucher=w.pedestrians.people[0];croucher.pose='cover';croucher.joints={head:{x:0,y:-12},shoulder:[{x:-4.5,y:-9},{x:4.5,y:-9}],hip:{x:0,y:-2},elbow:[{x:-7,y:-13},{x:7,y:-13}],hand:[{x:-8,y:-17},{x:8,y:-17}],knee:[{x:-5,y:4},{x:5,y:4}],foot:[{x:-7,y:7},{x:7,y:7}]};
    const fleer=w.pedestrians.people[1];fleer.x=812;fleer.y=2120;fleer.vx=34;fleer.vy=24;fleer.run=true;fleer.pose='run';fleer.angle=Math.PI/4;
-   w.city.crates.push({x:350,y:2035,w:23,h:19},{x:350,y:2065,w:23,h:19},{x:350,y:2095,w:23,h:19});
   }
   else if(name==='homecoming'){
    w.setTimeOfDay('dusk');
@@ -80,13 +77,13 @@ export const ShotDirector=class ShotDirector{
    w.effects.skids=[];w.effects.particles=[];w.effects.impacts=[];w.effects.lightPools=[];w.combat.bullets=[];w.activities.flags=[];w.activities.cards=[];
    // Stage the reunion on the promenade where the clamped camera can frame it.
    const danny={...pedestrianTemplate,x:652,y:2104,vx:0,vy:0,angle:Math.PI/2,timer:0,run:false,color:'#418b83',pants:'#394653',_shotScale:1,_homecomingPose:true,pose:'idle',joints:{head:{x:0,y:-14.2},shoulder:[{x:-4.5,y:-10.5},{x:4.5,y:-10.5}],hip:{x:0,y:-2.2},elbow:[{x:-5.6,y:-7.5},{x:7,y:-13.5}],hand:[{x:-6,y:-4.1},{x:5,y:-17}],knee:[{x:-2.3,y:1.1},{x:2.3,y:1.1}],foot:[{x:-2.3,y:3},{x:2.3,y:3}]}};
-   const mia={...pedestrianTemplate,x:676,y:2114,vx:0,vy:0,angle:-Math.PI/2,timer:0,run:false,color:'#f2a85e',hairStyle:'long',_shotScale:1,_homecomingPose:true,pose:'walk',phase:1.4};
+   const mia={...pedestrianTemplate,x:680,y:2118,vx:0,vy:0,angle:-Math.PI/2,timer:0,run:false,color:'#f2a85e',hairStyle:'long',_shotScale:1,_homecomingPose:true,pose:'walk',phase:1.4};
    w.player._homecomingHidden=true;w.pedestrians.people=[danny,mia];
    // Mia's sedan is parked on the inland shoulder beside her.
    const car=new Vehicle(692,2122,'sedan','#e8a078',.22);car.speed=0;car.driver='player';car._doorOpen=true;w.vehicles.push(car);
    // Keep the ambient crowd on the beach pier decks and boulevard sidewalk.
    dress([],[[350,2027],[390,2028],[400,2189],[535,1900],[535,2260],[460,2268],[490,2325],[420,2380]]);w.pedestrians.people.slice(2).forEach((p,i)=>{p.color=['#4d8290','#d28c59','#718d58','#b86b69','#d7b75f','#568578','#d18c62','#617b9b'][i];p.skin=['#dca77f','#ae7655','#efc8a2','#c88e6d','#e8b88d','#c78f69','#e3b58b','#af795a'][i];p.pants=['#394653','#3b4651','#665342','#34414e','#51443e','#324a48','#55423b','#394754'][i];if(i===4){p.vx=24;p.vy=0;}});
-   const promenade={...pedestrianTemplate,x:740,y:2170,vx:18,vy:0,angle:Math.PI/2,timer:0,run:false,pose:'walk',phase:.6,color:'#568578',skin:'#c78f69',pants:'#324a48'};w.pedestrians.people.push(promenade);
+   const promenade={...pedestrianTemplate,x:740,y:2170,vx:18,vy:0,angle:Math.PI/2,timer:0,run:false,pose:'walk',phase:.6,color:'#73808a',skin:'#c78f69',pants:'#394653'};w.pedestrians.people.push(promenade);
    w.objective={x:mia.x,y:mia.y,label:'TALK TO MIA'};w._shotObjectiveBanner='TALK TO MIA';w._homecomingShotMarkerSuppressed=true;w._homecomingScene=true;
    w.heat=0;w.wanted.heat=0;w.pinCallout('HOMECOMING','CORAL BEACH',{y:176});
    w._shotHudMode='unarmed';game.camera.x=648;game.camera.y=2100;game.camera.zoom=3.2;
