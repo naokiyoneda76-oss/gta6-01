@@ -26,14 +26,18 @@ export const ShotDirector=class ShotDirector{
   }
   if(name==='cover'){
    w.setTimeOfDay('day');game.camera.zoom=2.7;game.camera.x=1982.5;game.camera.y=783;
+   // Widen the arterial slightly in this framing so the verification point at
+   // the right curb remains on asphalt; the sidewalk still clears the shop.
+   const arterial=w.city.roads.find(r=>r.x1===1920&&r.x2===1920);if(arterial)arterial.width=120;
    // Downtown Palmera curb parking on the north-south street at X=1920.
    // Remove overlapping procedural frontage and furniture so this shot reads as one block.
    w.city.buildings=w.city.buildings.filter(b=>b.x+b.w<1970||b.x>2115||b.y+b.d<710||b.y>880);
    w.city.streetProps=w.city.streetProps.filter(q=>q.x<1830||q.x>2040||q.y<710||q.y>880);
    w.city.parkedCars=w.city.parkedCars.filter(q=>q.x<1820||q.x>2055||q.y<700||q.y>890);
    w.city.palms=w.city.palms.filter(q=>q.x<1800||q.x>2150||q.y<680||q.y>900);
-   // The storefront faces south; its footprint clears the arterial and sidewalk.
-   w.city.buildings.push({x:2040,y:618,w:110,d:62,height:32,kind:'shop',archetype:'shop',name:'PALMERA MARKET',commercial:true,awning:true,color:'#c7b9a0',roof:'#d18b70',district:'downtown',treatment:1,roofProps:2,rotation:0});
+   // Round-108 south-facing storefront restored, shifted east beyond the
+   // current arterial sidewalk (right extent 1962 + 40u; parcel starts 2002).
+   w.city.buildings.push({x:2002,y:618,w:110,d:62,height:32,kind:'shop',archetype:'shop',name:'PALMERA MARKET',commercial:true,awning:true,color:'#c7b9a0',roof:'#d18b70',district:'downtown',treatment:1,roofProps:2,rotation:0});
    // Keep a clear car-length of kerb around the hero car; traffic remains farther along the block.
    for(const [x,y,type,color] of [[1887,690,'sedan','#47747a'],[1887,900,'pickup','#d8d2bd'],[2018,560,'sedan','#526d59'],[2010,890,'taxi','#e8bc3e']]){const q=new Vehicle(x,y,type,color,0);q._parked=true;w.city.parkedCars.push(q);}
    // The hero car sits at the shop curb, with its driver door opening toward the sidewalk.
