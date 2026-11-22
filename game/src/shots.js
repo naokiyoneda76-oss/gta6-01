@@ -42,7 +42,7 @@ export const ShotDirector=class ShotDirector{
    const opening={world:v.getDriverDoorWorldPosition()},danny={x:opening.world.x-27,y:opening.world.y},owner={x:danny.x-25,y:danny.y+8};
    w.player.x=danny.x;w.player.y=danny.y;w.player.angle=0;w.player._carjackHoldUp=true;w._shotHudMode='pistol';
    const p=w.pedestrians.people[0];p.x=owner.x;p.y=owner.y;p.run=false;p._recoil=false;p._alarmed=false;p._coverOwnerStagger=false;p.pose='idle';p.joints={head:{x:3,y:-14.2},shoulder:[{x:-5,y:-11},{x:4,y:-10}],hip:{x:1,y:-2.2},elbow:[{x:-10,y:-8.2},{x:10,y:-8.2}],hand:[{x:-14,y:-14},{x:14,y:-14}],knee:[{x:-2.3,y:1.1},{x:2.3,y:1.1}],foot:[{x:-2.3,y:3},{x:2.3,y:3}]};p.timer=0;p.vx=0;p.vy=0;p.angle=0;game.camera.x=(danny.x+owner.x)/2;game.camera.y=(danny.y+owner.y)/2;game.camera.zoom=4.6;
-   w._carjackAnchors={danny,owner,centerDistanceWorld:Math.hypot(danny.x-owner.x,danny.y-owner.y),zoom:4.6};
+   for(const q of w.city.parkedCars)if(q.color==='#47747a'&&Math.hypot(q.x-owner.x,q.y-owner.y)<100)q.y-=150;w._carjackAnchors={danny,owner,centerDistanceWorld:Math.hypot(danny.x-owner.x,danny.y-owner.y),zoom:4.6};
    // Clear only the local palm crowns whose fronds cross this shot's owner silhouette.
    w.city.palms=w.city.palms.filter(t=>[danny,owner].every(f=>Math.hypot((t.x-3)-f.x,(t.y-32)-f.y)>=56));w.city.streetProps=w.city.streetProps.filter(q=>[danny,owner].every(f=>Math.hypot(q.x-f.x,q.y-f.y)>30));
    w.pedestrians.people=[p];p.color='#C2AA78';p.skin='#dbad83';p.pants='#51483a';p.hair='#302923';p.hairStyle='short';
@@ -59,7 +59,7 @@ export const ShotDirector=class ShotDirector{
    w.pinCallout('HIGH HEAT!','HEAT LEVEL 5',{y:176});game.camera.x=x+60;game.camera.y=y+66;game.camera.zoom=1.2;dress([[1120,790,'sedan','#d8d2bd',heading],[1370,650,'pickup','#526d59',heading]],[[1080,610],[1430,740],[1190,850]]);
   }
   else if(name==='marina'){
-   w.setTimeOfDay('dusk');for(const v of w.vehicles)if(v.type==='police'){v.type='sedan';v.color='#d8d2bd';}w.player.x=610;w.player.y=2110;w.player.angle=-Math.PI/2;w.player._cover=true;w.player._marinaAim=true;w.player._marinaLeanOut=true;w.player._marinaMuzzleFlash=true;w._shotHudMode='pistol';w._marinaShotMarker=true;w._homecomingShotMarkerSuppressed=true;w.objective={x:554,y:2074,label:'SURVIVE THE AMBUSH'};w.city.crates=[{x:563,y:2084,w:30,h:28},{x:550,y:2110,w:23,h:19},{x:550,y:2087,w:23,h:19},{x:550,y:2062,w:23,h:19}];w.city.lots.push({x:650,y:2010,w:16,d:178,type:'yard',cars:0});
+   w.setTimeOfDay('dusk');for(const v of w.vehicles)if(v.type==='police'){v.type='sedan';v.color='#d8d2bd';}w.player.x=610;w.player.y=2110;w.player.angle=-Math.PI/2;w.player._cover=true;w.player._marinaAim=true;w.player._marinaLeanOut=true;w.player._marinaMuzzleFlash=true;w._shotHudMode='pistol';w._marinaShotMarker=true;w._homecomingShotMarkerSuppressed=true;w.objective={x:554,y:2074,label:'SURVIVE THE AMBUSH'};w.city.crates=[{x:563,y:2084,w:30,h:28},{x:550,y:2110,w:23,h:19},{x:550,y:2087,w:23,h:19},{x:550,y:2070,w:23,h:19}];w.city.lots.push({x:650,y:2010,w:16,d:178,type:'yard',cars:0});w.city.streetProps=w.city.streetProps.filter(q=>!(q.x>590&&q.x<680&&q.y>1930&&q.y<2190&&q.kind==='planter'));w.city.parkedCars=w.city.parkedCars.filter(q=>!(q.x>535&&q.x<700&&q.y>2030&&q.y<2140));
    // Pier-side and road-side teams converge on the marked crate cover.
    const pier=w.gang.spawnGroup(530,2050,3,{faction:'Ambush',color:'#813d4a'});
    pier.members.forEach((p,i)=>{p.x=510+i*18;p.y=2040+i*18;p.state='combat';p.angle=Math.atan2(w.player.y-p.y,w.player.x-p.x);p._flash=true;p._advancing=true;p.cover={x:p.x,y:p.y};});
@@ -68,10 +68,12 @@ export const ShotDirector=class ShotDirector{
    // Incoming rounds strike the cover; Danny returns one short bright tracer west.
    w.combat.bullets.push({x:590,y:2104,prevX:640,prevY:2104,vx:0,vy:0,life:1,range:300,owner:'gang'});
    w.combat.bullets.push({x:575,y:2100,prevX:610,prevY:2100,sx:610,sy:2100,vx:0,vy:0,life:1,range:300,owner:'player',staged:true});
-   w.effects.impacts.push({x:606,y:2103},{x:608,y:2103},{x:600,y:2088});
+   w.effects.impacts.push({x:606,y:2103},{x:608,y:2103},{x:600,y:2088},{x:568,y:2092},{x:584,y:2088});
    w.dialogue.active=false;w.heat=2;w.wanted.heat=2;w.activities.flags=[];w.activities.cards=[];w.pinCallout('BETRAYAL','SURVIVE THE AMBUSH',{x:640,y:176});game.camera.x=618;game.camera.y=2070;game.camera.zoom=2.7;dress([[500,1895,'sedan','#47747a',Math.PI/2],[790,2180,'pickup','#526d59',Math.PI/2]],[[465,1990],[795,2110],[520,2190],[340,2290],[385,2320],[430,2295]]);const marinaVan=new Vehicle(650,1915,'van','#477b82',Math.PI/2);marinaVan._parked=true;w.city.parkedCars.push(marinaVan);
    const croucher=w.pedestrians.people[0];croucher.pose='cover';croucher.joints={head:{x:0,y:-12},shoulder:[{x:-4.5,y:-9},{x:4.5,y:-9}],hip:{x:0,y:-2},elbow:[{x:-7,y:-13},{x:7,y:-13}],hand:[{x:-8,y:-17},{x:8,y:-17}],knee:[{x:-5,y:4},{x:5,y:4}],foot:[{x:-7,y:7},{x:7,y:7}]};
    const fleer=w.pedestrians.people[1];fleer.x=812;fleer.y=2120;fleer.vx=34;fleer.vy=24;fleer.run=true;fleer.pose='run';fleer.angle=Math.PI/4;
+   // Sparse warm rounds visibly converge on Danny's cover from both ambush angles.
+   for(const [sx,sy,ex,ey] of [[520,2042,568,2092],[548,2058,568,2092],[704,2027,584,2088],[724,2045,584,2088]])w.combat.bullets.push({x:ex,y:ey,prevX:sx,prevY:sy,vx:0,vy:0,life:1,range:400,owner:'gang',staged:true});
   }
   else if(name==='homecoming'){
    w.setTimeOfDay('day');w._homecomingMorning=true;
@@ -88,7 +90,7 @@ export const ShotDirector=class ShotDirector{
    // Keep the ambient crowd on the beach pier decks and boulevard sidewalk.
    dress([],[[350,2027],[390,2028],[400,2189],[535,1900],[535,2260],[460,2268],[490,2325],[420,2380]]);w.pedestrians.people.slice(2).forEach((p,i)=>{p.color=['#4d8290','#d28c59','#718d58','#b86b69','#d7b75f','#568578','#d18c62','#617b9b'][i];p.skin=['#dca77f','#ae7655','#efc8a2','#c88e6d','#e8b88d','#c78f69','#e3b58b','#af795a'][i];p.pants=['#394653','#3b4651','#665342','#34414e','#51443e','#324a48','#55423b','#394754'][i];if(i===4){p.vx=24;p.vy=0;}});
    const promenade={...pedestrianTemplate,x:740,y:2170,vx:18,vy:0,angle:Math.PI/2,timer:0,run:false,pose:'walk',phase:.6,color:'#73808a',skin:'#c78f69',pants:'#394653'};w.pedestrians.people.push(promenade);
-   w.objective={x:mia.x,y:mia.y,label:'TALK TO MIA'};w._shotObjectiveBanner='TALK TO MIA';w._homecomingShotMarkerSuppressed=true;w._homecomingScene=true;w._homecomingAnchors={car:{x:car.x,y:car.y,heading:car.angle},door:doorAnchor,danny:dannyAt,mia:miaAt,silhouetteGapWorld:Math.max(0,Math.hypot(dannyAt.x-miaAt.x,dannyAt.y-miaAt.y)-14),zoom:4.2};
+   w.objective={x:mia.x,y:mia.y,label:'TALK TO MIA'};w._shotObjectiveBanner='TALK TO MIA';w._homecomingShotMarkerSuppressed=true;w._homecomingScene=true;w._homecomingSparkles=true;w._homecomingAnchors={car:{x:car.x,y:car.y,heading:car.angle},door:doorAnchor,danny:dannyAt,mia:miaAt,silhouetteGapWorld:Math.max(0,Math.hypot(dannyAt.x-miaAt.x,dannyAt.y-miaAt.y)-14),zoom:4.2};
    w.heat=0;w.wanted.heat=0;w.pinCallout('HOMECOMING','CORAL BEACH',{y:176});
    w._shotHudMode='unarmed';game.camera.x=571;game.camera.y=1032;game.camera.zoom=4.2;
   }
