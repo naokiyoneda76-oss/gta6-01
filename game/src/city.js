@@ -31,7 +31,7 @@ export const CityMap = class CityMap {
   _buildMarinaRoads() {
     const marina=this.districts.find(d=>d.id==='marina'),y0=marina.y,y1=marina.y+marina.h,x0=500,x1=marina.x+marina.w,out=[];
     for(const r of this.roads){const vertical=r.x1===r.x2;if(vertical&&r.y1===0&&r.y2===this.height&&r.x1>=x0&&r.x1<=x1){out.push({...r,y2:y0},{...r,y1:y0,y2:y1,width:84,groundProfile:'marina'},{...r,y1:y1});}else if(!vertical&&r.x1===500&&r.x2===this.width&&r.y1>=y0&&r.y1<=y1){out.push({...r,x2:x0},{...r,x1:x0,x2:x1,width:84,groundProfile:'marina'} ,{...r,x1:x1});}else out.push(r);}
-    this.roads=out;this.marinaGround={x:marina.x,y:marina.y,w:marina.w,h:marina.h,sidewalk:18,parking:22,cargo:{x:535,y:1988,w:235,h:215}};
+    this.roads=out;this.marinaGround={x:marina.x,y:marina.y,w:marina.w,h:marina.h,sidewalk:30,parking:22,cargo:{x:535,y:1988,w:235,h:215}};
   }
   _fillDistrict(d) {
     const [minH, maxH] = d.heights; const step = d.kind === 'tower' ? 130 : d.kind === 'house' ? 95 : 120;
