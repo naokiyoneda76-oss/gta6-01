@@ -25,19 +25,25 @@ export const ShotDirector=class ShotDirector{
    w._styleCrates=[{x:700,y:1028,w:18,h:18},{x:724,y:1032,w:18,h:18}];game.camera.x=842;game.camera.y=1060;game.camera.zoom=1.55;w.objective=null;w.heat=0;w.wanted.heat=0;return true;
   }
   if(name==='cover'){
-   w.setTimeOfDay('day');game.camera.zoom=4.6;game.camera.x=556;game.camera.y=1058;
-   // Coral Beach boulevard at X=535; the car points north and its driver door opens west.
-   const v=new Vehicle(535,1045,'sport','#e94f45',0);v.speed=0;v.driver='player';v._doorOpen=true;v._coverDoorAngle=62;v._groundMarker=false;v._handbrake=false;v._coverDoor=true;w.vehicles=[v];w.traffic.cars=[];w.gang.crews=[];w._shotSpeed=0;
+   w.setTimeOfDay('day');game.camera.zoom=2.7;game.camera.x=1938;game.camera.y=790;
+   // Downtown Palmera curb parking on the north-south street at X=1920.
+   // Remove overlapping procedural frontage and furniture so this shot reads as one block.
+   w.city.buildings=w.city.buildings.filter(b=>b.x+b.w<1970||b.x>2115||b.y+b.d<710||b.y>880);
+   w.city.streetProps=w.city.streetProps.filter(q=>q.x<1830||q.x>2040||q.y<710||q.y>880);
+   w.city.parkedCars=w.city.parkedCars.filter(q=>q.x<1820||q.x>2055||q.y<700||q.y>890);
+   w.city.palms=w.city.palms.filter(q=>q.x<1800||q.x>2150||q.y<680||q.y>900);
+   w.city.buildings.push({x:1980,y:742,w:142,d:62,height:32,kind:'shop',archetype:'shop',name:'PALMERA MARKET',sign:'MARKET',commercial:true,awning:true,color:'#c7b9a0',roof:'#d18b70',district:'downtown',treatment:1,roofProps:2});
+   // The car and four curbside vehicles form two parallel parked rows, with the shop behind them.
+   for(const [x,y,type,color] of [[1887,742,'sedan','#47747a'],[1887,824,'pickup','#d8d2bd'],[1953,742,'sedan','#526d59'],[1953,824,'taxi','#e8bc3e']]){const q=new Vehicle(x,y,type,color,0);q._parked=true;w.city.parkedCars.push(q);}
+   // Hero car is parallel to the east kerb; its driver door opens west into the street.
+   const v=new Vehicle(1953,783,'sport','#e94f45',0);v.speed=0;v.driver='player';v._doorOpen=true;v._coverDoorAngle=62;v._groundMarker=false;v._handbrake=false;v._coverDoor=true;w.vehicles=[v];w.traffic.cars=[];w.gang.crews=[];w._shotSpeed=0;
    // Sport driver door: hinge (-10.35,-1.68), panel L=14.28, W=11.96.
-   // At 62 degrees the opening centre is hinge + half panel vectors = (-16.65,-5.03), world (515.53,1039.97).
-   w.player.x=518;w.player.y=1051;w.player.angle=0;w.player._coverShove={head:{x:0,y:-14.2},shoulder:[{x:-4.5,y:-10.5},{x:4.5,y:-10.5}],hip:{x:0,y:-2.2},elbow:[{x:-8,y:-9.3},{x:-1,y:-5.8}],hand:[{x:-12,y:-11.8},{x:-7,y:-4.7}],knee:[{x:-2.3,y:1.1},{x:2.3,y:1.1}],foot:[{x:-2.3,y:3},{x:2.3,y:3}]};w._shotHudMode='pistol';
-   const p=w.pedestrians.people[0];p.x=493;p.y=1051;p.run=false;p._recoil=false;p._alarmed=false;p._coverOwnerStagger=true;p.pose='stumble';p.joints={head:{x:-1.2,y:-15.6},shoulder:[{x:-4.6,y:-10.6},{x:4.4,y:-10.2}],hip:{x:-0.3,y:-2.0},elbow:[{x:-8.8,y:-9.6},{x:7.4,y:-4.6}],hand:[{x:-11.6,y:-13.8},{x:9.5,y:0.5}],knee:[{x:-4.6,y:0.6},{x:3.4,y:1.6}],foot:[{x:-7.6,y:0.2},{x:4.8,y:4.6}]};p.timer=0;p.vx=0;p.vy=0;p.angle=0;
+   // At 62 degrees its opening centre sits about 17 units west of the car centre.
+   w.player.x=1936;w.player.y=789;w.player.angle=0;w.player._coverShove={head:{x:0,y:-14.2},shoulder:[{x:-4.5,y:-10.5},{x:4.5,y:-10.5}],hip:{x:0,y:-2.2},elbow:[{x:-8,y:-9.3},{x:-1,y:-5.8}],hand:[{x:-12,y:-11.8},{x:-7,y:-4.7}],knee:[{x:-2.3,y:1.1},{x:2.3,y:1.1}],foot:[{x:-2.3,y:3},{x:2.3,y:3}]};w._shotHudMode='pistol';
+   const p=w.pedestrians.people[0];p.x=1911;p.y=789;p.run=false;p._recoil=false;p._alarmed=false;p._coverOwnerStagger=true;p.pose='stumble';p.joints={head:{x:-1.2,y:-15.6},shoulder:[{x:-4.6,y:-10.6},{x:4.4,y:-10.2}],hip:{x:-0.3,y:-2.0},elbow:[{x:-8.8,y:-9.6},{x:7.4,y:-4.6}],hand:[{x:-11.6,y:-13.8},{x:9.5,y:0.5}],knee:[{x:-4.6,y:0.6},{x:3.4,y:1.6}],foot:[{x:-7.6,y:0.2},{x:4.8,y:4.6}]};p.timer=0;p.vx=0;p.vy=0;p.angle=0;
    // Clear only the local palm crowns whose fronds cross this shot's owner silhouette.
    w.city.palms=w.city.palms.filter(t=>Math.hypot((t.x-3)-p.x,(t.y-32)-p.y)>=56);
    w.pedestrians.people=[p];p.color='#C2AA78';p.skin='#dbad83';p.pants='#51483a';p.hair='#302923';p.hairStyle='short';
-   // Staggered roadside traffic gives two parked cars in the boulevard view.
-   w.city.parkedCars=w.city.parkedCars.filter(q=>q.x<430||q.x>650||Math.abs(q.y-1050)>300);
-   for(const [x,y,type,color] of [[535,970,'sedan','#47747a'],[535,1130,'pickup','#d8d2bd']]){const q=new Vehicle(x,y,type,color,0);q._parked=true;w.city.parkedCars.push(q);}
    w.missions.index=1;w.missions.state='active';w.missions.car=v;w.objective=null;w._shotObjectiveBanner='GET IN THE CAR';w.heat=2;w.wanted.heat=2;
    w.effects.skids=[];w.effects.particles=w.effects.particles.filter(q=>!q._smoke);w.pinCallout('STOLEN!','FIRST WHEELS',{y:176});
   }
@@ -51,19 +57,19 @@ export const ShotDirector=class ShotDirector{
    w.pinCallout('HIGH HEAT!','HEAT LEVEL 5',{y:176});game.camera.x=x+60;game.camera.y=y+66;game.camera.zoom=1.2;dress([[1120,790,'sedan','#d8d2bd',heading],[1370,650,'pickup','#526d59',heading]],[[1080,610],[1430,740],[1190,850]]);
   }
   else if(name==='marina'){
-   w.setTimeOfDay('dusk');for(const v of w.vehicles)if(v.type==='police'){v.type='sedan';v.color='#d8d2bd';}w.player.x=578;w.player.y=2040;w.player._cover=true;w.player._marinaAim=true;w._shotHudMode='pistol';w._marinaShotMarker=true;w._homecomingShotMarkerSuppressed=true;w.objective={x:554,y:2074,label:'SURVIVE THE AMBUSH'};const coverCrate=w.city.crates.find(b=>b.x===565&&b.y===2055);if(coverCrate){coverCrate.x=545;coverCrate.w=30;coverCrate.h=28;}
+   w.setTimeOfDay('dusk');for(const v of w.vehicles)if(v.type==='police'){v.type='sedan';v.color='#d8d2bd';}w.player.x=578;w.player.y=2040;w.player._cover=true;w.player._marinaAim=true;w._shotHudMode='pistol';w._marinaShotMarker=true;w._homecomingShotMarkerSuppressed=true;w.objective={x:554,y:2074,label:'SURVIVE THE AMBUSH'};const coverCrate=w.city.crates.find(b=>b.x===565&&b.y===2055);if(coverCrate){coverCrate.x=545;coverCrate.w=30;coverCrate.h=28;}for(const b of w.city.crates)if(b!==coverCrate)b.x-=80;
    // Pier-side and road-side teams converge on the marked crate cover.
    const pier=w.gang.spawnGroup(430,2050,3,{faction:'Ambush',color:'#813d4a'});
    pier.members.forEach((p,i)=>{p.x=405+i*24;p.y=2040+i*18;p.state='combat';p.angle=Math.atan2(w.player.y-p.y,w.player.x-p.x);p._flash=true;p._advancing=true;p.cover={x:p.x,y:p.y};});
-   const road=w.gang.spawnGroup(820,1880,3,{faction:'Ambush',color:'#813d4a'});
-   road.members.forEach((p,i)=>{p.x=820+i*24;p.y=1880+i*18;p.state='combat';p.angle=Math.atan2(w.player.y-p.y,w.player.x-p.x);p._flash=true;p._advancing=true;p.cover={x:p.x,y:p.y};});
+   const road=w.gang.spawnGroup(630,2020,3,{faction:'Ambush',color:'#813d4a'});
+   road.members.forEach((p,i)=>{p.x=622+i*16;p.y=2015+i*12;p.state='combat';p.angle=Math.atan2(w.player.y-p.y,w.player.x-p.x);p._flash=true;p._advancing=true;p.cover={x:p.x,y:p.y};});
    // Two incoming rounds strike the front crate face from distinct bearings.
    w.combat.bullets.push({x:574,y:2051,prevX:420,prevY:2046,vx:0,vy:0,life:1,range:300,owner:'gang'});
-   w.combat.bullets.push({x:596,y:2051,prevX:860,prevY:1870,vx:0,vy:0,life:1,range:300,owner:'gang'});
+   w.combat.bullets.push({x:596,y:2051,prevX:660,prevY:2008,vx:0,vy:0,life:1,range:300,owner:'gang'});
    // Three bright return rounds connect the exposed muzzle to distinct road-side attackers.
    for(const [target,from] of [[road.members[0],[604,2021]],[road.members[1],[604,2021]],[road.members[2],[604,2021]]])w.combat.bullets.push({x:target.x,y:target.y-9,prevX:from[0],prevY:from[1],sx:from[0],sy:from[1],vx:0,vy:0,life:1,range:300,owner:'player',staged:true});
    w.effects.impacts.push({x:604,y:2021},{x:574,y:2051},{x:596,y:2051},{x:road.members[0].x,y:road.members[0].y-9},{x:road.members[1].x,y:road.members[1].y-9},{x:road.members[2].x,y:road.members[2].y-9});
-   w.dialogue.play([{who:'ROSA',text:'Danny, get behind the crates! It’s an ambush — they’re coming in from the pier!'}]);w.dialogue.revealAll();w.heat=2;w.wanted.heat=2;w.activities.flags=[];w.activities.cards=[];w.pinCallout('BETRAYAL','SURVIVE THE AMBUSH',{x:640,y:176});game.camera.x=578;game.camera.y=2040;game.camera.zoom=2.15;dress([[500,1895,'sedan','#47747a',Math.PI/2],[790,2180,'pickup','#526d59',Math.PI/2]],[[465,1990],[795,2110],[520,2190],[340,2290],[385,2320],[430,2295]]);
+   w.dialogue.play([{who:'ROSA',text:'Danny, get behind the crates! It’s an ambush — they’re coming in from the pier!'}]);w.dialogue.revealAll();w.heat=2;w.wanted.heat=2;w.activities.flags=[];w.activities.cards=[];w.pinCallout('BETRAYAL','SURVIVE THE AMBUSH',{x:640,y:176});game.camera.x=514;game.camera.y=2048;game.camera.zoom=1.9;dress([[500,1895,'sedan','#47747a',Math.PI/2],[790,2180,'pickup','#526d59',Math.PI/2]],[[465,1990],[795,2110],[520,2190],[340,2290],[385,2320],[430,2295]]);
   }
   else if(name==='homecoming'){
    w.setTimeOfDay('dusk');
