@@ -1,0 +1,19 @@
+<!doctype html><meta charset="utf-8"><title>PALMERA HEAT silhouette gate</title>
+<canvas id="c" width="100" height="72" style="width:800px;height:576px;image-rendering:pixelated"></canvas>
+<script type="module">
+import {SeededRandom} from '../game/src/random.js';
+import {ShotDirector} from '../game/src/shots.js';
+import {drawFigure} from '../game/src/figures.js';
+function hashValue(p){let h=2166136261,s=`${Math.round(p.x||0)}:${Math.round(p.y||0)}:${p.color||''}`;for(let i=0;i<s.length;i++)h=Math.imul(h^s.charCodeAt(i),16777619);return h>>>0;}
+function hashHair(p){return ['#392b25','#554033','#302a27','#665046','#453b35'][hashValue(p)%5];}
+function hashStyle(p){return ['short','cap','bun','long','short','short','bald','long'][hashValue(p)>>>3&7];}
+const game={camera:{x:0,y:0,zoom:1},screen:'play',rng:null};
+new ShotDirector().stageShot('homecoming',game);
+const [danny,mia]=game.world.pedestrians.people, canvas=document.querySelector('#c'),ctx=canvas.getContext('2d');
+const s=Number(new URLSearchParams(location.search).get('ss')||1.2);ctx.fillStyle='white';ctx.fillRect(0,0,canvas.width,canvas.height);
+function draw(p,x){ctx.save();ctx.translate(x,36);ctx.scale(s,s);ctx.rotate(p.angle||0);drawFigure(ctx,{hero:p.hero,torso:p.color,inner:p.inner,skin:p.skin,pants:p.pants,hair:p.hair||hashHair(p),hairStyle:p.hairStyle||hashStyle(p),phase:0,pose:p.pose,joints:p.joints,rim:true,_hairLong2:p._hairLong2,_hairLong3:p._hairLong3,_femFigure:p._femFigure});ctx.restore();}
+draw(danny,36);draw(mia,36+(mia.x-danny.x)*s);
+const im=ctx.getImageData(0,0,canvas.width,canvas.height),data=im.data;let xs=[1e9,1e9],ys=[1e9,1e9],xe=[-1,-1],ye=[-1,-1];
+for(let i=0;i<data.length;i+=4){const x=(i/4)%canvas.width,y=Math.floor(i/4/canvas.width);if(data[i]<245||data[i+1]<245||data[i+2]<245){data[i]=data[i+1]=data[i+2]=0;const j=x<36+9*s?0:1;xs[j]=Math.min(xs[j],x);xe[j]=Math.max(xe[j],x);ys[j]=Math.min(ys[j],y);ye[j]=Math.max(ye[j],y);}}
+ctx.putImageData(im,0,0);window.__silHeights={danny:ye[0]-ys[0]+1,mia:ye[1]-ys[1]+1};window.__silDone=true;
+</script>
