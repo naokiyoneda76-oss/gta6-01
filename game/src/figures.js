@@ -1,6 +1,49 @@
 import {ART} from './art.js';
 import {LIGHTING,FIGURES_V2,UNIFIED_SHADOWS,drawGroundShadow,shade} from './lighting.js';
 const POSES={idle:{lean:0,arm:0,leg:0},walk:{lean:0,arm:1.8,leg:2},run:{lean:2,arm:3,leg:3},stumble:{lean:3,arm:2.8,leg:2.5},'car-entry':{lean:4,arm:2.5,leg:2.5},aim:{lean:1,arm:4,leg:0},cover:{lean:2.5,arm:3.2,leg:1.8}};
+// Staging-only manga effect marks, drawn beside the head as flat vector shapes.
+// Sizes are figure-local units; total mark height is ~0.5-0.8x the head height.
+const FX_META={surprise:{hw:1.8,hh:2.45},heart:{hw:2.4,hh:2.2},sweat:{hw:2.9,hh:2.4}};
+function drawFxMark(c,kind,cx,cy,side){
+ const outline=ART.palette.outline;
+ c.save();c.translate(cx,cy);c.scale(side,1);c.lineJoin='round';c.lineCap='round';
+ if(kind==='surprise'){
+  c.fillStyle='#ffd94a';c.strokeStyle=outline;c.lineWidth=.55;
+  for(const bx of [-1.15,1.15]){
+   c.beginPath();c.rect(bx-.58,-2.45,1.16,3.1);c.fill();c.stroke();
+   c.beginPath();c.arc(bx,1.75,.62,0,Math.PI*2);c.fill();c.stroke();
+  }
+ }else if(kind==='heart'){
+  c.beginPath();c.moveTo(0,2.1);
+  c.bezierCurveTo(-2.8,.4,-2.4,-2.2,-1.1,-2.2);
+  c.bezierCurveTo(-.3,-2.2,0,-1.4,0,-.8);
+  c.bezierCurveTo(0,-1.4,.3,-2.2,1.1,-2.2);
+  c.bezierCurveTo(2.4,-2.2,2.8,.4,0,2.1);
+  c.closePath();c.fillStyle='#ef5148';c.fill();c.strokeStyle=outline;c.lineWidth=.55;c.stroke();
+  c.fillStyle='rgba(255,255,255,.55)';c.beginPath();c.ellipse(-1.15,-1.15,.55,.38,-.6,0,Math.PI*2);c.fill();
+ }else if(kind==='sweat'){
+  const drop=(x,y,s,a)=>{c.save();c.translate(x,y);c.rotate(a);c.scale(s,s);c.beginPath();c.moveTo(0,-1.9);c.bezierCurveTo(1.05,-.6,1.02,.75,0,.95);c.bezierCurveTo(-1.02,.75,-1.05,-.6,0,-1.9);c.closePath();c.fillStyle='#8fd8f7';c.fill();c.strokeStyle=outline;c.lineWidth=.5;c.stroke();c.fillStyle='rgba(255,255,255,.75)';c.beginPath();c.arc(-.34,.28,.3,0,Math.PI*2);c.fill();c.restore();};
+  drop(.9,-.3,1.05,.5);drop(-1.7,-1.3,.72,.15);drop(2.2,-1.8,.55,.85);
+ }
+ c.restore();
+}
+export function drawFxMarkAt(c,kind,x,y,side=1){c.save();c.translate(x,y);c.scale(ART.figureScale,ART.figureScale);drawFxMark(c,kind,0,0,side);c.restore();}
+function drawFxBalloon(c,kind,cx,cy){
+ c.save();c.translate(cx,cy);c.lineJoin='round';c.lineCap='round';
+ const ink='#26221e';
+ c.beginPath();c.moveTo(-1.15,4.4);c.lineTo(1.15,4.4);c.lineTo(0,7.15);c.closePath();c.fillStyle='#fffdf4';c.fill();c.strokeStyle=ink;c.lineWidth=.35;c.stroke();
+ c.beginPath();c.ellipse(0,0,4.5,5.25,0,0,Math.PI*2);c.fillStyle='#fffdf4';c.fill();c.strokeStyle=ink;c.lineWidth=.35;c.stroke();
+ if(kind==='surprise'){
+  c.fillStyle=ink;c.beginPath();c.rect(-0.8,-3.3,1.6,3.9);c.fill();c.beginPath();c.arc(0,2.3,0.85,0,Math.PI*2);c.fill();
+ }else if(kind==='heart'){
+  c.save();c.scale(1.4,1.4);c.beginPath();c.moveTo(0,2.1);c.bezierCurveTo(-2.8,.4,-2.4,-2.2,-1.1,-2.2);c.bezierCurveTo(-.3,-2.2,0,-1.4,0,-.8);c.bezierCurveTo(0,-1.4,.3,-2.2,1.1,-2.2);c.bezierCurveTo(2.4,-2.2,2.8,.4,0,2.1);c.closePath();c.fillStyle='#ef5148';c.fill();c.strokeStyle=ink;c.lineWidth=.3;c.stroke();c.restore();
+ }else if(kind==='sweat'){
+  const drop=(x,y,s,a)=>{c.save();c.translate(x,y);c.rotate(a);c.scale(s,s);c.beginPath();c.moveTo(0,-1.9);c.bezierCurveTo(1.05,-.6,1.02,.75,0,.95);c.bezierCurveTo(-1.02,.75,-1.05,-.6,0,-1.9);c.closePath();c.fillStyle='#57b7e8';c.fill();c.strokeStyle=ink;c.lineWidth=.3;c.stroke();c.restore();};
+  drop(-1.9,-.4,1.55,-.18);drop(1.9,-.4,1.55,.18);
+ }
+ c.restore();
+}
+export function drawFxBalloonAt(c,kind,x,y){c.save();c.translate(x,y);c.scale(ART.figureScale,ART.figureScale);drawFxBalloon(c,kind,0,-12.9);c.restore();}
 export function drawFigure(c,o={}){
  const hero=!!o.hero,litHero=LIGHTING&&hero,figureV2=FIGURES_V2,skinBase=o.skin||ART.palette.skin,shirtBase=o.torso||'#cf694f',pantsBase=o.pants||ART.palette.pants,hairBase=o.hair||ART.palette.hair;
  // Non-hero variety is derived from visual class inputs, so repeated figures stay consistent.
@@ -35,6 +78,10 @@ export function drawFigure(c,o={}){
  // Broad crown is dominant. A slim skin crescent at the lower edge is the only facial cue.
  const hs=hero?1.35:1;c.fillStyle=outline;c.beginPath();c.ellipse(headPoint.x,headPoint.y,3.65*hs,3.15*hs,0,0,Math.PI*2);c.fill();c.fillStyle=skin;c.beginPath();c.ellipse(headPoint.x,headPoint.y+.65*hs,2.65*hs,1.7*hs,0,0,Math.PI);c.fill();
  c.fillStyle=hair;c.beginPath();if(hero){c.moveTo(headPoint.x-3.5,headPoint.y-.35);c.quadraticCurveTo(headPoint.x-4.2,headPoint.y-4.7,headPoint.x-.4,headPoint.y-5.5);c.quadraticCurveTo(headPoint.x+1.2,headPoint.y-5.4,headPoint.x+2.1,headPoint.y-3.9);c.quadraticCurveTo(headPoint.x+3.8,headPoint.y-3.2,headPoint.x+3.6,headPoint.y-.35);c.quadraticCurveTo(headPoint.x,headPoint.y-1.5,headPoint.x-3.5,headPoint.y-.35);c.fill();c.strokeStyle='#665044';c.lineWidth=.8;c.beginPath();c.moveTo(headPoint.x-2.7,headPoint.y-3.6);c.quadraticCurveTo(headPoint.x-.7,headPoint.y-5.15,headPoint.x+1.25,headPoint.y-4.15);c.stroke();}else if(o._hairLong3){const hx=headPoint.x,hy=headPoint.y;c.beginPath();c.moveTo(hx-1.85,hy+3.2);c.quadraticCurveTo(hx-3.15,hy-.8,hx-3.6,hy-3.2);c.quadraticCurveTo(hx-2.5,hy-5.25,hx-.45,hy-5.6);c.quadraticCurveTo(hx+1.2,hy-5.5,hx+3.65,hy-3.15);c.quadraticCurveTo(hx+4.65,hy-.7,hx+4.45,hy+3.3);c.quadraticCurveTo(hx+4.65,hy+6.2,hx+4.2,hy+9.1);c.quadraticCurveTo(hx+4.05,hy+10.7,hx+3.35,hy+12.5);c.quadraticCurveTo(hx+2.7,hy+11.9,hx+2.15,hy+10.7);c.quadraticCurveTo(hx+1.65,hy+12.2,hx+.65,hy+12.1);c.quadraticCurveTo(hx-.1,hy+11.1,hx-.45,hy+10.1);c.quadraticCurveTo(hx-.8,hy+10.9,hx-1.05,hy+9.2);c.quadraticCurveTo(hx-1.15,hy+7.4,hx-1.15,hy+6.8);c.quadraticCurveTo(hx-1.35,hy+5.9,hx-1.85,hy+3.2);c.closePath();c.fillStyle=hairBase;c.fill();c.strokeStyle=outline;c.lineWidth=.7;c.stroke();c.beginPath();c.moveTo(hx-1.8,hy+5);c.quadraticCurveTo(hx-.1,hy+5.7,hx+4.4,hy+4.8);c.quadraticCurveTo(hx+4.55,hy+7.2,hx+4.2,hy+9.1);c.quadraticCurveTo(hx+4.05,hy+10.7,hx+3.35,hy+12.5);c.quadraticCurveTo(hx+2.7,hy+11.9,hx+2.15,hy+10.7);c.quadraticCurveTo(hx+1.65,hy+12.2,hx+.65,hy+12.1);c.quadraticCurveTo(hx-.1,hy+11.1,hx-.45,hy+10.1);c.quadraticCurveTo(hx-.8,hy+10.9,hx-1.05,hy+9.2);c.quadraticCurveTo(hx-1.15,hy+7.4,hx-1.15,hy+6.8);c.quadraticCurveTo(hx-1.35,hy+5.9,hx-1.8,hy+5);c.closePath();c.fillStyle=shade(hairBase,.78);c.globalAlpha=.5;c.fill();c.globalAlpha=1;c.strokeStyle=shade(hairBase,.5);c.lineWidth=.8;c.beginPath();c.moveTo(hx-2.3,hy-4.1);c.quadraticCurveTo(hx-.3,hy-5.35,hx+1.8,hy-4.1);c.quadraticCurveTo(hx+2.5,hy-3.65,hx+2.8,hy-2.9);c.stroke();c.strokeStyle=shade(hairBase,1.45);c.lineWidth=.7;c.beginPath();c.moveTo(hx-3.3,hy-4.1);c.quadraticCurveTo(hx-2.1,hy-5.15,hx-.9,hy-5.25);c.stroke();}else if(o._hairLong2){const hx=headPoint.x,hy=headPoint.y;c.beginPath();c.moveTo(hx-4.5,hy+3.4);c.quadraticCurveTo(hx-5.1,hy-.8,hx-3.7,hy-3.2);c.quadraticCurveTo(hx,hy-5.6,hx+3.7,hy-3.2);c.quadraticCurveTo(hx+5.1,hy-.8,hx+4.5,hy+3.4);c.quadraticCurveTo(hx+2.4,hy+4.6,hx+.6,hy+4.05);c.quadraticCurveTo(hx-1.2,hy+4.75,hx-4.5,hy+3.4);c.closePath();c.fillStyle=hairBase;c.fill();c.strokeStyle=outline;c.lineWidth=.7;c.stroke();c.beginPath();c.moveTo(hx-4.42,hy+1.9);c.quadraticCurveTo(hx,hy+3.1,hx+4.42,hy+1.9);c.lineTo(hx+4.5,hy+3.4);c.quadraticCurveTo(hx+2.4,hy+4.6,hx+.6,hy+4.05);c.quadraticCurveTo(hx-1.2,hy+4.75,hx-4.5,hy+3.4);c.closePath();c.fillStyle=shade(hairBase,.78);c.globalAlpha=.5;c.fill();c.globalAlpha=1;}else if(figureV2){const variant=classHash%3;if(variant===0){c.moveTo(headPoint.x-3.4,headPoint.y-.2);c.quadraticCurveTo(headPoint.x-3.9,headPoint.y-4.2,headPoint.x-.2,headPoint.y-4.3);c.quadraticCurveTo(headPoint.x+3.8,headPoint.y-4.2,headPoint.x+3.4,headPoint.y-.2);c.quadraticCurveTo(headPoint.x,headPoint.y-1.1,headPoint.x-3.4,headPoint.y-.2);c.fill();}else if(variant===1){c.moveTo(headPoint.x-3.5,headPoint.y-.1);c.quadraticCurveTo(headPoint.x-4.2,headPoint.y-3.2,headPoint.x-1.8,headPoint.y-3.8);c.quadraticCurveTo(headPoint.x-.5,headPoint.y-5.1,headPoint.x+1.2,headPoint.y-3.7);c.quadraticCurveTo(headPoint.x+4,headPoint.y-3.4,headPoint.x+3.4,headPoint.y-.1);c.lineTo(headPoint.x+2.5,headPoint.y-.5);c.lineTo(headPoint.x+1.6,headPoint.y-.1);c.lineTo(headPoint.x+.5,headPoint.y-.7);c.lineTo(headPoint.x-.5,headPoint.y-.1);c.lineTo(headPoint.x-1.5,headPoint.y-.6);c.closePath();c.fill();}else{c.ellipse(headPoint.x,headPoint.y-.8,3.4,3.2,0,Math.PI,Math.PI*2);c.fill();c.fillRect(headPoint.x-3.1,headPoint.y-1.1,.9,3.1);c.fillRect(headPoint.x+2.2,headPoint.y-1.1,.9,3.1);}}else{c.ellipse(headPoint.x,headPoint.y-.65,3.3,2.65,0,Math.PI,Math.PI*2);c.fill();}if(!hero&&(o.hairStyle||'short')==='long'&&!figureV2){c.fillRect(headPoint.x-3.2,headPoint.y-.7,1.2,3.4);c.fillRect(headPoint.x+2,headPoint.y-.7,1.2,3.4);}
+ // Minimal eyes in the skin face window: solid dark ovals, gaze = whole-pair shift.
+ if(o._face){const gx=Math.max(-1.15,Math.min(1.15,o._face.x||0)),gy=Math.max(-.15*hs,Math.min(.25*hs,o._face.y||0));c.fillStyle='#1f1813';for(const s of [-1,1]){c.beginPath();c.ellipse(headPoint.x+gx+s*1.5*hs,headPoint.y+1.45*hs+gy,.52*hs,.62*hs,0,0,Math.PI*2);c.fill();}}
+ if(o._fx&&FX_META[o._fx]){const fm=FX_META[o._fx],fside=o._fxSide||1;drawFxMark(c,o._fx,headPoint.x+fside*(3.65*hs+fm.hw+1.1),headPoint.y-3.15*hs-fm.hh+1.2,fside);}
+ if(o._fx2){drawFxBalloon(c,o._fx2,headPoint.x+(o._fx2Off?.x||0),headPoint.y-12.9+(o._fx2Off?.y||0));}
  if(o.rim){c.strokeStyle='rgba(255,215,150,.60)';c.lineWidth=.3;c.beginPath();c.ellipse(headPoint.x,headPoint.y,3.65*hs-.15,3.15*hs-.15,0,Math.PI*1.04,Math.PI*1.46);c.stroke();c.strokeStyle='rgba(255,215,150,.45)';c.lineWidth=.3;c.beginPath();c.moveTo(shoulder[0].x,shoulder[0].y);c.lineTo(elbows[0].x,elbows[0].y);c.stroke();}
  c.restore();
 }
